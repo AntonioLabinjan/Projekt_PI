@@ -4,6 +4,7 @@
 
 Aplikacija za praćenje raznih aktivnosti važnih za zdrav život i treniranje.
 Te su aktivnosti: 
+	- kreiranje računa (login i signup)
 	- praćenje visine i težine
 	- praćenje odrađenih treninga
 	- praćenje konzumacije obroka
@@ -14,5 +15,4 @@ Te su aktivnosti:
 	- prijedlozi za odrađivanje vježbi
 	- prijedlozi za obroke
 
-+ implementacija logina i signupa
 
