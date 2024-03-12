@@ -2,7 +2,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import ImageGallery from './components/ImageGallery.vue';
+import HomePage from './components/HomePage.vue';
 const routes = [
   { path: '/', component: HomePage },  ];
 
