@@ -3,12 +3,6 @@
     <h1>Progress Tracker</h1>
     <nav class="navbar">
       <ul class="navbar-nav">
-        <li><button @click="goToVueTrainer">Go to Training App</button></li>
-        <li><button @click="goToMealTracker">Go to Meal Tracker</button></li>
-        <li><button @click="goToSleepTracker">Go to Sleep Tracker</button></li>
-        <li><button @click="goToWaterIntake">Go to Water Intake Tracker</button></li>
-        <li><button @click="goToBMI">Go to BMI Calculator</button></li>
-        <li><button @click="goToStreak">Go to Streak Tracker</button></li>
         <li><button @click="goBackHome">Go Back Home</button></li>
       </ul>
     </nav>
@@ -85,7 +79,9 @@ export default {
       this.images.splice(index, 1);
       this.applyFilter();
     },
-   
+    goBackHome() {
+      this.$router.push({ path: '/' });
+    },
 };
 </script>
 <style>
