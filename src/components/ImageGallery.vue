@@ -82,8 +82,10 @@ export default {
     goBackHome() {
       this.$router.push({ path: '/' });
     },
-};
+  } 
+}; 
 </script>
-<style>
 
+<style>
+/* Ovo ćemo ben smišljat*/
 </style>
