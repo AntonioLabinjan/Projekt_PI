@@ -1,9 +1,18 @@
-// tu učitavamo rute za ruter
-import Vue from 'vue'
-import App from './App.vue'
+// konfiguracija rutera i komponenti
+import { createApp } from 'vue';
+import App from './App.vue';
+import { createRouter, createWebHistory } from 'vue-router';
+import ImageGallery from './components/ImageGallery.vue';
+const routes = [
+  { path: '/', component: HomePage },  ];
 
-Vue.config.productionTip = false
 
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
+const router = createRouter({
+  history: createWebHistory(),
+  routes
+});
+
+const app = createApp(App);
+app.component('HomePage', HomePage);
+app.use(router);
+app.mount('#app');
