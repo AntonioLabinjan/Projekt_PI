@@ -1,6 +1,6 @@
 <template>
   <div class="empty-component">
-    <!-- Vaš sadržaj komponente ide ovdje -->
+    <!-- Unosit ćemo težinu i visinu, pa će nam se automatski računati BMI i dobit ćemo obavijest je li visok, nizak, dobar itd. -->
   </div>
 </template>
 
