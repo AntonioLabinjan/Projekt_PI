@@ -2,7 +2,6 @@
   <div class="container">
     <h1>Exercise Tracker</h1>
     <hr>
-    <!-- Content -->
     <form v-if="editIndex === null" @submit.prevent="addExercise" class="exercise-input-section">
       <h3>Exercise Info</h3>
       <label for="exerciseName">Exercise Name:</label>
@@ -123,4 +122,5 @@ export default {
 </script>
 
 <style scoped>
-  </style>
+<!-- tu moram dodati stilove -->  
+</style>
