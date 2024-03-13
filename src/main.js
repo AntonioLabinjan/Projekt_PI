@@ -8,7 +8,7 @@ const routes = [
   { path: '/', component: HomePage },
   { path: '/image-gallery', component: ImageGallery },  
 ];
-
+// na istu foru importirat i ostale komponente...to ću sutra
 
 const router = createRouter({
   history: createWebHistory(),
