@@ -82,6 +82,24 @@ export default {
     goBackHome() {
       this.$router.push({ path: '/' });
     },
+    goToVueTrainer() {
+      this.$router.push({ path:'/vue-trainer' }); 
+    },
+    goToMealTracker() {
+      this.$router.push({ path: '/meal-tracker' });
+    },
+    goToSleepTracker() {
+      this.$router.push({ path: '/sleep-tracker' });
+    },
+    goToWaterIntake() {
+      this.$router.push({ path: '/water-intake' });
+    },
+    goToBMI() {
+      this.$router.push({ path: '/BMI-calculator' });
+    },
+    goToStreak() {
+      this.$router.push({ path: '/streak' });
+    },
   } 
 }; 
 </script>
