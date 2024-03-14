@@ -75,7 +75,6 @@ export default {
     addExercise() {
       this.exercises.push({ ...this.newExercise });
       this.resetForm();
-      this.updatePieChart();
     },
     openEditDialog(index) {
       this.editIndex = index;
@@ -99,7 +98,6 @@ export default {
     },
     deleteExercise(index) {
       this.exercises.splice(index, 1);
-      this.updatePieChart();
     },
     cancelEdit() {
       this.editIndex = null;
@@ -117,6 +115,27 @@ export default {
         intensity: "",
         calories: 0,
       };
+    },
+    goToMealTracker() {
+      this.$router.push({ path:'/meal-tracker' });
+    },
+    goToImageGallery() {
+      this.$router.push({ path:'/image-gallery' });
+    },
+    goToSleepTracker() {
+      this.$router.push({ path:'/sleep-tracker' });
+    },
+    goToWaterIntake() {
+      this.$router.push({ path:'/water-intake' });
+    },
+    goToBMI() {
+      this.$router.push({ path:'/BMI-calculator' });
+    },
+    goToStreak() {
+      this.$router.push({ path:'/streak' });
+    },
+    goBackHome(){
+      this.$router.push({ path: '/' });
     },
 };
 </script>
