@@ -1,18 +1,42 @@
 <template>
-  <div class="empty-component">
-    <!-- Unosit ćemo težinu i visinu, pa će nam se automatski računati BMI i dobit ćemo obavijest je li visok, nizak, dobar itd. -->
-  </div>
+  
+    <h1>BMI Calculator</h1>
+	
 </template>
 
 <script>
 export default {
-  name: 'EmptyComponent',
-  // Dodajte potrebne podatke, metode, computed properties itd.
-}
+  methods: {
+    goToImageGallery() {
+      this.$router.push({ path: '/image-gallery' });
+    },
+    goToVueTrainer() {
+      this.$router.push({ path: '/vue-trainer' });
+    },
+    goToMealTracker() {
+      this.$router.push({ path: '/meal-tracker' });
+    },
+    goToLogIn() {
+      this.$router.push({ path: '/login' });
+    },
+    goToSignUp() {
+      this.$router.push({ path: '/sign-up' });
+    },
+    goToSleepTracker() {
+      this.$router.push({ path: '/sleep-tracker' });
+    },
+    goToWaterIntake() {
+      this.$router.push({ path: '/water-intake' });
+    },
+    goBackHome() {
+      this.$router.push({ path: '/' });
+    },
+	goToStreak() {
+      this.$router.push({ path: '/streak' });
+    },
+  }
+};
 </script>
 
 <style scoped>
-.empty-component {
-  /* Stilovi za praznu komponentu */
-}
 </style>
