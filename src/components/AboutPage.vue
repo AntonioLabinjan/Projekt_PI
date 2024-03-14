@@ -1,18 +1,23 @@
 <template>
-  <div class="empty-component">
-    <!-- Ovo će biti neki about page na kojem ću samo navesti funkcionalnosti aplikacije i baciti neki CSS. NIje baš korisno, ali čini mi se fora -->
-  </div>
+    <h2>About Vue Trainer</h2>
+    <hr>
 </template>
 
 <script>
 export default {
-  name: 'EmptyComponent',
-  // Dodajte potrebne podatke, metode, computed properties itd.
-}
+  name: 'AboutPage',
+  methods: {
+    goBackHome() {
+      this.$router.push({ path: '/' });
+    },
+    goToExerciseSuggestions() {
+      this.$router.push({ path: '/default-exercises' });
+    },
+    goToMealSuggestions() {
+      this.$router.push({ path: '/default-meals' });
+    },
+  }
+};
 </script>
 
-<style scoped>
-.empty-component {
-  /* Stilovi za praznu komponentu */
-}
 </style>
