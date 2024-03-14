@@ -46,7 +46,7 @@ export default {
   methods: {
     signUp() {
       // Implementacija logike za registraciju (ovo ćemo isto riješit naknadno)
-      console.log('Signing up with first name:', this.firstName, 'last name:', this.lastName, 'date of birth:', this.dob, 'username:', this.signupUsername, 'and password:', this.signupPassword);
+      console.log('Signing up with first name:', this.firstName, 'last name:', this.lastName, 'date of birth:', this.dob, 'username:', this.signupUsername, 'and password:', this.signupPassword); // ovo mi trenutno samo ispisuje stvari u konzolu..beskorisno je, ali napravio sam to čisto da se nešto dešava kad kliknem
     },
     goToLogIn() {
       this.$router.push({ path: '/login' });
