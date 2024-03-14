@@ -1,13 +1,33 @@
 <template>
-  <div class="empty-component">
-    <!-- U ovoj komponenti ćemo pratiti unos tekućine...još moram malo razmisliti na koju bi foru to radilo -->
-  </div>
+  <h1>Unos vode</h1> 
 </template>
 
 <script>
 export default {
   name: 'EmptyComponent',
-  // Dodajte potrebne podatke, metode, computed properties itd.
+  methods: {
+    goBackHome() {
+      this.$router.push({ path: '/' });
+    },
+    goToVueTrainer() {
+      this.$router.push({ path: '/vue-trainer' });
+    },
+    goToImageGallery() {
+      this.$router.push({ path: '/image-gallery' });
+    },
+    goToSleepTracker() {
+      this.$router.push({ path: '/sleep-tracker' });
+    },
+    goToMealTracker() {
+      this.$router.push({ path: '/meal-tracker' });
+    },
+    goToBMI() {
+      this.$router.push({ path: '/BMI-calculator'});
+    },
+    goToStreak() {
+      this.$router.push({path: '/streak'});
+    }
+  } 
 }
 </script>
 
