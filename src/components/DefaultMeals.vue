@@ -1,18 +1,18 @@
 <template>
-  <div class="empty-component">
-    <!-- Ovo će biti ista stvar kao DefaultEcercises.vue, ali za obroke-->
-  </div>
+  <h1>Ovdje ćemo imati zakodirane prijedloge obroka</h1>
 </template>
 
 <script>
 export default {
-  name: 'EmptyComponent',
-  // Dodajte potrebne podatke, metode, computed properties itd.
-}
+  data() {},
+  methods: {
+    goBack() {
+      this.$router.push({ path: '/about' });
+    },
+  }
+};
 </script>
 
 <style scoped>
-.empty-component {
-  /* Stilovi za praznu komponentu */
-}
+
 </style>
