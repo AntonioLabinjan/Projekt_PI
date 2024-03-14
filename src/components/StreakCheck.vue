@@ -6,14 +6,6 @@
 <script>
 export default {
   data() {
-    return {
-      selectedDates: [], // Odabrani datumi
-      currentStreak: 0, // Trenutni streak
-      recordStreak: 0, // Rekordni streak
-      customDate: '', // Datum koji korisnik unosi ručno
-      medalCounter: 0, // Brojač medalja
-      prevStreak: 0 // Prethodni streak
-    };
   },
   methods: {
     // Funkcije za navigaciju
