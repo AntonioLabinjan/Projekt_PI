@@ -1,18 +1,18 @@
 <template>
-  <div class="empty-component">
-    <!-- Ovdje ću ubaciti neke hardkodirane "kartice" s vježbama. Također, omogućit ću CRUD operacije nad njima -->
-  </div>
+  <h1>Ovdje ćemo imati zakodirane prijedloge vježbi</h1>
 </template>
 
 <script>
 export default {
-  name: 'EmptyComponent',
-  // Dodajte potrebne podatke, metode, computed properties itd.
-}
+  data() {},
+  methods: {
+    goBack() {
+      this.$router.push({ path: '/about' });
+    },
+  }
+};
 </script>
 
 <style scoped>
-.empty-component {
-  /* Stilovi za praznu komponentu */
-}
+
 </style>
