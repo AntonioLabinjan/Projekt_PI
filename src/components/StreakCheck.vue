@@ -1,18 +1,49 @@
+  
 <template>
-  <div class="empty-component">
-    <!-- Ovdje ćemo moći dodavati dane kada smo trenirali, pratit će se streak dana, kad postignemo određeni streak, dobit ćemo neku "nagradu" (najvjerojatnije ću ubaciti neku grafičku ikonicu koja će nam se prikazati, ili tako nešto) -->
-  </div>
+   <!-- Ovdje ćemo moći dodavati dane kada smo trenirali, pratit će se streak dana, kad postignemo određeni streak, dobit ćemo neku "nagradu" (najvjerojatnije ću ubaciti neku grafičku ikonicu koja će nam se prikazati, ili tako nešto) -->
 </template>
 
 <script>
 export default {
-  name: 'EmptyComponent',
-  // Dodajte potrebne podatke, metode, computed properties itd.
-}
+  data() {
+    return {
+      selectedDates: [], // Odabrani datumi
+      currentStreak: 0, // Trenutni streak
+      recordStreak: 0, // Rekordni streak
+      customDate: '', // Datum koji korisnik unosi ručno
+      medalCounter: 0, // Brojač medalja
+      prevStreak: 0 // Prethodni streak
+    };
+  },
+  methods: {
+    // Funkcije za navigaciju
+    goToImageGallery() {
+      this.$router.push({ path: '/image-gallery' });
+    },
+    goToVueTrainer() {
+      this.$router.push({ path: '/vue-trainer' });
+    },
+    goToMealTracker() {
+      this.$router.push({ path: '/meal-tracker' });
+    },
+    goToSleepTracker() {
+      this.$router.push({ path: '/sleep-tracker' });
+    },
+    goToWaterIntake() {
+      this.$router.push({ path: '/water-intake' });
+    },
+    goToBMI() {
+      this.$router.push({ path: '/BMI-calculator' });
+    },
+    // Funkcija za povratak na početnu rutu
+    goBackHome() {
+      this.$router.push({ path: '/' });
+    },
+    
+};
+};
 </script>
 
 <style scoped>
-.empty-component {
-  /* Stilovi za praznu komponentu */
-}
+
 </style>
