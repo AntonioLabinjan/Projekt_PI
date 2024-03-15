@@ -1,7 +1,17 @@
 <template>
-  
+  <!-- ove css klase imenujem unaprijed s ciljem da se sve slične klase isto zovu, pa da mi CSS bude koliko-toliko konzistentan -->
     <h1>BMI Calculator</h1>
-	
+	<nav>
+      <ul class="navbar-nav">
+        <li class="nav-item"><button @click="goToVueTrainer" class="btn btn-secondary">Go to Training app</button></li>
+        <li class="nav-item"><button @click="goToImageGallery" class="btn btn-secondary">Go to Image Gallery</button></li>
+        <li class="nav-item"><button @click="goToSleepTracker" class="btn btn-secondary">Go to Sleep Tracker</button></li>
+        <li class="nav-item"><button @click="goToMealTracker" class="btn btn-secondary">Go to Meal Tracker</button></li>
+        <li class="nav-item"><button @click="goToWaterIntake" class="btn btn-secondary">Go to Water Intake Tracker</button></li>
+	<li class="nav-item"><button @click="goToStreak" class="btn btn-secondary">Go to Streak Tracker</button></li>
+        <li class="nav-item"><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
+      </ul>
+    </nav>
 </template>
 
 <script>
