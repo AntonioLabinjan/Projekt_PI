@@ -1,7 +1,18 @@
-  
-<template>
-   <!-- Ovdje ćemo moći dodavati dane kada smo trenirali, pratit će se streak dana, kad postignemo određeni streak, dobit ćemo neku "nagradu" (najvjerojatnije ću ubaciti neku grafičku ikonicu koja će nam se prikazati, ili tako nešto) -->
-</template>
+  <template>
+  <div class="workout-tracker">
+    <!-- Navigacija -->
+    <nav class="navbar">
+      <ul>
+        <!-- Ostale opcije navigacije -->
+        <li><button @click="goToImageGallery">Go to Image Gallery</button></li>
+        <li><button @click="goToVueTrainer">Go to Training App</button></li>
+        <li><button @click="goToMealTracker">Go to Meal Tracker</button></li>
+        <li><button @click="goToSleepTracker">Go to Sleep Tracker</button></li>
+        <li><button @click="goToWaterIntake">Go to Water Intake Tracker</button></li>
+        <li><button @click="goToBMI">Go to BMI Calculator</button></li>
+        <li><button @click="goBackHome">Go Back Home</button></li>
+      </ul>
+    </nav>
 
 <script>
 export default {
