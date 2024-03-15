@@ -1,7 +1,18 @@
 <template>
   <div>
     <h1>Sleep Tracker</h1>
-  </div>  
+    <nav class="navbar">
+      <ul class="navbar-nav">
+        <li><button @click="goToTrainingApp" class="btn btn-secondary">Go to Training App</button></li>
+        <li><button @click="goToImageGallery" class="btn btn-secondary">Go to Image Gallery</button></li>
+        <li><button @click="goToMealTracker" class="btn btn-secondary">Go to Meal Tracker</button></li>
+        <li><button @click="goToWaterIntake" class="btn btn-secondary">Go to Water Intake Tracker</button></li>
+        <li><button @click="goToBMI">Go to BMI Calculator</button></li>
+        <li><button @click="goToStreak">Go to Streak Tracker</button></li>
+        <li><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
+      </ul> 
+    </nav>
+  </div>
 </template>
 
 <script>
