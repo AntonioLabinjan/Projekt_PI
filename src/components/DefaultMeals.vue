@@ -1,5 +1,8 @@
 <template>
   <h1>Ovdje ćemo imati zakodirane prijedloge obroka</h1>
+  <div>
+    <button @click="goBack">Go Back</button>
+  </div>
 </template>
 
 <script>
