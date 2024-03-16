@@ -1,6 +1,18 @@
 <template>
   <div class="container">
     <h1>Exercise Tracker</h1>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <ul class="navbar-nav">
+        <li><button @click="goToMealTracker" class="btn-secondary">Go to Meal Tracker</button></li>
+        <li><button @click="goToImageGallery" class="btn-secondary">Go to Image Gallery</button></li>
+        <li><button @click="goToSleepTracker" class="btn-secondary">Go to Sleep Tracker</button></li>
+        <li><button @click="goToWaterIntake" class="btn-secondary">Go to Water Intake Tracker</button></li>
+        <li><button @click="goToBMI" class="btn-secondary">Go to BMI Calculator</button></li>
+        <li><button @click="goToStreak" class="btn-secondary">Go to Streak Tracker</button></li>
+        <li><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
+      </ul>
+    </nav>
     <hr>
     <form v-if="editIndex === null" @submit.prevent="addExercise" class="exercise-input-section">
       <h3>Exercise Info</h3>
