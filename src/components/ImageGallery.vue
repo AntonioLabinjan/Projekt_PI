@@ -41,6 +41,11 @@
         <input v-model="newImage.weight" type="number" id="weight" /><br>
         <button @click="addImage" class="btn btn-primary">Add Image</button>
       </div>
+      <div class="filter-container">
+        <label for="weightFilter">Filter by Weight (Kg):</label>
+        <input v-model="weightFilter" type="number" id="weightFilter" />
+        <button @click="filterByWeight" class="btn btn-primary">Apply Filter</button>
+      </div>
     </div>
   </div>
 </template>
@@ -50,6 +55,7 @@ export default {
   data() {
     return {
       images: [],
+      filteredImages: [],
       newImage: {
         file: null,
         description: '',
@@ -79,14 +85,25 @@ export default {
           description: '',
           weight: 0,
         };
+        this.applyFilter();
       }
     },
     deleteImage(index) {
       this.images.splice(index, 1);
       this.applyFilter();
     },
-    goBackHome() {
-      this.$router.push({ path: '/' });
+    filterByWeight() {
+      this.applyFilter();
+    },
+    applyFilter() {
+      if (this.weightFilter) {
+        const filteredWeight = parseInt(this.weightFilter);
+        if (!isNaN(filteredWeight)) {
+          this.filteredImages = this.images.filter(image => image.weight === filteredWeight);
+          return;
+        }
+      }
+      this.filteredImages = [...this.images];
     },
     goToVueTrainer() {
       this.$router.push({ path:'/vue-trainer' }); 
@@ -106,10 +123,15 @@ export default {
     goToStreak() {
       this.$router.push({ path: '/streak' });
     },
-  } 
-}; 
+    goBackHome() {
+      this.$router.push({ path: '/' });
+    },
+  },
+  created() {
+    this.applyFilter();
+  }
+};
 </script>
-
 <style>
-/* Ovo ćemo ben smišljat*/
+
 </style>
