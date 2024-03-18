@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+  <h1>TrainingApp</h1>
     <router-view /> <!-- Ovdje će se dinamički učitavati komponente prema rutama iz main.js -->
   </div>
 </template>
