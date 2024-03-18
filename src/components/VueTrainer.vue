@@ -73,7 +73,10 @@
       <button @click="filterByIntensity" class="btn btn-primary">Apply Filter</button>
     </div>
 
-  
+    <!-- Pie Chart container -->
+    <div class="pie-chart-section">
+      <h3>Exercise Duration Pie Chart</h3>
+      <canvas ref="pieChartCanvas"></canvas>
     </div>
   </div>
 </template>
@@ -97,6 +100,9 @@ export default {
         calories: 0,
       },
       intensityFilter: "",
+      pieChartContext: null,
+      pieChartData: [],
+      pieChartColors: ['#ff6d38', '#ffc107', '#28a745', '#007bff', '#dc3545', '#6c757d', '#17a2b8', '#343a40', '#6f42c1', '#fd7e14'],
     };
   },
   computed: {
@@ -196,7 +202,42 @@ export default {
         return this.exercises;
       }
       return this.exercises.filter(exercise => exercise.intensity.includes(this.intensityFilter));
-    },   
+    },
+    updatePieChart() {
+      const canvas = this.$refs.pieChartCanvas;
+      canvas.width = 300;
+      canvas.height = 300;
+      this.pieChartContext = canvas.getContext('2d');
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = Math.min(centerX, centerY);
+      
+      // Exercise duration data
+      const exerciseDurationData = this.exercises.reduce((total, exercise) =>total + exercise.duration, 0);
+
+      this.pieChartData = this.exercises.map(exercise => {
+        return {
+          name: exercise.name,
+          percentage: (exercise.duration / exerciseDurationData) * 100
+        };
+      });
+      
+      let startAngle = 0;
+      this.pieChartData.forEach((data, index) => {
+        const sliceAngle = (data.percentage / 100) * Math.PI *2;
+
+        this.pieChartContext.fillStyle = this.pieChartColors[index];
+        this.pieChartContext.beginPath();
+        this.pieChartContext.moveTo(centerX, centerY);
+        this.pieChartContext.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+        this.pieChartContext.closePath();
+        this.pieChartContext.fill();
+
+        startAngle += sliceAngle;
+      });
+    },
+  },
 };
 </script>
 
