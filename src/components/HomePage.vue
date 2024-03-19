@@ -6,7 +6,7 @@
     </div>
     <div class="header">
       <h1>Welcome to Vue Trainer</h1>
-<hr>
+      <hr>
       <h4>Your personal training application</h4>
       <p>Add your exercises, meals, sleep, water intake, calculate your BMI, and track your progress!</p>
     </div>
@@ -24,12 +24,33 @@
     <div class="about-button">
       <button @click="goToAbout">About</button>
     </div>
+    <div class="motivational-quote">
+      <p>{{ motivationalQuote }}</p>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      motivationalQuotes: [
+        "Success is not final, failure is not fatal: It is the courage to continue that counts. - Winston Churchill",
+        "The only way to do great work is to love what you do. - Steve Jobs",
+        "Don't watch the clock; do what it does. Keep going. - Sam Levenson",
+        "Believe you can and you're halfway there. - Theodore Roosevelt",
+        "It does not matter how slowly you go as long as you do not stop. - Confucius",
+        "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt"
+      ],
+      motivationalQuote: ""
+    };
+  },
   methods: {
+    selectRandomQuote() {
+      const randomIndex = Math.floor(Math.random() * this.motivationalQuotes.length);
+      this.motivationalQuote = this.motivationalQuotes[randomIndex];
+    },
+    // Metode za rutiranje na druge stranice
     goToImageGallery() {
       this.$router.push({ path: '/image-gallery' });
     },
@@ -60,6 +81,9 @@ export default {
     goToStreak() {
       this.$router.push({ path: '/streak' });
     },
+  },
+  mounted() {
+    this.selectRandomQuote();
   }
 };
 </script>
