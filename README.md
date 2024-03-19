@@ -20,3 +20,6 @@ Te su aktivnosti:
 - praćenje training streaka
 - prijedlozi za odrađivanje vježbi
 - prijedlozi za obroke
+
+
+### Ideja...napravit dictionary, ili listu, ili ča već i napunit je s nekima random motivational quotesima. Dodat botun koji nan izbaci neki random citat 
