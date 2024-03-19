@@ -34,6 +34,7 @@
 export default {
   data() {
     return {
+      // dodat ih baren još 20
       motivationalQuotes: [
         "Success is not final, failure is not fatal: It is the courage to continue that counts. - Winston Churchill",
         "The only way to do great work is to love what you do. - Steve Jobs",
