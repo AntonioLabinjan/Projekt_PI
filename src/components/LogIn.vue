@@ -12,6 +12,7 @@
       </div>
       <div class="button-group">
         <button type="submit" class="btn btn-primary">Login</button>
+        <h3>Don't have an account?</h3>
         <button @click="goToSignUp" class="btn btn-secondary">Sign-up</button>
         <button @click="goBackHome" class="btn btn-secondary">Home</button>
       </div>
