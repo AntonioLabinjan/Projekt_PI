@@ -25,6 +25,7 @@
       <!-- ovo je neki basic template za signup; vjerojatno ću ga izmjenit s nekin bootsrapon ili nečin -->
       <div class="button-group">
         <button type="submit" class="btn btn-primary">Sign Up</button>
+        <h3>Already have an account? Log in</h3>
         <button @click="goToLogIn" class="btn btn-secondary">Login</button>
         <button @click="goBackHome" class="btn btn-secondary">Home</button>
       </div>
