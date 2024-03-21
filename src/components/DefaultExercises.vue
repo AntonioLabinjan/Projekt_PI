@@ -16,6 +16,7 @@
       <hr>
     </div>
 
+    <!-- Forma za dodavanje/novo uređivanje vježbe -->
     <h2 v-if="editMode">Uredi vježbu</h2>
     <h2 v-else>Dodaj novu vježbu</h2>
     <form @submit.prevent="submitExercise">
@@ -38,6 +39,7 @@
       <button type="button" @click="cancelEdit" v-if="editMode">Odustani</button>
     </form>
     
+    <!-- Button to go back to the about page -->
     <button @click="goBack">Go Back</button>
   </div>
 </template>
@@ -48,6 +50,14 @@ export default {
     return {
      exercises: [
   { name: 'Čučnjevi', reps: 12, sets: 3, duration: '1 minuta', bodyPart: 'Noge', instructions: 'Stanite uspravno, spustite se kao da sjedite na stolicu, zatim se vratite u početni položaj.', image: 'https://th.bing.com/th/id/R.7501f29ab92bb18f2fba9c4311a453ca?rik=74830ZTxqOoXYQ&pid=ImgRaw&r=0' },
+  { name: 'Sklekovi', reps: 15, sets: 4, duration: '30 sekundi', bodyPart: 'Prsa', instructions: 'Postavite ruke na tlo malo šire od širine ramena, spustite se prema dolje savijajući laktove, a zatim se vratite u početni položaj.', image: 'https://th.bing.com/th/id/OIP.zpJ5qP9dxrz4GiOlUTIR6wHaFj?rs=1&pid=ImgDetMain' },
+  { name: 'Trbušnjaci', reps: 20, sets: 3, duration: '45 sekundi', bodyPart: 'Trbuh', instructions: 'Lezite na leđa, savijte koljena i stavite ruke iza glave, podignite trup prema koljenima, zatim se polako spustite.', image: 'https://th.bing.com/th/id/R.aa1695a0ee2288c1d71ce76d6c3823b2?rik=FYS2N5QHE3vhEA&riu=http%3a%2f%2f1.bp.blogspot.com%2f-9xyqnGPL7W4%2fU8YQ9gn-4kI%2fAAAAAAAAB9w%2fm2dR23py-LM%2fs1600%2fClassic%2bsit%2bup.JPG&ehk=OD9vm5tbb4rplSze%2bx8p7MRP3L7Sz5eoss6s0Vt10Hw%3d&risl=&pid=ImgRaw&r=0' },
+  { name: 'Zgibovi', reps: 10, sets: 3, duration: '45 sekundi', bodyPart: 'Leđa', instructions: 'Pripazite da su ruke postavljene šire od ramena, izvucite se prema gore, zatim se polako spustite.', image: 'https://th.bing.com/th/id/R.6e0cab381052bba64d9266f87000f505?rik=jgabsxSYHiwbew&pid=ImgRaw&r=0' },
+  { name: 'Plank', reps: '1 minuta', sets: 3, duration: '1 minuta', bodyPart: 'Trup', instructions: 'Postavite se na podlaktice i nožne prste, održavajte tijelo ravno, kao daska, i zadržite poziciju.', image: 'https://th.bing.com/th/id/OIP.JYvi473LvxLJ7ksfUqOxMAHaE8?w=800&h=534&rs=1&pid=ImgDetMain' },
+  { name: 'Dizanje utega', reps: 12, sets: 3, duration: '1 minuta', bodyPart: 'Ruke', instructions: 'Stanite uspravno s utegom u ruci, savijte laktove i podignite utege prema gore, zatim polako spustite.', image: 'https://th.bing.com/th/id/R.409bd68de8e1417cc843851ae76558d4?rik=f2vSBwCzSNyajw&pid=ImgRaw&r=0' },
+  { name: 'Burpees', reps: 10, sets: 3, duration: '45 sekundi', bodyPart: 'Cijelo tijelo', instructions: 'Počnite stojeći, spustite se u sklek, zatim se brzo vratite u stojeći položaj i skočite što više možete.', image: 'https://th.bing.com/th/id/R.f9b312999b7a6a2b9ab6a74f8a3cfb04?rik=9pfLifcFxN%2fr7g&pid=ImgRaw&r=0' },
+  { name: 'Planche', reps: '30 sekundi', sets: 3, duration: '30 sekundi', bodyPart: 'Ruke, trup', instructions: 'Postavite ruke na tlo i izbacite noge u zrak, održavajući tijelo paralelno s podlogom.', image: 'https://fitnesspurity.com/wp-content/uploads/2016/12/3-5.jpg' },
+  { name: 'Biciklistički trbušnjaci', reps: 20, sets: 3, duration: '1 minuta', bodyPart: 'Trbuh', instructions: 'Lezite na leđa, stavite ruke iza glave, podignite noge i izmjenjujte ih kao da vozite bicikl, dodirujući koljena laktovima.', image: 'https://th.bing.com/th/id/R.dc81ded9454bd60d418116ea60632337?rik=wkHKnWUSWRr4Bg&pid=ImgRaw&r=0' }
 ],
 
       newExercise: {
@@ -65,15 +75,19 @@ export default {
   },
   methods: {
     addExercise() {
+      // Dodavanje nove vježbe u listu
       this.exercises.push({ ...this.newExercise });
+      // Resetiranje forme za unos nove vježbe
       this.resetForm();
     },
     editExercise(index) {
+      // Postavljanje podataka o vježbi u formu za uređivanje
       this.newExercise = { ...this.exercises[index] };
       this.editIndex = index;
       this.editMode = true;
     },
     deleteExercise(index) {
+      // Brisanje vježbe iz liste
       this.exercises.splice(index, 1);
     },
     submitExercise() {
@@ -82,10 +96,12 @@ export default {
         this.exercises.splice(this.editIndex, 1, { ...this.newExercise });
         this.resetForm();
       } else {
+        // Dodavanje nove vježbe
         this.addExercise();
       }
     },
     cancelEdit() {
+      // Poništavanje uređivanja i resetiranje forme
       this.resetForm();
     },
     resetForm() {
@@ -194,4 +210,4 @@ form button {
   cursor: pointer;
   border-radius: 3px;
 }
-</style
+</style>
