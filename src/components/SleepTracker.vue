@@ -12,8 +12,7 @@
         <li><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
       </ul> 
     </nav>
-  </div>
-  <hr>
+<hr>
     <form v-if="!editIndex" @submit.prevent="addOrEditSleepEntry" class="sleep-input-section">
       <h3 v-if="!editEntry">Sleep Entry</h3>
       <h3 v-else>Edit Sleep Entry</h3>
@@ -45,15 +44,98 @@
         <button class="delete-btn" @click="deleteSleepEntry(index)">Delete</button>
       </li>
     </ul>
+
+    <div class="statistics">
+      <strong>Total Entries:</strong> {{ totalEntries }}<br>
+      <strong>Average Quality:</strong> {{ averageQuality }}
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
+    return {
+      newSleepEntry: {
+        date: "",
+        startTime: "",
+        wakeTime: "",
+        quality: 0,
+      },
+      sleepEntries: [],
+      editIndex: null,
+      editEntry: false,
+    };
+  },
+  computed: {
+    totalEntries() {
+      return this.sleepEntries.length;
+    },
+    averageQuality() {
+      if (this.totalEntries === 0) {
+        return 0;
+      }
+      const totalQuality = this.sleepEntries.reduce((total, entry) => total + entry.quality, 0);
+      return (totalQuality / this.totalEntries).toFixed(2);
     },
   },
   methods: {
-    
+    addOrEditSleepEntry() {
+      if (this.editEntry) {
+        this.saveEditedSleepEntry();
+      } else {
+        this.addSleepEntry();
+      }
+    },
+    addSleepEntry() {
+      this.sleepEntries.push({ ...this.newSleepEntry });
+      this.resetForm();
+    },
+    editSleepEntry(index) {
+      this.editIndex = index;
+      this.newSleepEntry = { ...this.sleepEntries[index] };
+      this.editEntry = true;
+    },
+    saveEditedSleepEntry() {
+      this.sleepEntries[this.editIndex] = { ...this.newSleepEntry };
+      this.resetForm();
+      this.editEntry = false;
+      this.editIndex = null;
+    },
+    deleteSleepEntry(index) {
+      this.sleepEntries.splice(index, 1);
+    },
+    resetForm() {
+      this.newSleepEntry = {
+        date: "",
+        startTime: "",
+        wakeTime: "",
+        quality: 0,
+      };
+    },
+    cancelEdit() {
+      this.editEntry = false;
+      this.editIndex = null;
+      this.resetForm();
+    },
+    calculateDuration(startTime, wakeTime) {
+      const [startHour, startMinute] = startTime.split(":").map(Number);
+      const [wakeHour, wakeMinute] = wakeTime.split(":").map(Number);
+
+      let durationInMinutes;
+
+      if (wakeHour < startHour || (wakeHour === startHour && wakeMinute < startMinute)) {
+        // Buđenje se dogodilo nakon ponoći, tada računamo trajanje za dva dana
+        durationInMinutes = (wakeHour + 24) * 60 + wakeMinute - startHour * 60 - startMinute;
+      } else {
+        // Buđenje se dogodilo istog dana
+        durationInMinutes = wakeHour * 60 + wakeMinute - startHour * 60 - startMinute;
+      }
+
+      const hours = Math.floor(durationInMinutes / 60);
+      const minutes = durationInMinutes % 60;
+      return `${hours}h ${minutes}m`;
+    },
     goBackHome() {
       this.$router.push({ path: '/' });
     },
@@ -80,5 +162,18 @@ export default {
 </script>
 
 <style scoped>
+
+#app {
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Arial', sans-serif;
+  background-color: #f2f2f2; 
+  padding: 20px; 
+}
+
+h1 {
+  text-align: center;
+  color: #333; 
+}
 
 </style>
