@@ -162,7 +162,7 @@ export default {
 </script>
 
 <style scoped>
-
+/* CSS styles for sleep tracker component */
 #app {
   max-width: 800px;
   margin: 0 auto;
@@ -176,4 +176,106 @@ h1 {
   color: #333; 
 }
 
+.user-input-section,
+.exercise-input-section,
+.statistics {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ccc; 
+  border-radius: 8px; 
+  background-color: #f8f8f8; 
+}
+
+.user-input-section strong,
+.exercise-input-section strong,
+.statistics strong {
+  color: #555; 
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+}
+
+label {
+  margin-bottom: 5px;
+  color: #333; 
+}
+
+input {
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+}
+
+
+button {
+  padding: 10px 20px;
+  margin-top: 10px;
+  color: #fff; 
+  background-color: #007bff; 
+  border: none; 
+  border-radius: 4px; 
+  cursor: pointer; 
+  transition: background-color 0.3s ease; 
+}
+
+
+button.cancel {
+  background-color: #dc3545; 
+}
+
+
+ul.exercise-display-section {
+  list-style: none; 
+  padding: 0; 
+}
+
+.exercise-item {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd; 
+  border-radius: 4px; 
+  background-color: #fff; 
+}
+
+
+.edit-btn {
+  margin-right: 10px;
+  color: #fff; 
+  background-color: #28a745; 
+}
+
+.delete-btn {
+  color: #fff; 
+  background-color: #dc3545; 
+}
+
+/* Responzivni stilovi za mobilne uređaje */
+@media only screen and (max-width: 600px) {
+  #app {
+    width: 90%; 
+  }
+}
+
+.navbar {
+  padding: 10px 20px;
+}
+
+.navbar-nav {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-nav li {
+  display: inline;
+  margin-right: 10px;
+}
+
+.navbar-nav li:last-child {
+  margin-right: 0;
+}
 </style>
