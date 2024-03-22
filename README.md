@@ -21,6 +21,4 @@ Te su aktivnosti:
 - prijedlozi za odrađivanje vježbi
 - prijedlozi za obroke
 
-
-### Ideja...napravit dictionary, ili listu, ili ča već i napunit je s nekima random motivational quotesima. Dodat botun koji nan izbaci neki random citat 
 https://www.figma.com/file/f8u5rOvTMgHEVSlU6denFg/Untitled?type=design&node-id=0%3A1&mode=design&t=brZMxneQCVA9nUOM-1    FIGMA LINK
