@@ -1,7 +1,4 @@
 # Riješena je navigacija
-# Sad se bacamo na ove jednostavnije CRUD operacije na pojedinim komponentama
-
-## Reminder for my future self: hostanje prazne aplikacije na neki server je glupa ideja, pošto samo daje errore jer nema ničega u aplikaciji osim praznih komponenti, a neman pojma kako se je sad makne iz servera :)
 
 #### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
 #### Trainingapp (nije definitivni naziv)
@@ -22,3 +19,6 @@ Te su aktivnosti:
 - prijedlozi za obroke
 
 https://www.figma.com/file/f8u5rOvTMgHEVSlU6denFg/Untitled?type=design&node-id=0%3A1&mode=design&t=brZMxneQCVA9nUOM-1    FIGMA LINK
+
+# IMPLEMENTIRATI QR KOD SKENER U APLIKACIJU
+https://github.com/AntonioLabinjan/QR_scanner/tree/master
