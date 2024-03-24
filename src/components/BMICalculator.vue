@@ -1,22 +1,58 @@
 <template>
-  <!-- ove css klase imenujem unaprijed s ciljem da se sve slične klase isto zovu, pa da mi CSS bude koliko-toliko konzistentan -->
-    <h1>BMI Calculator</h1>
-	<nav>
+  <div>
+    <h1 class="display-4">BMI Calculator</h1>
+	
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <ul class="navbar-nav">
         <li class="nav-item"><button @click="goToVueTrainer" class="btn btn-secondary">Go to Training app</button></li>
         <li class="nav-item"><button @click="goToImageGallery" class="btn btn-secondary">Go to Image Gallery</button></li>
         <li class="nav-item"><button @click="goToSleepTracker" class="btn btn-secondary">Go to Sleep Tracker</button></li>
         <li class="nav-item"><button @click="goToMealTracker" class="btn btn-secondary">Go to Meal Tracker</button></li>
         <li class="nav-item"><button @click="goToWaterIntake" class="btn btn-secondary">Go to Water Intake Tracker</button></li>
-	<li class="nav-item"><button @click="goToStreak" class="btn btn-secondary">Go to Streak Tracker</button></li>
+		<li class="nav-item"><button @click="goToStreak" class="btn btn-secondary">Go to Streak Tracker</button></li>
         <li class="nav-item"><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
       </ul>
     </nav>
+    <hr>
+    <form @submit.prevent="calculateBMI" class="bmi-input-section">
+      <div class="form-group">
+        <label for="height">Height (cm):</label>
+        <input v-model="height" type="number" id="height" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="weight">Weight (kg):</label>
+        <input v-model="weight" type="number" id="weight" class="form-control" required />
+      </div>
+      <button type="submit" class="btn btn-primary">Calculate BMI</button>
+    </form>
+
+    <div v-if="bmi" class="bmi-result" :class="bmiColor">
+      <p>Your BMI: {{ bmi }}</p>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      height: null,
+      weight: null,
+      bmi: null,
+    };
+  },
+  computed: {
+  },
   methods: {
+    calculateBMI() {
+      if (!this.height || !this.weight) {
+        alert('Please enter both height and weight');
+        return;
+      }
+
+      const heightInMeters = this.height / 100;
+      this.bmi = (this.weight / (heightInMeters * heightInMeters)).toFixed(1);
+    },
     goToImageGallery() {
       this.$router.push({ path: '/image-gallery' });
     },
@@ -49,4 +85,21 @@ export default {
 </script>
 
 <style scoped>
+.bmi-input-section {
+  margin-top: 20px;
+}
+
+.bmi-result {
+  margin-top: 20px;
+  padding: 10px;
+  color: white;
+  border-radius: 8px;
+  text-align: center;
+}
+
+@media only screen and (max-width: 600px) {
+  #app {
+    width: 90%;
+  }
+}
 </style>
