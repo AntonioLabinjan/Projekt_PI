@@ -42,6 +42,18 @@ export default {
     };
   },
   computed: {
+    bmiColor() {
+      if (!this.bmi) return ''; // Default background color if BMI is not calculated yet
+      if (this.bmi < 18.5) {
+        return 'bg-primary'; // Underweight
+      } else if (this.bmi >= 18.5 && this.bmi <= 24.9) {
+        return 'bg-success'; // Normal
+      } else if (this.bmi >= 25 && this.bmi <= 29.9) {
+        return 'bg-warning'; // Overweight (less than 15% above normal)
+      } else {
+        return 'bg-danger'; // Obese (more than 15% above normal)
+      }
+    }
   },
   methods: {
     calculateBMI() {
