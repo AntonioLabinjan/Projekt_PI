@@ -15,6 +15,7 @@ import AboutPage from './components/AboutPage.vue';
 import DefaultExercises from './components/DefaultExercises.vue';
 import DefaultMeals from './components/DefaultMeals.vue';
 import StreakCheck from './components/StreakCheck.vue';
+import QrScanner from './components/QrScanner.vue';
 
 const routes = [
   { path: '/', component: HomePage },
@@ -30,6 +31,7 @@ const routes = [
   {path: '/streak', component: () => import('./components/StreakCheck.vue') },
   {path: '/default-exercises', component: () => import('./components/DefaultExercises.vue') },
   {path: '/default-meals', component: () => import('./components/DefaultMeals.vue') },
+  {path: '/qr-scanner', component: () => import('./components/QrScanner.vue')},
 ];
 
 
@@ -52,5 +54,6 @@ app.component('AboutPage', AboutPage);
 app.component('DefaultExercises', DefaultExercises);
 app.component('DefaultMeals', DefaultMeals);
 app.component('StreakCheck', StreakCheck);
+app.component('QrScanner', QrScanner);
 app.use(router);
 app.mount('#app');
