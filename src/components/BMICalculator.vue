@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="display-4">BMI Calculator</h1>
-	
+    
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <ul class="navbar-nav">
         <li class="nav-item"><button @click="goToVueTrainer" class="btn btn-secondary">Go to Training app</button></li>
@@ -9,7 +9,7 @@
         <li class="nav-item"><button @click="goToSleepTracker" class="btn btn-secondary">Go to Sleep Tracker</button></li>
         <li class="nav-item"><button @click="goToMealTracker" class="btn btn-secondary">Go to Meal Tracker</button></li>
         <li class="nav-item"><button @click="goToWaterIntake" class="btn btn-secondary">Go to Water Intake Tracker</button></li>
-		<li class="nav-item"><button @click="goToStreak" class="btn btn-secondary">Go to Streak Tracker</button></li>
+        <li class="nav-item"><button @click="goToStreak" class="btn btn-secondary">Go to Streak Tracker</button></li>
         <li class="nav-item"><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
       </ul>
     </nav>
@@ -43,15 +43,15 @@ export default {
   },
   computed: {
     bmiColor() {
-      if (!this.bmi) return ''; // Default background color if BMI is not calculated yet
+      if (!this.bmi) return ''; 
       if (this.bmi < 18.5) {
-        return 'bg-primary'; // Underweight
+        return 'bg-primary'; 
       } else if (this.bmi >= 18.5 && this.bmi <= 24.9) {
-        return 'bg-success'; // Normal
+        return 'bg-success'; 
       } else if (this.bmi >= 25 && this.bmi <= 29.9) {
-        return 'bg-warning'; // Overweight (less than 15% above normal)
+        return 'bg-warning'; 
       } else {
-        return 'bg-danger'; // Obese (more than 15% above normal)
+        return 'bg-danger'; 
       }
     }
   },
@@ -89,7 +89,7 @@ export default {
     goBackHome() {
       this.$router.push({ path: '/' });
     },
-	goToStreak() {
+    goToStreak() {
       this.$router.push({ path: '/streak' });
     },
   }
@@ -107,6 +107,23 @@ export default {
   color: white;
   border-radius: 8px;
   text-align: center;
+}
+
+
+.bg-primary {
+  background-color: #007bff; /* Blue */
+}
+
+.bg-success {
+  background-color: #28a745; /* Green */
+}
+
+.bg-warning {
+  background-color: #ffc107; /* Yellow */
+}
+
+.bg-danger {
+  background-color: #dc3545; /* Red */
 }
 
 @media only screen and (max-width: 600px) {
