@@ -24,6 +24,7 @@
     <div class="about-button">
       <button @click="goToAbout">About</button>
     </div>
+    <div><button @click="goToScanner">Go to scanner</button></div>
     <div class="motivational-quote">
       <p>{{ motivationalQuote }}</p>
     </div>
@@ -37,7 +38,10 @@ export default {
       motivationalQuotes: [
         "Success is not final, failure is not fatal: It is the courage to continue that counts. - Winston Churchill",
         "The only way to do great work is to love what you do. - Steve Jobs",
-        // Ovde dodaj ostale citate
+        "Don't watch the clock; do what it does. Keep going. - Sam Levenson",
+        "Believe you can and you're halfway there. - Theodore Roosevelt",
+        "It does not matter how slowly you go as long as you do not stop. - Confucius",
+        "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt"
       ],
       motivationalQuote: ""
     };
@@ -47,7 +51,6 @@ export default {
       const randomIndex = Math.floor(Math.random() * this.motivationalQuotes.length);
       this.motivationalQuote = this.motivationalQuotes[randomIndex];
     },
-    // Metode za rutiranje na druge stranice
     goToImageGallery() {
       this.$router.push({ path: '/image-gallery' });
     },
@@ -78,6 +81,9 @@ export default {
     goToStreak() {
       this.$router.push({ path: '/streak' });
     },
+    goToScanner() {
+      this.$router.push({ path: '/qr-scanner'});
+    }
   },
   mounted() {
     this.selectRandomQuote();
@@ -86,4 +92,31 @@ export default {
 </script>
 
 <style scoped>
+
+.login-signup-buttons button,
+.navbar button,
+.about-button button {
+  background-color: red; /* Transparentni bijeli */
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.login-signup-buttons button:hover,
+.navbar button:hover,
+.about-button button:hover {
+  background-color: rgba(255, 255, 255, 0.5); /* Polu-prozirni bijeli */
+}
+
+.header h1 {
+  margin-top: 0;
+}
+
+.motivational-quote p {
+  font-style: italic;
+  margin-top: 20px;
+}
 </style>
