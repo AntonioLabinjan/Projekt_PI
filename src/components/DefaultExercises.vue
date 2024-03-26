@@ -2,7 +2,6 @@
   <div id="app">
     <h1>Galerija Vježbi</h1>
     <hr>
-    <!-- Prikaz hardkodiranih vježbi -->
     <div v-for="(exercise, index) in exercises" :key="index" class="exercise">
       <h2>{{ exercise.name }}</h2>
       <p><strong>Broj ponavljanja:</strong> {{ exercise.reps }}</p>
@@ -16,7 +15,6 @@
       <hr>
     </div>
 
-    <!-- Forma za dodavanje/novo uređivanje vježbe -->
     <h2 v-if="editMode">Uredi vježbu</h2>
     <h2 v-else>Dodaj novu vježbu</h2>
     <form @submit.prevent="submitExercise">
@@ -39,7 +37,6 @@
       <button type="button" @click="cancelEdit" v-if="editMode">Odustani</button>
     </form>
     
-    <!-- Button to go back to the about page -->
     <button @click="goBack">Go Back</button>
   </div>
 </template>
@@ -75,33 +72,26 @@ export default {
   },
   methods: {
     addExercise() {
-      // Dodavanje nove vježbe u listu
       this.exercises.push({ ...this.newExercise });
-      // Resetiranje forme za unos nove vježbe
       this.resetForm();
     },
     editExercise(index) {
-      // Postavljanje podataka o vježbi u formu za uređivanje
       this.newExercise = { ...this.exercises[index] };
       this.editIndex = index;
       this.editMode = true;
     },
     deleteExercise(index) {
-      // Brisanje vježbe iz liste
       this.exercises.splice(index, 1);
     },
     submitExercise() {
       if (this.editMode) {
-        // Ažuriranje postojeće vježbe
         this.exercises.splice(this.editIndex, 1, { ...this.newExercise });
         this.resetForm();
       } else {
-        // Dodavanje nove vježbe
         this.addExercise();
       }
     },
     cancelEdit() {
-      // Poništavanje uređivanja i resetiranje forme
       this.resetForm();
     },
     resetForm() {
@@ -125,7 +115,6 @@ export default {
 </script>
 
 <style scoped>
-/* Globalni stilovi */
 body {
   font-family: Arial, sans-serif;
   background-color: #f2f2f2;
@@ -144,7 +133,6 @@ h1 {
   color: #333;
 }
 
-/* Stilizacija pojedinačnih vježbi */
 .exercise {
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -158,8 +146,7 @@ h1 {
   height: auto;
   margin-top: 10px;
 }
-
-/* Stilizacija gumba */
+  
 button {
   background-color: #007bff;
   color: #fff;
