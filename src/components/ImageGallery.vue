@@ -13,7 +13,6 @@
       </ul>
     </nav>
     <hr>
-    <!-- Content -->
     <div class="container">
       <input type="file" @change="handleFileChange" accept="image/*" />
       <div class="row">
