@@ -158,21 +158,17 @@ export default {
       };
     },
     updatePieChart() {
-      // Postavite veličinu canvasa
       const canvas = this.$refs.pieChartCanvas;
       canvas.width = 300;
       canvas.height = 300;
       this.pieChartContext = canvas.getContext('2d');
       
-      // Postavite središte grafikona
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
       const radius = Math.min(centerX, centerY);
 
-      // Izračunaj ukupne kalorije
       const totalCalories = this.meals.reduce((total, meal) => total + meal.calories, 0);
 
-      // Izračunajte udjele kalorija za svaki obrok
       this.pieChartData = this.meals.map(meal => {
         return {
           name: meal.name,
@@ -180,7 +176,6 @@ export default {
         };
       });
 
-      // Nacrtajte pie chart
       let startAngle = 0;
       this.pieChartData.forEach((data, index) => {
         const sliceAngle = (data.percentage / 100) * Math.PI * 2;
@@ -192,7 +187,6 @@ export default {
         this.pieChartContext.closePath();
         this.pieChartContext.fill();
 
-        // Postavite kutove za sljedeći segment
         startAngle += sliceAngle;
       });
     },
