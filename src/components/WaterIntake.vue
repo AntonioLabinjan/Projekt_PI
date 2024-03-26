@@ -158,43 +158,43 @@ export default {
 .intake-item strong {
   display: block;
   margin-bottom: 5px;
-  color: #333; /* Tamno siva boja teksta */
+  color: #333; 
 }
 
 .intake-input-section input,
 .intake-input-section button {
   margin-bottom: 10px;
   padding: 8px;
-  border: 1px solid #ccc; /* Siva granica */
-  border-radius: 4px; /* Zaobljeni rubovi */
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
 }
 
 .intake-input-section button {
-  color: #fff; /* Bijela boja teksta */
-  background-color: #007bff; /* Plava pozadina */
-  border: none; /* Bez granice */
-  border-radius: 4px; /* Zaobljeni rubovi */
-  cursor: pointer; /* Pokazivač miša */
-  transition: background-color 0.3s ease; /* Glatki prijelaz boje */
+  color: #fff; 
+  background-color: #007bff; 
+  border: none;
+  border-radius: 4px; 
+  cursor: pointer; 
+  transition: background-color 0.3s ease; 
 }
 
 .intake-input-section button:hover {
-  background-color: #0056b3; /* Tamnoplava pozadina */
+  background-color: #0056b3; 
 }
 
 .intake-display-section .intake-item {
   margin-bottom: 15px;
   padding: 10px;
-  border: 1px solid #ddd; /* Siva granica */
-  border-radius: 4px; /* Zaobljeni rubovi */
-  background-color: #fff; /* Bijela pozadina */
+  border: 1px solid #ddd; 
+  border-radius: 4px;
+  background-color: #fff; 
 }
 
 .statistics strong {
   display: inline-block;
   width: 200px;
   margin-bottom: 5px;
-  color: #555; /* Siva boja teksta */
+  color: #555; 
 }
 
 .navbar {
@@ -218,25 +218,24 @@ export default {
 
 .edit-btn {
   margin-right: 10px;
-  color: #fff; /* Bijela boja teksta */
-  background-color: #28a745; /* Zelena pozadina */
+  color: #fff; 
+  background-color: #28a745; 
 }
 
 .delete-btn {
-  color: #fff; /* Bijela boja teksta */
-  background-color: #dc3545; /* Crvena pozadina */
+  color: #fff; 
+  background-color: #dc3545;
 }
 
-/* Stilovi za bar chart */
 .intake-bar-chart {
-  height: 40px; /* Visina grafikona */
-  margin-top: 20px; /* Margina za razdvajanje od ostalih elemenata */
-  border: 1px solid #ccc; /* Dodajte granicu grafikonu */
-  position: relative; /* Postavite relativnu poziciju */
+  height: 40px;
+  margin-top: 20px; 
+  border: 1px solid #ccc; 
+  position: relative; 
 }
 
 .intake-bar-chart .bar {
   height: 100%;
-  background-color: #007bff; /* Boja trake grafikona */
+  background-color: #007bff; 
 }
 </style>
