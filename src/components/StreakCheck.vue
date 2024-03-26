@@ -12,13 +12,14 @@
       </ul>
     </nav>
     <hr>
+
     <h1>Training Streak Tracker</h1>
     <form @submit.prevent="addCustomDate">
       <label for="customDate">Add your date:</label>
       <input type="date" id="customDate" v-model="customDate">
       <button type="submit">Add</button>
     </form>
-    
+
     <vue-calendar @dateSelected="addDate"></vue-calendar>
 
     <div class="selected-dates">
@@ -31,7 +32,11 @@
     <div class="streak">
       <p>Current streak: {{ currentStreak }}</p>
       <p>Record streak: {{ recordStreak }}</p>
-      <div v-if="currentStreak >= 7" class="reward">
+      <div v-if="currentStreak >= 3 && currentStreak%3==0" class="reward">
+        <p>Congratulations! You've earned 3-day streak award!</p>
+        <img src="@/assets/silver_medal.jpg" alt="Streak Master Badge">
+      </div>
+      <div v-if="currentStreak >=7 && currentStreak%7==0" class="reward">
         <p>Congratulations! You've earned 7-day streak award!</p>
         <img src="@/assets/medal.jpg" alt="Streak Master Badge">
       </div>
@@ -47,7 +52,7 @@
 export default {
   data() {
     return {
-      selectedDates: [], // Odabrani datum
+      selectedDates: [], // Odabrani datumi
       currentStreak: 0, // Trenutni streak
       recordStreak: 0, // Rekordni streak
       customDate: '', // Datum koji korisnik unosi ručno
@@ -81,6 +86,7 @@ export default {
     goBackHome() {
       this.$router.push({ path: '/' });
     },
+    // datum koji je korisnik unio ručno
     addCustomDate() {
       if (this.customDate) {
         this.selectedDates.push(this.customDate);
@@ -88,6 +94,7 @@ export default {
         this.customDate = ''; 
       }
     },
+    // datum iz kalendara
     addDate(date) {
       this.selectedDates.push(date);
       this.updateStreak();
@@ -116,11 +123,11 @@ updateStreak() {
     if ((currentTime - prevTime) / oneDay === 1) {
       streak++;
     } else {
-      streak = 1; 
+      streak = 1; // resetiramo streak ako se prekine
     }
   }
 
-  if (streak % 7 === 0 && streak !== 0) { 
+  if ((streak % 3 === 0 || streak % 7 === 0) && streak !== 0) { // tu su uvjeti za dobit medalju
     this.medalCounter++;
   }
 
@@ -132,6 +139,7 @@ updateStreak() {
 },
 
 
+// Ažuriranje nagrade 
 updateReward() {
 },
 
