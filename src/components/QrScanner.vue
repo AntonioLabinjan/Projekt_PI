@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <h1>QR-scanner</h1>
+  <div class="container" :class="{ 'dark-mode': darkMode }">
+    <h1>QR-code scanner</h1>
     <nav>
       <ul class="navbar">
         <li><button @click="goToImageGallery">Image Gallery</button></li>
@@ -13,6 +13,7 @@
         <li><button @click="goBackHome">Go back home</button></li>
       </ul>
     </nav>
+    <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     <div v-if="!cameraAvailable">
       <p>Kamera nije dostupna na ovom uređaju.</p>
     </div>
@@ -34,11 +35,20 @@ import jsQR from 'jsqr';
 export default {
   data() {
     return {
+      darkMode: false,
       scannedData: null,
       cameraAvailable: true
     };
   },
   methods: {
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+      if (this.darkMode) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+    },
     async startCamera() {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -152,4 +162,10 @@ video {
 .navbar button:hover {
   background-color: #0056b3;
 }
+
+.container.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
+
 </style>
