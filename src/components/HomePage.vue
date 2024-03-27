@@ -5,7 +5,7 @@
       <button @click="goToSignUp">Sign Up</button>
     </div>
     <div class="header">
-      <h1>Welcome to Vue Trainer</h1>
+      <h1>Welcome to TrainingAPP</h1>
       <hr>
       <h4>Your personal training application</h4>
       <p>Add your exercises, meals, sleep, water intake, calculate your BMI, and track your progress!</p>
@@ -28,11 +28,18 @@
     <div class="motivational-quote">
       <p>{{ motivationalQuote }}</p>
     </div>
+
+    <notification-maker></notification-maker>
   </div>
 </template>
 
 <script>
+import NotificationMaker from '@/components/notificationMaker.vue';
+
 export default {
+  components: {
+    NotificationMaker
+  },
   data() {
     return {
       motivationalQuotes: [
@@ -96,7 +103,7 @@ export default {
 .login-signup-buttons button,
 .navbar button,
 .about-button button {
-  background-color: red; /* Transparentni bijeli */
+  background-color: red; 
   color: black;
   border: none;
   padding: 10px 20px;
@@ -108,7 +115,7 @@ export default {
 .login-signup-buttons button:hover,
 .navbar button:hover,
 .about-button button:hover {
-  background-color: rgba(255, 255, 255, 0.5); /* Polu-prozirni bijeli */
+  background-color: rgba(255, 255, 255, 0.5); 
 }
 
 .header h1 {
