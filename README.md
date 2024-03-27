@@ -1,5 +1,6 @@
 # Riješena je navigacija
-
+# Dodan dark mode
+# idući zadatak: skužit kako se implementira store.js u ovo čudo :)
 #### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
 #### Trainingapp (nije definitivni naziv)
 #### Koncept aplikacije (ideja...moguće da će se modificirat u hodu)
