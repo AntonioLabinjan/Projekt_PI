@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container" :class="{ 'dark-mode': darkMode }">
     <h1>Water Intake Tracker</h1>
     <nav class="navbar">
       <ul class="navbar-nav">
@@ -51,7 +51,17 @@
       </li>
     </ul>
 
-    
+    <div class="statistics">
+      <strong>Total Intake:</strong> {{ totalIntake }} ml<br>
+      <strong>Total Intakes:</strong> {{ totalIntakes }}<br>
+      <strong>Average Intake per Time:</strong> {{ averageIntakePerTime }} ml
+    </div>
+
+    <!-- Bar chart koji mijenja boju ovisno o unosu tekućine -->
+    <div class="intake-bar-chart" :style="{ backgroundColor: intakeColor }">
+      <div class="bar" :style="{ width: barWidth }"></div>
+    </div>
+    <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
   </div>
 </template>
 
@@ -59,6 +69,7 @@
 export default {
   data() {
     return {
+      darkMode: false,
       newIntake: {
         type: "",
         amount: 0,
@@ -73,8 +84,46 @@ export default {
       }
     };
   },
-
+  computed: {
+    totalIntake() {
+      return this.waterIntake.reduce((total, intake) => total + intake.amount, 0);
+    },
+    totalIntakes() {
+      return this.waterIntake.length;
+    },
+    averageIntakePerTime() {
+      if (this.totalIntakes === 0) {
+        return 0;
+      }
+      return (this.totalIntake / this.totalIntakes).toFixed(2);
+    },
+    intakeColor() {
+      const totalIntake = this.totalIntake;
+      if (totalIntake < 2000) {
+        return '#dc3545'; // Crvena boja za unos manji od 2000 ml
+      } else if (totalIntake >= 2000 && totalIntake < 2500) {
+        return '#ff6d38'; // Narančasta boja za unos između 2000 i 2500 ml
+      } else if (totalIntake >= 2500 && totalIntake < 3000) {
+        return '#ffc107'; // Žuta boja za unos između 2500 i 3000 ml
+      } else {
+        return '#28a745'; // Zelena boja za unos veći od 3000 ml
+      }
+    },
+    barWidth() {
+      const dailyIntake = Math.floor(this.totalIntake / 1000); // Pretvara unos u litre
+      const maxWidth = 100; // Maksimalna širina grafikona u pikselima
+      return Math.min(dailyIntake * 20, maxWidth) + '%'; // 20 piksela po litri, ograničava na maksimalnu širinu
+    }
+  },
   methods: {
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+      if (this.darkMode) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+    },
     addIntake() {
       this.waterIntake.push({ ...this.newIntake });
       this.resetForm();
@@ -142,7 +191,6 @@ export default {
 </script>
 
 <style scoped>
-/* Stilovi za water intake tracker komponentu */
 
 .intake-input-section,
 .intake-display-section,
@@ -186,7 +234,7 @@ export default {
   margin-bottom: 15px;
   padding: 10px;
   border: 1px solid #ddd; 
-  border-radius: 4px;
+  border-radius: 4px; 
   background-color: #fff; 
 }
 
@@ -224,18 +272,26 @@ export default {
 
 .delete-btn {
   color: #fff; 
-  background-color: #dc3545;
+  background-color: #dc3545; 
 }
 
 .intake-bar-chart {
-  height: 40px;
+  height: 40px; 
   margin-top: 20px; 
   border: 1px solid #ccc; 
-  position: relative; 
+  position: relative;
 }
 
 .intake-bar-chart .bar {
   height: 100%;
   background-color: #007bff; 
+
+
 }
+
+.container.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
+
 </style>
