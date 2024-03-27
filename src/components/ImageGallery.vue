@@ -13,7 +13,8 @@
       </ul>
     </nav>
     <hr>
-    <div class="container">
+    <!-- Content -->
+    <div class="container" :class="{ 'dark-mode': darkMode }">
       <input type="file" @change="handleFileChange" accept="image/*" />
       <div class="row">
         <div v-if="filteredImages.length > 0">
@@ -45,6 +46,7 @@
         <input v-model="weightFilter" type="number" id="weightFilter" />
         <button @click="filterByWeight" class="btn btn-primary">Apply Filter</button>
       </div>
+      <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     </div>
   </div>
 </template>
@@ -53,6 +55,7 @@
 export default {
   data() {
     return {
+      darkMode: false,
       images: [],
       filteredImages: [],
       newImage: {
@@ -64,6 +67,14 @@ export default {
     };
   },
   methods: {
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+      if (this.darkMode) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+    },
     handleFileChange(event) {
       const file = event.target.files[0];
       if (file) {
@@ -132,5 +143,9 @@ export default {
 };
 </script>
 <style>
+.container.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
 
 </style>
