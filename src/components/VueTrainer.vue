@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" :class="{ 'dark-mode': darkMode }">
     <h1>Exercise Tracker</h1>
     <!-- Navbar -->
     <nav class="navbar">
@@ -78,6 +78,7 @@
       <h3>Exercise Duration Pie Chart</h3>
       <canvas ref="pieChartCanvas"></canvas>
     </div>
+    <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
   </div>
 </template>
 
@@ -85,6 +86,7 @@
 export default {
   data() {
     return {
+      darkMode: false,
       newExercise: {
         name: "",
         duration: 0,
@@ -129,6 +131,14 @@ export default {
     },
   },
   methods: {
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+      if (this.darkMode) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+    },
     goToMealTracker() {
       this.$router.push({ path:'/meal-tracker' });
     },
@@ -243,6 +253,10 @@ export default {
 
 <style scoped>
 /* CSS styles for exercise tracker component */
+.container.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
 .container {
   max-width: 800px;
   margin: 0 auto;
