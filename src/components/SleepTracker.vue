@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container" :class="{ 'dark-mode': darkMode }">
     <h1>Sleep Tracker</h1>
     <nav class="navbar">
       <ul class="navbar-nav">
@@ -45,6 +45,8 @@
       </li>
     </ul>
 
+    <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
+
     <div class="statistics">
       <strong>Total Entries:</strong> {{ totalEntries }}<br>
       <strong>Average Quality:</strong> {{ averageQuality }}
@@ -56,6 +58,7 @@
 export default {
   data() {
     return {
+      darkMode: false,
       newSleepEntry: {
         date: "",
         startTime: "",
@@ -80,6 +83,14 @@ export default {
     },
   },
   methods: {
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+      if (this.darkMode) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+    },
     addOrEditSleepEntry() {
       if (this.editEntry) {
         this.saveEditedSleepEntry();
@@ -162,7 +173,11 @@ export default {
 </script>
 
 <style scoped>
-/* CSS styles for sleep tracker component */
+.container.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
+
 #app {
   max-width: 800px;
   margin: 0 auto;
@@ -210,7 +225,6 @@ input {
   border-radius: 4px; 
 }
 
-
 button {
   padding: 10px 20px;
   margin-top: 10px;
@@ -226,7 +240,6 @@ button {
 button.cancel {
   background-color: #dc3545; 
 }
-
 
 ul.exercise-display-section {
   list-style: none; 
@@ -253,10 +266,9 @@ ul.exercise-display-section {
   background-color: #dc3545; 
 }
 
-/* Responzivni stilovi za mobilne uređaje */
 @media only screen and (max-width: 600px) {
   #app {
-    width: 90%; 
+    width: 90%;
   }
 }
 
