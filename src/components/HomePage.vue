@@ -1,8 +1,9 @@
 <template>
-  <div class="container">
+  <div class="container" :class="{ 'dark-mode': darkMode }">
     <div class="login-signup-buttons">
       <button @click="goToLogIn">Log In</button>
       <button @click="goToSignUp">Sign Up</button>
+      <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     </div>
     <div class="header">
       <h1>Welcome to TrainingAPP</h1>
@@ -29,19 +30,16 @@
       <p>{{ motivationalQuote }}</p>
     </div>
 
+    <!-- Ugradnja notificationMaker.vue komponente -->
     <notification-maker></notification-maker>
   </div>
 </template>
 
 <script>
-import NotificationMaker from '@/components/notificationMaker.vue';
-
 export default {
-  components: {
-    NotificationMaker
-  },
   data() {
     return {
+      darkMode: false,
       motivationalQuotes: [
         "Success is not final, failure is not fatal: It is the courage to continue that counts. - Winston Churchill",
         "The only way to do great work is to love what you do. - Steve Jobs",
@@ -54,9 +52,13 @@ export default {
     };
   },
   methods: {
-    selectRandomQuote() {
-      const randomIndex = Math.floor(Math.random() * this.motivationalQuotes.length);
-      this.motivationalQuote = this.motivationalQuotes[randomIndex];
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+      if (this.darkMode) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
     },
     goToImageGallery() {
       this.$router.push({ path: '/image-gallery' });
@@ -90,6 +92,10 @@ export default {
     },
     goToScanner() {
       this.$router.push({ path: '/qr-scanner'});
+    },
+    selectRandomQuote() {
+      const randomIndex = Math.floor(Math.random() * this.motivationalQuotes.length);
+      this.motivationalQuote = this.motivationalQuotes[randomIndex];
     }
   },
   mounted() {
@@ -99,11 +105,15 @@ export default {
 </script>
 
 <style scoped>
+.container.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
 
 .login-signup-buttons button,
 .navbar button,
 .about-button button {
-  background-color: red; 
+  background-color: red;
   color: black;
   border: none;
   padding: 10px 20px;
@@ -115,7 +125,7 @@ export default {
 .login-signup-buttons button:hover,
 .navbar button:hover,
 .about-button button:hover {
-  background-color: rgba(255, 255, 255, 0.5); 
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .header h1 {
