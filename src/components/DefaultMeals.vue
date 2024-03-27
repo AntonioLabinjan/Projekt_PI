@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <h1>Galerija Obroka</h1>
+  <div class="container" :class="{'dark-mode': darkMode}">
+    <h1 class="display-4">Galerija Obroka</h1>
     <hr>
     <!-- Prikaz hardkodiranih obroka -->
     <div v-for="(meal, index) in meals" :key="index" class="meal">
@@ -35,6 +35,7 @@
     
     <!-- Button to go back to the about page -->
     <button @click="goBack">Go Back</button>
+    <button @click="toggleDarkMode" class="btn btn-dark">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
   </div>
 </template>
 
@@ -63,7 +64,8 @@ export default {
         image: ''
       },
       editIndex: null,
-      editMode: false
+      editMode: false,
+      darkMode: false,
     };
   },
   methods: {
@@ -111,8 +113,17 @@ export default {
     goBack() {
       this.$router.push({ path: '/about' });
     },
-  }
-};
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+      if(this.darkMode){
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+      }
+    }
+  };
+
 </script>
 
 <style scoped>
@@ -201,4 +212,9 @@ form button {
   cursor: pointer;
   border-radius: 3px;
 }
+.container.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
+
 </style>
