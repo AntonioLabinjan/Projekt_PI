@@ -1,9 +1,10 @@
 <template>
-  <div class="about">
+  <div class="about" :class="{ 'dark-mode': darkMode }">
     <h2>About Vue Trainer</h2>
     <hr>
     <p>Welcome to <b>Vue Trainer</b>, your ultimate fitness companion!</p>
     <p>With Vue Trainer, you can easily track your progress in various aspects of your health and fitness journey:</p>
+    <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
 
     <div class="feature-list">
       <div class="feature">
@@ -70,6 +71,11 @@
 <script>
 export default {
   name: 'AboutPage',
+  data() {
+    return {
+      darkMode: false,
+    };
+  },
   methods: {
     goBackHome() {
       this.$router.push({ path: '/' });
@@ -80,11 +86,19 @@ export default {
     goToMealSuggestions() {
       this.$router.push({ path: '/default-meals' });
     },
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+    },
   }
 };
 </script>
 
 <style scoped>
+.about.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
+
 .about {
   margin: 20px;
   font-family: Arial, sans-serif;
