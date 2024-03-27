@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container" :class="{ 'dark-mode': darkMode }">
     <h1>Meal Tracker</h1>
     <div>
       <nav class="navbar">
@@ -53,6 +53,8 @@
       </li>
     </ul>
 
+    <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
+    
     <div class="statistics">
       <strong>Total Calories:</strong> {{ totalCalories }} kcal<br>
       <strong>Total Meals:</strong> {{ totalMeals }}<br>
@@ -74,6 +76,7 @@
 export default {
   data() {
     return {
+      darkMode: false,
       newMeal: {
         name: "",
         ingredients: "",
@@ -113,6 +116,14 @@ export default {
     },
   },
   methods: {
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+      if (this.darkMode) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+    },
     addMeal() {
       this.meals.push({ ...this.newMeal });
       this.resetForm();
@@ -216,7 +227,10 @@ export default {
 </script>
 
 <style scoped>
-/* CSS styles for meal tracker component */
+.container.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
 
 .pie-chart-section {
   text-align: center;
