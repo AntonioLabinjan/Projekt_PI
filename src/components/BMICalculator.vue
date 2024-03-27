@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ 'dark-mode': darkMode }">
     <h1 class="display-4">BMI Calculator</h1>
     
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -29,6 +29,7 @@
     <div v-if="bmi" class="bmi-result" :class="bmiColor">
       <p>Your BMI: {{ bmi }}</p>
     </div>
+    <button @click="toggleDarkMode" class="btn btn-dark">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
   </div>
 </template>
 
@@ -39,19 +40,20 @@ export default {
       height: null,
       weight: null,
       bmi: null,
+      darkMode: false,
     };
   },
   computed: {
     bmiColor() {
-      if (!this.bmi) return ''; 
+      if (!this.bmi) return ''; // Default background color if BMI is not calculated yet
       if (this.bmi < 18.5) {
-        return 'bg-primary'; 
+        return 'bg-primary'; // Underweight
       } else if (this.bmi >= 18.5 && this.bmi <= 24.9) {
-        return 'bg-success'; 
+        return 'bg-success'; // Normal
       } else if (this.bmi >= 25 && this.bmi <= 29.9) {
-        return 'bg-warning'; 
+        return 'bg-warning'; // Overweight (less than 15% above normal)
       } else {
-        return 'bg-danger'; 
+        return 'bg-danger'; // Obese (more than 15% above normal)
       }
     }
   },
@@ -92,6 +94,14 @@ export default {
     goToStreak() {
       this.$router.push({ path: '/streak' });
     },
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+      if (this.darkMode) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+    },
   }
 };
 </script>
@@ -109,7 +119,6 @@ export default {
   text-align: center;
 }
 
-
 .bg-primary {
   background-color: #007bff; /* Blue */
 }
@@ -124,6 +133,11 @@ export default {
 
 .bg-danger {
   background-color: #dc3545; /* Red */
+}
+
+.dark-mode {
+  background-color: #333;
+  color: #fff;
 }
 
 @media only screen and (max-width: 600px) {
