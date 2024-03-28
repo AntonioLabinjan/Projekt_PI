@@ -22,6 +22,10 @@
         <label for="signupPassword">Password</label>
         <input type="password" class="form-control" id="signupPassword" v-model="signupPassword" required>
       </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required>
+      </div>
       
       <div class="button-group">
         <button type="submit" class="btn btn-primary">Sign Up</button>
@@ -43,7 +47,8 @@ export default {
       lastName: '',
       dob: '',
       signupUsername: '',
-      signupPassword: ''
+      signupPassword: '',
+      confirmPassword: ''
     }
   },
   methods: {
@@ -56,6 +61,16 @@ export default {
       }
     },
     signUp() {
+      if (this.signupPassword !== this.confirmPassword) {
+        alert("Passwords don't match. Please enter matching passwords.");
+        return;
+      }
+      // Provjera uvjeta lozinke
+      const passwordRegex = /^(?=.*\d)(?=.*[A-Z]).{8,}$/;
+      if (!passwordRegex.test(this.signupPassword)) {
+        alert("Password must contain at least 8 characters, at least one digit, and at least one uppercase letter.");
+        return;
+      }
       // Implementacija logike za registraciju (ovo ćemo isto riješit naknadno)
       console.log('Signing up with first name:', this.firstName, 'last name:', this.lastName, 'date of birth:', this.dob, 'username:', this.signupUsername, 'and password:', this.signupPassword);
     },
@@ -68,7 +83,6 @@ export default {
   }
 }
 </script>
-
 <style scoped>
 .signup-container {
   max-width: 400px;
