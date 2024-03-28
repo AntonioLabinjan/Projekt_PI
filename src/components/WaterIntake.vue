@@ -67,6 +67,26 @@
 
 <script>
 export default {
+  computed: {
+    waterIntake() {
+      return this.$store.state.waterIntake;
+    },
+    totalIntake() {
+      return this.$store.getters.totalIntake;
+    },
+    totalIntakes() {
+      return this.$store.getters.totalIntakes;
+    },
+    averageIntakePerTime() {
+      return this.$store.getters.averageIntakePerTime;
+    },
+    intakeColor() {
+      return this.$store.getters.intakeColor;
+    },
+    barWidth() {
+      return this.$store.getters.barWidth;
+    }
+  },
   data() {
     return {
       darkMode: false,
@@ -75,7 +95,6 @@ export default {
         amount: 0,
         time: ""
       },
-      waterIntake: [],
       editIndex: null,
       editedIntake: {
         type: "",
@@ -83,37 +102,6 @@ export default {
         time: ""
       }
     };
-  },
-  computed: {
-    totalIntake() {
-      return this.waterIntake.reduce((total, intake) => total + intake.amount, 0);
-    },
-    totalIntakes() {
-      return this.waterIntake.length;
-    },
-    averageIntakePerTime() {
-      if (this.totalIntakes === 0) {
-        return 0;
-      }
-      return (this.totalIntake / this.totalIntakes).toFixed(2);
-    },
-    intakeColor() {
-      const totalIntake = this.totalIntake;
-      if (totalIntake < 2000) {
-        return '#dc3545'; // Crvena boja za unos manji od 2000 ml
-      } else if (totalIntake >= 2000 && totalIntake < 2500) {
-        return '#ff6d38'; // Narančasta boja za unos između 2000 i 2500 ml
-      } else if (totalIntake >= 2500 && totalIntake < 3000) {
-        return '#ffc107'; // Žuta boja za unos između 2500 i 3000 ml
-      } else {
-        return '#28a745'; // Zelena boja za unos veći od 3000 ml
-      }
-    },
-    barWidth() {
-      const dailyIntake = Math.floor(this.totalIntake / 1000); // Pretvara unos u litre
-      const maxWidth = 100; // Maksimalna širina grafikona u pikselima
-      return Math.min(dailyIntake * 20, maxWidth) + '%'; // 20 piksela po litri, ograničava na maksimalnu širinu
-    }
   },
   methods: {
     toggleDarkMode() {
@@ -125,7 +113,7 @@ export default {
       }
     },
     addIntake() {
-      this.waterIntake.push({ ...this.newIntake });
+      this.$store.dispatch('addIntake', { ...this.newIntake });
       this.resetForm();
     },
     openEditDialog(index) {
@@ -133,7 +121,7 @@ export default {
       this.editedIntake = { ...this.waterIntake[index] };
     },
     saveEdit() {
-      this.waterIntake[this.editIndex] = { ...this.editedIntake };
+      this.$store.dispatch('editIntake', { index: this.editIndex, intake: { ...this.editedIntake } });
       this.editIndex = null;
       this.editedIntake = {
         type: "",
@@ -148,7 +136,7 @@ export default {
       }
     },
     deleteIntake(index) {
-      this.waterIntake.splice(index, 1);
+      this.$store.dispatch('removeIntake', index);
     },
     cancelEdit() {
       this.editIndex = null;
@@ -184,14 +172,13 @@ export default {
       this.$router.push({ path: '/BMI-calculator'});
     },
     goToStreak() {
-      this.$router.push({path: '/streak'});
-    },
+      this.$router.push({ path: '/streak'});
+    }
   }
 };
 </script>
 
 <style scoped>
-
 .intake-input-section,
 .intake-display-section,
 .statistics {
@@ -285,13 +272,14 @@ export default {
 .intake-bar-chart .bar {
   height: 100%;
   background-color: #007bff; 
-
-
 }
 
 .container.dark-mode {
   background-color: #000;
   color: #fff;
 }
-
+.container.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
 </style>
