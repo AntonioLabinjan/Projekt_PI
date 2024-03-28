@@ -55,6 +55,7 @@
 </template>
 
 <script>
+// Importamo Vuex store
 export default {
   data() {
     return {
@@ -65,12 +66,14 @@ export default {
         wakeTime: "",
         quality: 0,
       },
+      // Pristupamo polju sleepEntries iz stanja (state) u Vuex store-u
       sleepEntries: this.$store.state.sleepEntries,
       editIndex: null,
       editEntry: false,
     };
   },
   computed: {
+    // Pristupamo getterima iz Vuex store-a
     totalEntries() {
       return this.$store.getters.totalSleepEntries;
     },
@@ -95,6 +98,7 @@ export default {
       }
     },
     addSleepEntry() {
+      // Pozivamo akciju iz Vuex store-a za dodavanje unosa sna
       this.$store.dispatch('addSleepEntry', { ...this.newSleepEntry });
       this.resetForm();
     },
@@ -104,12 +108,14 @@ export default {
       this.editEntry = true;
     },
     saveEditedSleepEntry() {
+      // Pozivamo akciju iz Vuex store-a za uređivanje unosa sna
       this.$store.dispatch('editSleepEntry', { index: this.editIndex, entry: { ...this.newSleepEntry } });
       this.resetForm();
       this.editEntry = false;
       this.editIndex = null;
     },
     deleteSleepEntry(index) {
+      // Pozivamo akciju iz Vuex store-a za brisanje unosa sna
       this.$store.dispatch('removeSleepEntry', index);
     },
     resetForm() {
@@ -257,14 +263,14 @@ ul.exercise-display-section {
 }
 
 .delete-btn {
-  color: #fff; 
-  background-color: #dc3545; 
+  color: #fff; /* Bijela boja teksta */
+  background-color: #dc3545; /* Crvena pozadina */
 }
 
-
+/* Responsivni stilovi za mobilne uređaje */
 @media only screen and (max-width: 600px) {
   #app {
-    width: 90%; 
+    width: 90%; /* Smanji širinu aplikacije na mobilnim uređajima */
   }
 }
 
