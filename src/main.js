@@ -17,6 +17,7 @@ import DefaultMeals from './components/DefaultMeals.vue';
 import StreakCheck from './components/StreakCheck.vue';
 import QrScanner from './components/QrScanner.vue';
 import notificationMaker from './components/notificationMaker.vue';
+import store from './store/store.js';
 
 const routes = [
   { path: '/', component: HomePage },
@@ -59,4 +60,5 @@ app.component('StreakCheck', StreakCheck);
 app.component('QrScanner', QrScanner);
 app.component('notificationMaker', notificationMaker);
 app.use(router);
+app.use(store);
 app.mount('#app');
