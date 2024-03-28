@@ -34,6 +34,7 @@
         const timeUntilNotification = notificationDateTime - currentTime;
         this.countdown = Math.ceil(timeUntilNotification / 1000);
   
+        // Pokretanje intervalnog časovnika za odbrojavanje
         this.timer = setInterval(() => {
           this.countdown--;
           if (this.countdown <= 0) {
@@ -57,6 +58,7 @@
       },
       createNotification(title, message) {
         const notification = new Notification(title, { body: message });
+        // Dodali smo ovaj red kako bismo izbjegli ESLint error
         return notification;
       }
     }
@@ -64,6 +66,6 @@
   </script>
   
   <style scoped>
-  /* Ovo ćemo ben spensat, ionako ne znan pisat CSS :) */
+  /* Stiliziraj komponentu prema potrebi */
   </style>
   
