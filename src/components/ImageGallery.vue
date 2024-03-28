@@ -52,21 +52,33 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'; // Dodano
+
 export default {
   data() {
     return {
       darkMode: false,
-      images: [],
-      filteredImages: [],
       newImage: {
-        file: null,
         description: '',
         weight: 0,
       },
       weightFilter: null,
     };
   },
+  computed: {
+    ...mapState(['images']), // Dodano
+    filteredImages() {
+      if (this.weightFilter) {
+        const filteredWeight = parseInt(this.weightFilter);
+        if (!isNaN(filteredWeight)) {
+          return this.images.filter(image => image.weight === filteredWeight);
+        }
+      }
+      return this.images;
+    }
+  },
   methods: {
+    ...mapMutations(['addImage', 'deleteImage']), // Dodano
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
       if (this.darkMode) {
@@ -80,7 +92,6 @@ export default {
       if (file) {
         const reader = new FileReader();
         reader.onload = () => {
-          this.newImage.file = file;
           this.newImage.url = reader.result;
           this.newImage.date = new Date().toLocaleString();
         };
@@ -88,32 +99,19 @@ export default {
       }
     },
     addImage() {
-      if (this.newImage.file) {
-        this.images.push({ ...this.newImage });
+      if (this.newImage.url) {
+        this.$store.commit('addImage', { ...this.newImage });
         this.newImage = {
-          file: null,
           description: '',
           weight: 0,
         };
-        this.applyFilter();
       }
     },
     deleteImage(index) {
-      this.images.splice(index, 1);
-      this.applyFilter();
+      this.$store.commit('deleteImage', index);
     },
     filterByWeight() {
-      this.applyFilter();
-    },
-    applyFilter() {
-      if (this.weightFilter) {
-        const filteredWeight = parseInt(this.weightFilter);
-        if (!isNaN(filteredWeight)) {
-          this.filteredImages = this.images.filter(image => image.weight === filteredWeight);
-          return;
-        }
-      }
-      this.filteredImages = [...this.images];
+      // No need to do anything here since computed property takes care of filtering
     },
     goToVueTrainer() {
       this.$router.push({ path:'/vue-trainer' }); 
@@ -137,15 +135,12 @@ export default {
       this.$router.push({ path: '/' });
     },
   },
-  created() {
-    this.applyFilter();
-  }
 };
 </script>
+
 <style>
 .container.dark-mode {
   background-color: #000;
   color: #fff;
 }
-
 </style>
