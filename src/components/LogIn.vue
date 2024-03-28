@@ -53,6 +53,7 @@ export default {
 </script>
 
 <style scoped>
+/* Dodajte stilove za dark mode */
 .dark-mode {
   background-color: #333;
   color: #fff;
