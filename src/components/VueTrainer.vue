@@ -15,7 +15,7 @@
     </nav>
     <hr>
     <!-- Content -->
-    <form v-if="editIndex === null" @submit.prevent="addExercise" class="exercise-input-section">
+    <form @submit.prevent="addExercise" class="exercise-input-section">
       <h3>Exercise Info</h3>
       <label for="exerciseName">Exercise Name:</label>
       <input v-model="newExercise.name" type="text" id="exerciseName" required />
@@ -32,23 +32,6 @@
       <button type="submit">Add Exercise</button>
     </form>
 
-    <form v-else-if="editIndex !== null" @submit.prevent="saveEdit" class="exercise-input-section">
-      <label for="editExerciseName">Exercise Name:</label>
-      <input v-model="editedExercise.name" type="text" id="editExerciseName" required />
-
-      <label for="editExerciseDuration">Duration (min):</label>
-      <input v-model="editedExercise.duration" type="number" id="editExerciseDuration" required />
-
-      <label for="editExerciseIntensity">Intensity:</label>
-      <input v-model="editedExercise.intensity" type="text" id="editExerciseIntensity" required />
-
-      <label for="editExerciseCalories">Spent Calories:</label>
-      <input v-model="editedExercise.calories" type="number" id="editExerciseCalories" required />
-
-      <button type="submit">Save</button>
-      <button @click="cancelEdit">Cancel</button>
-    </form>
-
     <ul class="exercise-display-section">
       <li v-for="(exercise, index) in filteredExercises" :key="index" class="exercise-item">
         <strong>Exercise Name:</strong> {{ exercise.name }}<br>
@@ -60,9 +43,27 @@
       </li>
     </ul>
 
+    <div v-if="editIndex !== null" class="edit-form">
+      <h3>Edit Exercise</h3>
+      <label for="editedExerciseName">Exercise Name:</label>
+      <input v-model="editedExercise.name" type="text" id="editedExerciseName" required />
+
+      <label for="editedExerciseDuration">Duration (min):</label>
+      <input v-model="editedExercise.duration" type="number" id="editedExerciseDuration" required />
+
+      <label for="editedExerciseIntensity">Intensity:</label>
+      <input v-model="editedExercise.intensity" type="text" id="editedExerciseIntensity" required />
+
+      <label for="editedExerciseCalories">Spent Calories:</label>
+      <input v-model="editedExercise.calories" type="number" id="editedExerciseCalories" required />
+
+      <button @click="saveEdit">Save</button>
+      <button @click="cancelEdit">Cancel</button>
+    </div>
+
     <div class="statistics">
       <strong>Total Calories:</strong> {{ totalCalories }} kcal<br>
-      <strong>Total Duration:</strong> {{ totalDuration }} min<br>
+      <strong>Total Duration:</strong> {{ totalExerciseDuration }} min<br>
       <strong>Total Exercises:</strong> {{ totalExercises }}<br>
       <strong>Average Calories per Exercise:</strong> {{ averageCaloriesPerExercise }} kcal
     </div>
@@ -93,14 +94,8 @@ export default {
         intensity: "",
         calories: 0,
       },
-      exercises: [],
       editIndex: null,
-      editedExercise: {
-        name: "",
-        duration: 0,
-        intensity: "",
-        calories: 0,
-      },
+      editedExercise: null,
       intensityFilter: "",
       pieChartContext: null,
       pieChartData: [],
@@ -109,25 +104,23 @@ export default {
   },
   computed: {
     totalCalories() {
-      return this.exercises.reduce((total, exercise) => total + exercise.calories, 0);
+      return this.$store.getters.totalCaloriesBurned;
     },
-    totalDuration() {
-      return this.exercises.reduce((total, exercise) => total + exercise.duration, 0);
+    totalExerciseDuration() {
+      return this.$store.getters.totalDuration;
     },
     totalExercises() {
-      return this.exercises.length;
+      return this.$store.getters.totalExercises;
     },
     averageCaloriesPerExercise() {
-      if (this.totalExercises === 0) {
-        return 0;
-      }
-      return (this.totalCalories / this.totalExercises).toFixed(2);
+      return this.$store.getters.averageCaloriesPerExercise;
     },
     filteredExercises() {
+      const exercises = this.$store.state.exercises;
       if (!this.intensityFilter) {
-        return this.exercises;
+        return exercises;
       }
-      return this.exercises.filter(exercise => exercise.intensity.includes(this.intensityFilter));
+      return exercises.filter(exercise => exercise.intensity.includes(this.intensityFilter));
     },
   },
   methods: {
@@ -161,43 +154,31 @@ export default {
       this.$router.push({ path: '/' });
     },
     addExercise() {
-      this.exercises.push({ ...this.newExercise });
+      this.$store.dispatch('addExercise', { ...this.newExercise});
       this.resetForm();
       this.updatePieChart();
     },
     openEditDialog(index) {
       this.editIndex = index;
-      this.editedExercise = { ...this.exercises[index] };
+      this.editedExercise = {...this.$store.state.exercises[index]};
     },
     saveEdit() {
-      this.exercises[this.editIndex] = { ...this.editedExercise };
+      this.$store.dispatch('saveExerciseEdit', {index: this.editIndex, exercise: {...this.editedExercise}});
       this.editIndex = null;
-      this.editedExercise = {
-        name: "",
-        duration: 0,
-        intensity: "",
-        calories: 0,
-      };
+      this.editedExercise = null;
       this.updatePieChart();
     },
     confirmDeleteExercise(index) {
       const isConfirmed = window.confirm("Do you really want to delete this exercise?");
       if (isConfirmed) {
-        this.deleteExercise(index);
+        this.$store.dispatch('deleteExercise', index).then(() => {
+          this.updatePieChart();
+        });
       }
-    },
-    deleteExercise(index) {
-      this.exercises.splice(index, 1);
-      this.updatePieChart();
     },
     cancelEdit() {
       this.editIndex = null;
-      this.editedExercise = {
-        name: "",
-        duration: 0,
-        intensity: "",
-        calories: 0,
-      };
+      this.editedExercise = null;
     },
     resetForm() {
       this.newExercise = {
@@ -209,10 +190,11 @@ export default {
     },
     filterByIntensity() {
       if (!this.intensityFilter) {
-        return this.exercises;
+        return this.$store.state.exercises;
       }
-      return this.exercises.filter(exercise => exercise.intensity.includes(this.intensityFilter));
+      return this.$store.state.exercises.filter(exercise => exercise.intensity.includes(this.intensityFilter));
     },
+
     updatePieChart() {
       const canvas = this.$refs.pieChartCanvas;
       canvas.width = 300;
@@ -224,9 +206,9 @@ export default {
       const radius = Math.min(centerX, centerY);
       
       // Exercise duration data
-      const exerciseDurationData = this.exercises.reduce((total, exercise) =>total + exercise.duration, 0);
+      const exerciseDurationData = this.$store.state.exercises.reduce((total, exercise) => total + exercise.duration, 0);
 
-      this.pieChartData = this.exercises.map(exercise => {
+      this.pieChartData = this.$store.state.exercises.map(exercise => {
         return {
           name: exercise.name,
           percentage: (exercise.duration / exerciseDurationData) * 100
@@ -247,6 +229,9 @@ export default {
         startAngle += sliceAngle;
       });
     },
+  },
+  mounted() {
+    this.updatePieChart();
   },
 };
 </script>
