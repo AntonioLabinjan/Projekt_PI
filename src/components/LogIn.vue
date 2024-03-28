@@ -33,6 +33,7 @@ export default {
     login() {
       // Implementacija logike za prijavu će biti dodana kasnije
       console.log('Prijavljivanje s korisničkim imenom:', this.loginUsername, 'i lozinkom:', this.loginPassword);
+      this.$router.push({ path: '/' }); // Prebacivanje na rutu '/'
     },
     goToSignUp() {
       this.$router.push({ path: '/sign-up' });
