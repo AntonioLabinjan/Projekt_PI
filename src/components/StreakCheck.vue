@@ -1,5 +1,5 @@
 <template>
-  <div class="container" :class="{ 'dark-mode': darkMode }">
+  <div class="workout-tracker">
     <nav class="navbar">
       <ul>
         <li><button @click="goToImageGallery">Go to Image Gallery</button></li>
@@ -45,7 +45,6 @@
     <div class="medal-counter">
       <p>Medal Counter: {{ medalCounter }}</p>
     </div>
-    <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
   </div>
 </template>
 
@@ -53,7 +52,6 @@
 export default {
   data() {
     return {
-      darkMode: false,
       selectedDates: [], // Odabrani datumi
       currentStreak: 0, // Trenutni streak
       recordStreak: 0, // Rekordni streak
@@ -63,14 +61,6 @@ export default {
     };
   },
   methods: {
-    toggleDarkMode() {
-      this.darkMode = !this.darkMode;
-      if (this.darkMode) {
-        document.body.classList.add('dark-mode');
-      } else {
-        document.body.classList.remove('dark-mode');
-      }
-    },
     // Funkcije za navigaciju
     goToImageGallery() {
       this.$router.push({ path: '/image-gallery' });
@@ -163,11 +153,6 @@ formatDate(dateString) {
 </script>
 
 <style scoped>
-.container.dark-mode {
-  background-color: #000;
-  color: #fff;
-}
-
 .workout-tracker {
   font-family: Arial, sans-serif;
   max-width: 600px;
