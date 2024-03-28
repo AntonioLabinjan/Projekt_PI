@@ -82,7 +82,6 @@ export default {
         ingredients: "",
         calories: 0,
       },
-      meals: [],
       editIndex: null,
       editedMeal: {
         name: "",
@@ -97,22 +96,20 @@ export default {
   },
   computed: {
     totalCalories() {
-      return this.meals.reduce((total, meal) => total + meal.calories, 0);
+      return this.$store.getters.totalCalories; // Povezivanje sa Vuex store-om
     },
     totalMeals() {
-      return this.meals.length;
+      return this.$store.getters.totalMeals; // Povezivanje sa Vuex store-om
     },
     averageCaloriesPerMeal() {
-      if (this.totalMeals === 0) {
-        return 0;
-      }
-      return (this.totalCalories / this.totalMeals).toFixed(2);
+      return this.$store.getters.averageCaloriesPerMeal; // Povezivanje sa Vuex store-om
     },
     filteredMealsByIngredient() {
+      const meals = this.$store.state.meals; // Povezivanje sa Vuex store-om
       if (!this.ingredientFilter) {
-        return this.meals;
+        return meals;
       }
-      return this.meals.filter(meal => meal.ingredients.toLowerCase().includes(this.ingredientFilter.toLowerCase()));
+      return meals.filter(meal => meal.ingredients.toLowerCase().includes(this.ingredientFilter.toLowerCase()));
     },
   },
   methods: {
@@ -125,16 +122,16 @@ export default {
       }
     },
     addMeal() {
-      this.meals.push({ ...this.newMeal });
+      this.$store.dispatch('addMeal', { ...this.newMeal }); // Povezivanje sa Vuex store-om
       this.resetForm();
       this.updatePieChart();
     },
     openEditDialog(index) {
       this.editIndex = index;
-      this.editedMeal = { ...this.meals[index] };
+      this.editedMeal = { ...this.filteredMealsByIngredient[index] };
     },
     saveEdit() {
-      this.meals[this.editIndex] = { ...this.editedMeal };
+      this.$store.dispatch('updateMeal', { index: this.editIndex, meal: { ...this.editedMeal } }); // Povezivanje sa Vuex store-om
       this.editIndex = null;
       this.editedMeal = {
         name: "",
@@ -146,12 +143,8 @@ export default {
     confirmDeleteMeal(index) {
       const isConfirmed = window.confirm("Do you really want to delete this meal?");
       if (isConfirmed) {
-        this.deleteMeal(index);
+        this.$store.dispatch('deleteMeal', index); // Povezivanje sa Vuex store-om
       }
-    },
-    deleteMeal(index) {
-      this.meals.splice(index, 1);
-      this.updatePieChart();
     },
     cancelEdit() {
       this.editIndex = null;
@@ -169,24 +162,29 @@ export default {
       };
     },
     updatePieChart() {
+      // Postavite veličinu canvasa
       const canvas = this.$refs.pieChartCanvas;
       canvas.width = 300;
       canvas.height = 300;
       this.pieChartContext = canvas.getContext('2d');
       
+      // Postavite središte grafikona
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
       const radius = Math.min(centerX, centerY);
 
-      const totalCalories = this.meals.reduce((total, meal) => total + meal.calories, 0);
+      // Izračunaj ukupne kalorije
+      const totalCalories = this.$store.state.meals.reduce((total, meal) => total + meal.calories, 0);
 
-      this.pieChartData = this.meals.map(meal => {
+      // Izračunajte udjele kalorija za svaki obrok
+      this.pieChartData = this.$store.state.meals.map(meal => {
         return {
           name: meal.name,
           percentage: (meal.calories / totalCalories) * 100
         };
       });
 
+      // Nacrtajte pie chart
       let startAngle = 0;
       this.pieChartData.forEach((data, index) => {
         const sliceAngle = (data.percentage / 100) * Math.PI * 2;
@@ -198,6 +196,7 @@ export default {
         this.pieChartContext.closePath();
         this.pieChartContext.fill();
 
+        // Postavite kutove za sljedeći segment
         startAngle += sliceAngle;
       });
     },
@@ -220,9 +219,12 @@ export default {
       this.$router.push({ path: '/BMI-calculator' });
     },
     goToStreak() {
-      this.$router.push({path: '/streak'});
+      this.$router.push({ path: '/streak' });
     },
   },
+  mounted() {
+    this.updatePieChart();
+  }
 };
 </script>
 
