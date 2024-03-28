@@ -65,21 +65,17 @@ export default {
         wakeTime: "",
         quality: 0,
       },
-      sleepEntries: [],
+      sleepEntries: this.$store.state.sleepEntries,
       editIndex: null,
       editEntry: false,
     };
   },
   computed: {
     totalEntries() {
-      return this.sleepEntries.length;
+      return this.$store.getters.totalSleepEntries;
     },
     averageQuality() {
-      if (this.totalEntries === 0) {
-        return 0;
-      }
-      const totalQuality = this.sleepEntries.reduce((total, entry) => total + entry.quality, 0);
-      return (totalQuality / this.totalEntries).toFixed(2);
+      return this.$store.getters.averageSleepQuality;
     },
   },
   methods: {
@@ -99,7 +95,7 @@ export default {
       }
     },
     addSleepEntry() {
-      this.sleepEntries.push({ ...this.newSleepEntry });
+      this.$store.dispatch('addSleepEntry', { ...this.newSleepEntry });
       this.resetForm();
     },
     editSleepEntry(index) {
@@ -108,13 +104,13 @@ export default {
       this.editEntry = true;
     },
     saveEditedSleepEntry() {
-      this.sleepEntries[this.editIndex] = { ...this.newSleepEntry };
+      this.$store.dispatch('editSleepEntry', { index: this.editIndex, entry: { ...this.newSleepEntry } });
       this.resetForm();
       this.editEntry = false;
       this.editIndex = null;
     },
     deleteSleepEntry(index) {
-      this.sleepEntries.splice(index, 1);
+      this.$store.dispatch('removeSleepEntry', index);
     },
     resetForm() {
       this.newSleepEntry = {
@@ -136,10 +132,8 @@ export default {
       let durationInMinutes;
 
       if (wakeHour < startHour || (wakeHour === startHour && wakeMinute < startMinute)) {
-        // Buđenje se dogodilo nakon ponoći, tada računamo trajanje za dva dana
         durationInMinutes = (wakeHour + 24) * 60 + wakeMinute - startHour * 60 - startMinute;
       } else {
-        // Buđenje se dogodilo istog dana
         durationInMinutes = wakeHour * 60 + wakeMinute - startHour * 60 - startMinute;
       }
 
@@ -171,7 +165,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .container.dark-mode {
   background-color: #000;
@@ -215,50 +208,52 @@ form {
 
 label {
   margin-bottom: 5px;
-  color: #333; 
+  color: #333; /* Tamno siva boja za oznake */
 }
 
 input {
   padding: 8px;
   margin-bottom: 10px;
-  border: 1px solid #ccc; 
-  border-radius: 4px; 
+  border: 1px solid #ccc; /* Siva granica */
+  border-radius: 4px; /* Zaobljeni rubovi */
 }
 
+/* Stilizacija za gumbove */
 button {
   padding: 10px 20px;
   margin-top: 10px;
-  color: #fff; 
-  background-color: #007bff; 
-  border: none; 
-  border-radius: 4px; 
-  cursor: pointer; 
-  transition: background-color 0.3s ease; 
+  color: #fff; /* Bijela boja teksta */
+  background-color: #007bff; /* Plava pozadina */
+  border: none; /* Bez granice */
+  border-radius: 4px; /* Zaobljeni rubovi */
+  cursor: pointer; /* Pokazivač miša */
+  transition: background-color 0.3s ease; /* Glatki prijelaz boje */
 }
 
-
+/* Stilizacija za gumbove koji su oznaceni kao cancel */
 button.cancel {
-  background-color: #dc3545; 
+  background-color: #dc3545; /* Crvena pozadina */
 }
 
+/* Stilizacija za sekciju sa prikazom vježbi */
 ul.exercise-display-section {
-  list-style: none; 
-  padding: 0; 
+  list-style: none; /* Ukloni oznake liste */
+  padding: 0; /* Ukloni unutarnji razmak */
 }
 
 .exercise-item {
   margin: 10px 0;
   padding: 10px;
-  border: 1px solid #ddd; 
-  border-radius: 4px; 
-  background-color: #fff; 
+  border: 1px solid #ddd; /* Siva granica */
+  border-radius: 4px; /* Zaobljeni rubovi */
+  background-color: #fff; /* Bijela pozadina */
 }
 
-
+/* Stilizacija za gumbove za uređivanje i brisanje */
 .edit-btn {
   margin-right: 10px;
-  color: #fff; 
-  background-color: #28a745; 
+  color: #fff; /* Bijela boja teksta */
+  background-color: #28a745; /* Zelena pozadina */
 }
 
 .delete-btn {
@@ -266,9 +261,10 @@ ul.exercise-display-section {
   background-color: #dc3545; 
 }
 
+
 @media only screen and (max-width: 600px) {
   #app {
-    width: 90%;
+    width: 90%; 
   }
 }
 
