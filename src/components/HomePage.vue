@@ -30,12 +30,19 @@
       <p>{{ motivationalQuote }}</p>
     </div>
 
-    <!-- Ugradnja notificationMaker.vue komponente -->
+    <!-- Prikaz trenutnog kalorijskog balansa -->
+    <div class="caloric-balance">
+      <p>Current caloric balance: {{ currentCaloricBalance }}</p>
+    </div>
+
     <notification-maker></notification-maker>
   </div>
 </template>
 
 <script>
+// Import Vuex store
+import { mapGetters } from 'vuex';
+
 export default {
   data() {
     return {
@@ -50,6 +57,10 @@ export default {
       ],
       motivationalQuote: ""
     };
+  },
+  computed: {
+    // Mapiranje gettera za trenutni kalorijski balans
+    ...mapGetters(['currentCaloricBalance']),
   },
   methods: {
     toggleDarkMode() {
@@ -135,5 +146,9 @@ export default {
 .motivational-quote p {
   font-style: italic;
   margin-top: 20px;
+}
+
+.caloric-balance p {
+  font-weight: bold;
 }
 </style>
