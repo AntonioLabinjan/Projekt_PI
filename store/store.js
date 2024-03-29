@@ -246,7 +246,19 @@ const store = createStore({
       },
       medalCounter(state) {
         return state.medalCounter;
-      }
+      },
+      currentCaloricBalance(state) {
+        const totalCaloriesBurned = state.exercises.reduce((total, exercise) => total + exercise.calories, 0);
+        const totalCaloriesIntake = state.meals.reduce((total, meal) => total + meal.calories, 0);
+        let SdCheck = "totally balanced";
+        if(totalCaloriesBurned<totalCaloriesIntake){
+          SdCheck = "caloric suficit";
+        }
+        else if(totalCaloriesBurned>totalCaloriesIntake){
+          SdCheck = "caloric deficit"
+        }
+        return (totalCaloriesIntake - totalCaloriesBurned) + ' ' + '('+ SdCheck + ')';
+      },
     }
   });
   export default store;
