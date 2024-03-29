@@ -38,7 +38,10 @@
       <button type="submit" v-else>Dodaj vježbu</button>
       <button type="button" @click="cancelEdit" v-if="editMode">Odustani</button>
     </form>
-    
+    <div>
+      <img src = "../assets/QR1.png" alt = "QR kod za vježbu">
+      
+    </div>
     <!-- Button to go back to the about page -->
     <button @click="toggleDarkMode" class="btn btn-dark">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     <button @click="goBack">Go Back</button>
