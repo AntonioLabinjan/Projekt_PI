@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Progress Tracker</h1>
-    <nav class="navbar">
+    <nav class="navbar" :class="{'dark-mode': darkMode}">
       <ul class="navbar-nav">
         <li><button @click="goToVueTrainer">Go to Training App</button></li>
         <li><button @click="goToMealTracker">Go to Meal Tracker</button></li>
@@ -140,7 +140,20 @@ export default {
 
 <style>
 .container.dark-mode {
-  background-color: #000;
-  color: #fff;
+  background-color: #000; 
+  color: #fff; 
+}
+
+.navbar.dark-mode {
+  background-color: #000; 
+  color: #fff; 
+}
+
+h1 {
+  color: #000; 
+}
+
+h1.dark-mode {
+  color: #fff; 
 }
 </style>
