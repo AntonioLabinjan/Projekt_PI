@@ -6,7 +6,7 @@
       <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     </div>
     <div class="header">
-      <h1>Welcome to TrainingAPP</h1>
+      <h1>Welcome to TrainingApp</h1>
       <hr>
       <h4>Your personal training application</h4>
       <p>Add your exercises, meals, sleep, water intake, calculate your BMI, and track your progress!</p>
