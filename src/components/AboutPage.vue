@@ -94,11 +94,6 @@ export default {
 </script>
 
 <style scoped>
-.about.dark-mode {
-  background-color: #000;
-  color: #fff;
-}
-
 .about {
   margin: 20px;
   font-family: Arial, sans-serif;
@@ -114,7 +109,7 @@ p {
 
 .feature-list {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Prilagođava se širini ekrana */
   gap: 20px;
 }
 
@@ -159,5 +154,47 @@ button {
 
 button:hover {
   background-color: #0056b3;
+}
+
+.dark-mode {
+  background-color: #222; /* Crna pozadina u dark modu */
+}
+
+.dark-mode h2,
+.dark-mode p,
+.dark-mode .feature h3,
+.dark-mode .feature p,
+.dark-mode .author-info p {
+  color: #fff; /* Bijeli tekst u dark modu */
+}
+
+.dark-mode .feature {
+  background-color: #333;
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .feature:hover {
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+}
+
+.dark-mode .feature h3 {
+  color: #6ab0ff;
+}
+
+.dark-mode .feature p {
+  color: #bbb;
+}
+
+.dark-mode .author-info {
+  border-color: #888;
+}
+
+.dark-mode button {
+  background-color: #eee;
+  color: #333;
+}
+
+.dark-mode button:hover {
+  background-color: #ddd;
 }
 </style>
