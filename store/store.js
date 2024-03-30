@@ -11,7 +11,8 @@ const store = createStore({
       selectedDates: [], 
       currentStreak: null, 
       recordStreak: null, 
-      medalCounter: 0, 
+      medalCounter: 0,
+      notifications: [] 
     };
   },
   mutations: {
@@ -95,7 +96,10 @@ const store = createStore({
         },
         updateMedalCounter(state) {
           state.medalCounter = Math.floor(state.recordStreak / 7);
-        }
+        },
+        addNotification(state, notification) {
+          state.notifications.push(notification);
+        },
       },
   actions: {
     addIntake({ commit }, intake) {
@@ -259,6 +263,13 @@ const store = createStore({
         }
         return (totalCaloriesIntake - totalCaloriesBurned) + ' ' + '('+ SdCheck + ')';
       },
+      notifications(state) {
+        return state.notifications;
+      },
+      addNotification(state, notifications){
+        state.notifications.push(notifications);
+      },
+      }
     }
-  });
+  );
   export default store;
