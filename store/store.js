@@ -73,7 +73,6 @@ const store = createStore({
         },
         updateStreak(state) {
           let streak = 0;
-          let maxStreak = 0;
           const today = new Date();
           const yesterday = new Date(today);
           yesterday.setDate(yesterday.getDate() - 1);
