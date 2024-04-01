@@ -12,10 +12,21 @@ const store = createStore({
       currentStreak: null, 
       recordStreak: null, 
       medalCounter: 0,
-      notifications: [] 
+      notifications: [],
+      songs: [] 
     };
   },
   mutations: {
+    addSong(state, song) {
+      state.songs.push(song);
+    },
+    editSong(state, payload) {
+      const { index, song } = payload;
+      state.songs.splice(index, 1, song);
+    },
+    deleteSong(state, index) {
+      state.songs.splice(index, 1);
+    },
     addIntake(state, intake) {
       state.waterIntake.push(intake);
     },
@@ -101,6 +112,15 @@ const store = createStore({
         },
       },
   actions: {
+    addSong({ commit }, song) {
+      commit('addSong', song);
+    },
+    editSong({ commit }, payload) {
+      commit('editSong', payload);
+    },
+    deleteSong({ commit }, index) {
+      commit('deleteSong', index);
+    },
     addIntake({ commit }, intake) {
       commit('addIntake', intake);
     },
