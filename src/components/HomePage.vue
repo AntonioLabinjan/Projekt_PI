@@ -20,6 +20,7 @@
         <li><button @click="goToWaterIntake">Water Intake Tracker</button></li>
         <li><button @click="goToBMI">BMI Calculator</button></li>
         <li><button @click="goToStreak">Streak Tracker</button></li>
+        <li><button @click="goToMusicPlayer">Music Player</button></li>
       </ul>
     </nav>
     <div class="about-button">
@@ -103,6 +104,9 @@ export default {
     },
     goToScanner() {
       this.$router.push({ path: '/qr-scanner'});
+    },
+    goToMusicPlayer(){
+      this.$router.push({path: '/music'});
     },
     selectRandomQuote() {
       const randomIndex = Math.floor(Math.random() * this.motivationalQuotes.length);
