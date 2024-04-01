@@ -1,6 +1,4 @@
-# Riješena je navigacija
-# Dodan dark mode
-# idući zadatak: skužit kako se implementira store.js u ovo čudo :) => s ovin ću se igrat preko vikenda lokalno, pa commitat tek kad san siguran da sve dela, da si ne stvaran kaos na repo-u
+# PROVAT SLOŽIT DA MUSIC PLAYER BUDE NA HOME
 # dodan store.js u sve komponente osim na onu s medaljicama
 #### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
 #### Trainingapp (nije definitivni naziv)
