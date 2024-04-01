@@ -17,6 +17,7 @@ import DefaultMeals from './components/DefaultMeals.vue';
 import StreakCheck from './components/StreakCheck.vue';
 import QrScanner from './components/QrScanner.vue';
 import notificationMaker from './components/notificationMaker.vue';
+import MusicPlayer from './components/MusicPlayer.vue';
 import store from './store/store.js';
 
 const routes = [
@@ -34,7 +35,8 @@ const routes = [
   {path: '/default-exercises', component: () => import('./components/DefaultExercises.vue') },
   {path: '/default-meals', component: () => import('./components/DefaultMeals.vue') },
   {path: '/qr-scanner', component: () => import('./components/QrScanner.vue')},
-  {path: '/notification-maker', component: () => import('./components/notificationMaker.vue')}
+  {path: '/notification-maker', component: () => import('./components/notificationMaker.vue')},
+  {path: '/music', component: ()=> import('./components/MusicPlayer.vue')}
 ];
 
 
@@ -59,6 +61,7 @@ app.component('DefaultMeals', DefaultMeals);
 app.component('StreakCheck', StreakCheck);
 app.component('QrScanner', QrScanner);
 app.component('notificationMaker', notificationMaker);
+app.component('MusicPlayer', MusicPlayer);
 app.use(router);
 app.use(store);
 app.mount('#app');
