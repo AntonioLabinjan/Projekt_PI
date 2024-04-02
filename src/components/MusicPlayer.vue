@@ -1,96 +1,185 @@
 <template>
-    <div>
-        <div>
-            <h1>Music player</h1>
-        </div>
-      <div>
-        <input type="text" v-model="searchQuery" placeholder="Pretraži...">
-        <button @click="search">Pretraži</button>
-      </div>
-      <div v-if="filteredSongs.length === 0">Nema rezultata.</div>
-      <ul v-else>
-        <li v-for="song in filteredSongs" :key="song.id">
-          <span>{{ song.title }} by {{ song.author }} ({{ song.genre }})</span>
+  <div class="music-player-container">
+    <div class="header">
+      <h1>Music Player</h1>
+    </div>
+    <div class="search-bar">
+      <input type="text" v-model="searchQuery" placeholder="Pretraži...">
+      <button @click="search">Pretraži</button>
+    </div>
+    <div v-if="filteredSongs.length === 0" class="no-results">Nema rezultata.</div>
+    <ul v-else class="song-list">
+      <li v-for="song in filteredSongs" :key="song.id" class="song-item">
+        <span>{{ song.title }} by {{ song.author }} ({{ song.genre }})</span>
+        <div class="button-group">
           <button @click="play(song)">Play</button>
           <button @click="edit(song)">Edit</button>
-          <button @click="deleteSong(song.id)">Delete</button>
-        </li>
-      </ul>
-      <button @click="showAddForm = true">Dodaj novu pjesmu</button>
-      <div v-if="showAddForm">
-        <input type="text" v-model="newSong.title" placeholder="Naslov">
-        <input type="text" v-model="newSong.author" placeholder="Autor">
-        <input type="text" v-model="newSong.genre" placeholder="Žanr">
-        <input type="text" v-model="newSong.youtubeLink" placeholder="YouTube link">
-        <button @click="addNewSong">Dodaj pjesmu</button> 
-      </div>
-      <div v-if="showEditForm">
-        <input type="text" v-model="editedSong.title" placeholder="Naslov">
-        <input type="text" v-model="editedSong.author" placeholder="Autor">
-        <input type="text" v-model="editedSong.genre" placeholder="Žanr">
-        <input type="text" v-model="editedSong.youtubeLink" placeholder="YouTube link">
-        <button @click="saveEditedSong">Spremi promjene</button>
-      </div>
-      <button @click="goBackHome">Povratak na početnu</button>
+          <button @click="deleteSong(id)">Delete</button>
+        </div>
+      </li>
+    </ul>
+    <button @click="showAddForm = true" class="add-button">Dodaj novu pjesmu</button>
+    <div v-if="showAddForm" class="add-form">
+      <input type="text" v-model="newSong.title" placeholder="Naslov">
+      <input type="text" v-model="newSong.author" placeholder="Autor">
+      <input type="text" v-model="newSong.genre" placeholder="Žanr">
+      <input type="text" v-model="newSong.youtubeLink" placeholder="YouTube link">
+      <button @click="addNewSong">Dodaj pjesmu</button> 
     </div>
-  </template>
-  
-  <script>
-  import { mapState, mapActions } from 'vuex';
-  
-  export default {
-    data() {
-      return {
-        searchQuery: '', 
-        showAddForm: false, 
-        showEditForm: false, 
-        newSong: { title: '', author: '', genre: '', youtubeLink: '' }, 
-        editedSong: { id: null, title: '', author: '', genre: '', youtubeLink: '' } 
-      };
-    },
-    computed: {
-      ...mapState(['songs']),
-      filteredSongs() {
-        return this.songs.filter(song =>
-          song.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          song.author.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          song.genre.toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
-      }
-    },
-    methods: {
-      ...mapActions(['addSong', 'editSong', 'deleteSong']),
-      search() {
-        // ovo mi ustvari ne treba, jer filter radi istu stvar
-      },
-      play(song) {
-        window.open(song.youtubeLink);
-      },
-      edit(song) {
-        this.editedSong = { ...song };
-        this.showEditForm = true;
-      },
-      saveEditedSong() {
-        const index = this.songs.findIndex(song => song.id === this.editedSong.id);
-        if (index !== -1) {
-          this.editSong({ index, song: { ...this.editedSong } });
-          this.showEditForm = false;
-          this.editedSong = { id: null, title: '', author: '', genre: '', youtubeLink: '' };
-        }
-      },
-      deleteSong(id) {
-        this.deleteSong(id);
-      },
-      addNewSong() { 
-        this.newSong.id = this.songs.length + 1;
-        this.addSong({ ...this.newSong });
-        this.showAddForm = false;
-        this.newSong = { title: '', author: '', genre: '', youtubeLink: '' };
-      },
-      goBackHome(){
-        this.$router.push('/');
-      }
+    <div v-if="showEditForm" class="edit-form">
+      <input type="text" v-model="editedSong.title" placeholder="Naslov">
+      <input type="text" v-model="editedSong.author" placeholder="Autor">
+      <input type="text" v-model="editedSong.genre" placeholder="Žanr">
+      <input type="text" v-model="editedSong.youtubeLink" placeholder="YouTube link">
+      <button @click="saveEditedSong">Spremi promjene</button>
+    </div>
+    <button @click="goBackHome" class="back-button">Povratak na početnu</button>
+  </div>
+</template>
+
+<script>
+import { mapState, mapActions } from 'vuex';
+
+export default {
+  data() {
+    return {
+      searchQuery: '', 
+      showAddForm: false, 
+      showEditForm: false, 
+      newSong: { title: '', author: '', genre: '', youtubeLink: '' }, 
+      editedSong: { id: null, title: '', author: '', genre: '', youtubeLink: '' } 
+    };
+  },
+  computed: {
+    ...mapState(['songs']),
+    filteredSongs() {
+      return this.songs.filter(song =>
+        song.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        song.author.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        song.genre.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
     }
-  };
-  </script>
-  
+  },
+  methods: {
+    ...mapActions(['addSong', 'editSong', 'deleteSong']),
+    search() {
+      // ovo mi ustvari ne treba, jer filter radi istu stvar
+    },
+    play(song) {
+      window.open(song.youtubeLink);
+    },
+    edit(song) {
+      this.editedSong = { ...song };
+      this.showEditForm = true;
+    },
+    saveEditedSong() {
+      const index = this.songs.findIndex(song => song.id === this.editedSong.id);
+      if (index !== -1) {
+        this.editSong({ index, song: { ...this.editedSong } });
+        this.showEditForm = false;
+        this.editedSong = { id: null, title: '', author: '', genre: '', youtubeLink: '' };
+      }
+    },
+    deleteSong(id) {
+    this.$store.dispatch('deleteSong', id);
+},
+
+    addNewSong() { 
+      this.newSong.id = this.songs.length + 1;
+      this.addSong({ ...this.newSong });
+      this.showAddForm = false;
+      this.newSong = { title: '', author: '', genre: '', youtubeLink: '' };
+    },
+    goBackHome(){
+      this.$router.push('/');
+    }
+  }
+};
+</script>
+
+<style>
+.music-player-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.no-results {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.song-list {
+  list-style: none;
+  padding: 0;
+}
+
+.song-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.button-group button {
+  margin-left: 10px;
+}
+
+.add-button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-form,
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.add-form input,
+.edit-form input {
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.add-form button,
+.edit-form button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.back-button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #ccc;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+</style>
