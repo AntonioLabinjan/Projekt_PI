@@ -118,8 +118,8 @@ const store = createStore({
     editSong({ commit }, payload) {
       commit('editSong', payload);
     },
-    deleteSong({ commit }, index) {
-      commit('deleteSong', index);
+    deleteSong({ commit }, id) {
+      commit('deleteSong', id);
     },
     addIntake({ commit }, intake) {
       commit('addIntake', intake);
