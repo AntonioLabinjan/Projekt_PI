@@ -1,7 +1,8 @@
 <template>
-  <div class="music-player-container">
+  <div class="music-player-container" :class="{ 'dark-mode': isDarkMode }">
     <div class="header">
       <h1>Music Player</h1>
+      <button @click="toggleDarkMode" class="dark-mode-button">{{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}</button>
     </div>
     <div class="search-bar">
       <input type="text" v-model="searchQuery" placeholder="Pretraži...">
@@ -47,7 +48,8 @@ export default {
       showAddForm: false, 
       showEditForm: false, 
       newSong: { title: '', author: '', genre: '', youtubeLink: '' }, 
-      editedSong: { id: null, title: '', author: '', genre: '', youtubeLink: '' } 
+      editedSong: { id: null, title: '', author: '', genre: '', youtubeLink: '' },
+      isDarkMode: false
     };
   },
   computed: {
@@ -81,9 +83,8 @@ export default {
       }
     },
     deleteSong(id) {
-    this.$store.dispatch('deleteSong', id);
-},
-
+      this.$store.dispatch('deleteSong', id);
+    },
     addNewSong() { 
       this.newSong.id = this.songs.length + 1;
       this.addSong({ ...this.newSong });
@@ -92,6 +93,9 @@ export default {
     },
     goBackHome(){
       this.$router.push('/');
+    },
+    toggleDarkMode() {
+      this.isDarkMode = !this.isDarkMode;
     }
   }
 };
@@ -181,5 +185,29 @@ export default {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+
+.dark-mode .header,
+.dark-mode .search-bar input,
+.dark-mode .no-results,
+.dark-mode .song-item,
+.dark-mode .add-form input,
+.dark-mode .edit-form input,
+.dark-mode .back-button {
+  color: #fff;
+  background-color: #333;
+}
+
+.dark-mode .button-group button,
+.dark-mode .add-form button,
+.dark-mode .edit-form button {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.dark-mode .back-button {
+  background-color: #ccc;
+  color: #000;
 }
 </style>
