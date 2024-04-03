@@ -8,6 +8,7 @@
         <li><button @click="goToSleepTracker">Go to Sleep Tracker</button></li>
         <li><button @click="goToWaterIntake">Go to Water Intake Tracker</button></li>
         <li><button @click="goToBMI">Go to BMI Calculator</button></li>
+        <li><button @click="goToMusicPlayer">Music Player</button></li>
         <li><button @click="goBackHome">Go Back Home</button></li>
       </ul>
     </nav>
@@ -79,6 +80,9 @@ export default {
     },
     goToBMI() {
       this.$router.push({ path: '/BMI-calculator' });
+    },
+    goToMusicPlayer(){
+      this.$router.push({path: '/music'});
     },
     goToStreak() {
       this.$router.push({ path: '/streak' });
