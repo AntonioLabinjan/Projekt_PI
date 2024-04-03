@@ -9,6 +9,7 @@
         <li><button @click="goToWaterIntake">Go to Water Intake Tracker</button></li>
         <li><button @click="goToBMI">Go to BMI Calculator</button></li>
         <li><button @click="goToStreak">Go to Streak Tracker</button></li>
+        <li><button @click="goToMusicPlayer">Music Player</button></li>
         <li><button @click="goBackHome">Go Back Home</button></li>
       </ul>
     </nav>
@@ -78,7 +79,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['addImage', 'deleteImage']), // Dodano
+    ...mapMutations(['addImage', 'deleteImage']), 
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
       if (this.darkMode) {
@@ -111,7 +112,7 @@ export default {
       this.$store.commit('deleteImage', index);
     },
     filterByWeight() {
-      // No need to do anything here since computed property takes care of filtering
+      // Ovo iman u computed
     },
     goToVueTrainer() {
       this.$router.push({ path:'/vue-trainer' }); 
@@ -133,6 +134,9 @@ export default {
     },
     goBackHome() {
       this.$router.push({ path: '/' });
+    },
+    goToMusicPlayer(){
+      this.$router.push({path: '/music'});
     },
   },
 };
