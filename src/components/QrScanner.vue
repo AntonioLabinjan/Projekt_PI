@@ -10,6 +10,7 @@
         <li><button @click="goToWaterIntake">Water Intake Tracker</button></li>
         <li><button @click="goToBMI">BMI Calculator</button></li>
         <li><button @click="goToStreak">Streak Tracker</button></li>
+        <li><button @click="goToMusicPlayer">Music Player</button></li>
         <li><button @click="goBackHome">Go back home</button></li>
       </ul>
     </nav>
@@ -104,7 +105,10 @@ export default {
     },
     goBackHome() {
       this.$router.push({ path: '/' });
-    }
+    },
+    goToMusicPlayer(){
+      this.$router.push({path: '/music'});
+    },
   },
   mounted() {
     this.startCamera();
