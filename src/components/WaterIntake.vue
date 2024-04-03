@@ -9,6 +9,7 @@
         <li><button @click="goToMealTracker" class="btn-secondary">Go to Meal Tracker</button></li>
         <li><button @click="goToBMI">Go to BMI Calculator</button></li>
         <li><button @click="goToStreak">Go to Streak Tracker</button></li>
+        <li><button @click="goToMusicPlayer">Music Player</button></li>
         <li><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
       </ul>
     </nav>
@@ -173,7 +174,10 @@ export default {
     },
     goToStreak() {
       this.$router.push({ path: '/streak'});
-    }
+    },
+    goToMusicPlayer(){
+      this.$router.push({path: '/music'});
+    },
   }
 };
 </script>
