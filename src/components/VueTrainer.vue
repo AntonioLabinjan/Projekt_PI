@@ -10,6 +10,7 @@
         <li><button @click="goToWaterIntake" class="btn-secondary">Go to Water Intake Tracker</button></li>
         <li><button @click="goToBMI" class="btn-secondary">Go to BMI Calculator</button></li>
         <li><button @click="goToStreak" class="btn-secondary">Go to Streak Tracker</button></li>
+        <li><button @click="goToMusicPlayer">Music Player</button></li>
         <li><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
       </ul>
     </nav>
@@ -153,6 +154,9 @@ export default {
     goBackHome(){
       this.$router.push({ path: '/' });
     },
+    goToMusicPlayer(){
+      this.$router.push({path: '/music'});
+    },
     addExercise() {
       this.$store.dispatch('addExercise', { ...this.newExercise});
       this.resetForm();
@@ -236,12 +240,8 @@ export default {
 };
 </script>
 
+
 <style scoped>
-/* CSS styles for exercise tracker component */
-.container.dark-mode {
-  background-color: #000;
-  color: #fff;
-}
 .container {
   max-width: 800px;
   margin: 0 auto;
@@ -352,5 +352,18 @@ ul.exercise-display-section {
   #app {
     width: 90%;
 }
+}
+.container.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
+
+.dark-mode h1,
+.dark-mode h3,
+.dark-mode label {
+  color: #000;
+}
+ul.exercise-display-section.dark-mode{
+  background-color:#000 ;
 }
 </style>
