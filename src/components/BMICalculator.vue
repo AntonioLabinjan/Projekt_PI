@@ -10,6 +10,7 @@
         <li class="nav-item"><button @click="goToMealTracker" class="btn btn-secondary">Go to Meal Tracker</button></li>
         <li class="nav-item"><button @click="goToWaterIntake" class="btn btn-secondary">Go to Water Intake Tracker</button></li>
         <li class="nav-item"><button @click="goToStreak" class="btn btn-secondary">Go to Streak Tracker</button></li>
+        <li><button @click="goToMusicPlayer">Music Player</button></li>
         <li class="nav-item"><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
       </ul>
     </nav>
@@ -45,7 +46,7 @@ export default {
   },
   computed: {
     bmiColor() {
-      if (!this.bmi) return ''; // Default background color if BMI is not calculated yet
+      if (!this.bmi) return ''; // Default 
       if (this.bmi < 18.5) {
         return 'bg-primary'; // Underweight
       } else if (this.bmi >= 18.5 && this.bmi <= 24.9) {
@@ -94,6 +95,9 @@ export default {
     goToStreak() {
       this.$router.push({ path: '/streak' });
     },
+    goToMusicPlayer(){
+      this.$router.push({path: '/music'});
+    },
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
       if (this.darkMode) {
@@ -120,19 +124,19 @@ export default {
 }
 
 .bg-primary {
-  background-color: #007bff; /* Blue */
+  background-color: #007bff; 
 }
 
 .bg-success {
-  background-color: #28a745; /* Green */
+  background-color: #28a745; /* Zelena */
 }
 
 .bg-warning {
-  background-color: #ffc107; /* Yellow */
+  background-color: #ffc107; /* Žuta */
 }
 
 .bg-danger {
-  background-color: #dc3545; /* Red */
+  background-color: #dc3545; /* Crvena */
 }
 
 .dark-mode {
