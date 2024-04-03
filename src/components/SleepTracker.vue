@@ -9,6 +9,7 @@
         <li><button @click="goToWaterIntake" class="btn btn-secondary">Go to Water Intake Tracker</button></li>
         <li><button @click="goToBMI">Go to BMI Calculator</button></li>
         <li><button @click="goToStreak">Go to Streak Tracker</button></li>
+        <li><button @click="goToMusicPlayer">Music Player</button></li>
         <li><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
       </ul> 
     </nav>
@@ -66,14 +67,12 @@ export default {
         wakeTime: "",
         quality: 0,
       },
-      // Pristupamo polju sleepEntries iz stanja (state) u Vuex store-u
       sleepEntries: this.$store.state.sleepEntries,
       editIndex: null,
       editEntry: false,
     };
   },
   computed: {
-    // Pristupamo getterima iz Vuex store-a
     totalEntries() {
       return this.$store.getters.totalSleepEntries;
     },
@@ -98,7 +97,6 @@ export default {
       }
     },
     addSleepEntry() {
-      // Pozivamo akciju iz Vuex store-a za dodavanje unosa sna
       this.$store.dispatch('addSleepEntry', { ...this.newSleepEntry });
       this.resetForm();
     },
@@ -108,14 +106,12 @@ export default {
       this.editEntry = true;
     },
     saveEditedSleepEntry() {
-      // Pozivamo akciju iz Vuex store-a za uređivanje unosa sna
       this.$store.dispatch('editSleepEntry', { index: this.editIndex, entry: { ...this.newSleepEntry } });
       this.resetForm();
       this.editEntry = false;
       this.editIndex = null;
     },
     deleteSleepEntry(index) {
-      // Pozivamo akciju iz Vuex store-a za brisanje unosa sna
       this.$store.dispatch('removeSleepEntry', index);
     },
     resetForm() {
@@ -167,6 +163,9 @@ export default {
     },
     goToStreak() {
       this.$router.push({ path: '/streak' });
+    },
+    goToMusicPlayer(){
+      this.$router.push({path: '/music'});
     },
   },
 };
