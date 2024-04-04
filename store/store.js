@@ -13,7 +13,10 @@ const store = createStore({
       recordStreak: null, 
       medalCounter: 0,
       notifications: [],
-      songs: [] 
+      songs: [],
+      users: [], // Dodajemo listu korisnika za pohranu korisničkih podataka
+      currentUser: null, // Trenutni prijavljeni korisnik
+      isLoggedIn: false 
     };
   },
   mutations: {
@@ -110,6 +113,24 @@ const store = createStore({
         addNotification(state, notification) {
           state.notifications.push(notification);
         },
+        addUser(state, user) {
+          state.users.push(user);
+        },
+        loginUser(state, credentials) {
+          // Pronalazimo korisnika u listi korisnika s odgovarajućim korisničkim imenom i lozinkom
+          const user = state.users.find(u => u.username === credentials.username && u.password === credentials.password);
+          if (user) {
+            state.currentUser = user;
+            state.isLoggedIn = true;
+          } else {
+            state.currentUser = null;
+            state.isLoggedIn = false;
+          }
+        },
+        logoutUser(state) {
+          state.currentUser = null;
+          state.isLoggedIn = false;
+        }
       },
   actions: {
     addSong({ commit }, song) {
@@ -181,6 +202,15 @@ const store = createStore({
       },
       updateMedalCounter({ commit }) {
         commit('updateMedalCounter');
+      },
+      registerUser({ commit }, user) {
+        commit('addUser', user);
+      },
+      loginUser({ commit }, credentials) {
+        commit('loginUser', credentials);
+      },
+      logoutUser({ commit }) {
+        commit('logoutUser');
       }
     },
   getters: {
@@ -288,6 +318,12 @@ const store = createStore({
       addNotification(state, notifications){
         state.notifications.push(notifications);
       },
+      getCurrentUser(state) {
+        return state.currentUser;
+      },
+      isLoggedIn(state) {
+        return state.isLoggedIn;
+      }
       }
     }
   );
