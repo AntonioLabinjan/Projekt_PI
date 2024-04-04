@@ -1,4 +1,4 @@
-# PROVAT SLOŽIT DA MUSIC PLAYER BUDE NA HOME
+# Provat sklepat neki basic auth system kroz store.js (pohranjujemo usernames i passworde)
 # dodan store.js u sve komponente osim na onu s medaljicama
 #### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
 #### Trainingapp (nije definitivni naziv)
