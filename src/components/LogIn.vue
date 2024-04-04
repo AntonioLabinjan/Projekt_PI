@@ -31,9 +31,20 @@ export default {
   },
   methods: {
     login() {
-      // Implementacija logike za prijavu će biti dodana kasnije
-      console.log('Prijavljivanje s korisničkim imenom:', this.loginUsername, 'i lozinkom:', this.loginPassword);
-      this.$router.push({ path: '/' }); // Prebacivanje na rutu '/'
+      this.$store.dispatch('loginUser', {
+        username: this.loginUsername,
+        password: this.loginPassword
+      }).then(() => {
+        if (this.$store.getters.isLoggedIn) {
+          alert('Login successful.');
+          this.$router.push({ path: '/' });
+        } else {
+          alert('Invalid username or password');
+        }
+      }).catch(error => {
+        alert('An error occurred during login. Please try again later.');
+        console.error('Login error:', error);
+      });
     },
     goToSignUp() {
       this.$router.push({ path: '/sign-up' });
@@ -53,8 +64,9 @@ export default {
 };
 </script>
 
+
 <style scoped>
-/* Dodajte stilove za dark mode */
+/*dark mode */
 .dark-mode {
   background-color: #333;
   color: #fff;
