@@ -14,8 +14,8 @@ const store = createStore({
       medalCounter: 0,
       notifications: [],
       songs: [],
-      users: [], // Dodajemo listu korisnika za pohranu korisničkih podataka
-      currentUser: null, // Trenutni prijavljeni korisnik
+      users: [], 
+      currentUser: null, 
       isLoggedIn: false 
     };
   },
