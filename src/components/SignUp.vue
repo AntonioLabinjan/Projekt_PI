@@ -65,14 +65,16 @@ export default {
         alert("Passwords don't match. Please enter matching passwords.");
         return;
       }
-      // Provjera uvjeta lozinke
-      const passwordRegex = /^(?=.*\d)(?=.*[A-Z]).{8,}$/;
-      if (!passwordRegex.test(this.signupPassword)) {
-        alert("Password must contain at least 8 characters, at least one digit, and at least one uppercase letter.");
-        return;
-      }
-      // Implementacija logike za registraciju (ovo ćemo isto riješit naknadno)
-      console.log('Signing up with first name:', this.firstName, 'last name:', this.lastName, 'date of birth:', this.dob, 'username:', this.signupUsername, 'and password:', this.signupPassword);
+      this.$store.dispatch('registerUser', {
+        username: this.signupUsername,
+        password: this.signupPassword
+      }).then(() => {
+        alert('Registration successful. You can now login.');
+        this.$router.push({ path: '/login' });
+      }).catch(error => {
+        alert('An error occurred during registration. Please try again later.');
+        console.error('Registration error:', error);
+      });
     },
     goToLogIn() {
       this.$router.push({ path: '/login' });
@@ -83,6 +85,8 @@ export default {
   }
 }
 </script>
+
+
 <style scoped>
 .signup-container {
   max-width: 400px;
