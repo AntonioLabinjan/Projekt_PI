@@ -1,5 +1,5 @@
-# Provat sklepat neki basic auth system kroz store.js (pohranjujemo usernames i passworde)
-# dodan store.js u sve komponente osim na onu s medaljicama
+##### ~~Provat sklepat neki basic auth system kroz store.js (pohranjujemo usernames i passworde)~~  (sklepano)
+# dodan je store.js u sve komponente osim na onu s medaljicama
 #### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
 #### Trainingapp (nije definitivni naziv)
 #### Koncept aplikacije (ideja...moguće da će se modificirat u hodu)
