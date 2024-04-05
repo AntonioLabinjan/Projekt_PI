@@ -20,5 +20,3 @@ Te su aktivnosti:
 
 https://www.figma.com/file/f8u5rOvTMgHEVSlU6denFg/Untitled?type=design&node-id=0%3A1&mode=design&t=brZMxneQCVA9nUOM-1    FIGMA LINK
 
-# IMPLEMENTIRATI QR KOD SKENER U APLIKACIJU
-https://github.com/AntonioLabinjan/QR_scanner/tree/master
