@@ -17,6 +17,8 @@ Te su aktivnosti:
 - praćenje training streaka
 - prijedlozi za odrađivanje vježbi
 - prijedlozi za obroke
-
+- music player
+- praćenje kalorijskog balansa
+- qr kod skener
 https://www.figma.com/file/f8u5rOvTMgHEVSlU6denFg/Untitled?type=design&node-id=0%3A1&mode=design&t=brZMxneQCVA9nUOM-1    FIGMA LINK
 
