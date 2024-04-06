@@ -67,8 +67,72 @@ export default {
 
 <style scoped>
 /*dark mode */
-.dark-mode {
+.login-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.button-group {
+  text-align: center;
+}
+
+.btn {
+  padding: 10px 20px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.btn-dark {
+  margin-top: 10px;
+  display: block;
+  width: 100%;
   background-color: #333;
+  color: #fff;
+}
+
+.btn-dark:hover {
+  background-color: #555;
+}
+
+.login-container.dark-mode {
+  background-color: #000;
   color: #fff;
 }
 </style>
