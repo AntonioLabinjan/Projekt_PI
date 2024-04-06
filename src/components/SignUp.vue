@@ -157,9 +157,20 @@ label {
   color: #fff;
 }
 
-.container.dark-mode {
-  background-color: #000;
+.btn-dark {
+  margin-top: 10px;
+  display: block;
+  width: 100%;
+  background-color: #333;
   color: #fff;
 }
 
+.btn-dark:hover {
+  background-color: #555;
+}
+
+.signup-container.dark-mode {
+  background-color: #333;
+  color: #fff;
+}
 </style>
