@@ -1,3 +1,5 @@
+<!--Ovo je bila samo ideja za kreiranje nekakve komponente za spremanje ciljeva i praćenje njihovog ostvarenja, ali sam pri izradi skužio da nema smisla da radim posebnu komponentu samo za to, pošto to već pratim sa raznim grafikonima i statistikama na pojedinim komponentama-->
+
 <template>
     <div>
       <h2>Postavljanje Cilja</h2>
