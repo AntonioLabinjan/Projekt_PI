@@ -35,7 +35,7 @@
     <div class="caloric-balance">
       <p>Current caloric balance: {{ currentCaloricBalance }}</p>
     </div>
-
+<hr>
     <notification-maker></notification-maker>
   </div>
 </template>
