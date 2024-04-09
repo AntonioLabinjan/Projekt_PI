@@ -52,12 +52,14 @@
       <strong>Total Entries:</strong> {{ totalEntries }}<br>
       <strong>Average Quality:</strong> {{ averageQuality }}
     </div>
+    <div v-if="showAlert" class="alert">
+      <p>Između dva uzastopna unosa za san ima više od 2 dana! Razmislite o tome da malo popravite sleep schedule!!!</p>
+    </div>
   </div>
 </template>
 
 <script>
-// Importamo Vuex store
-export default {
+  export default {
   data() {
     return {
       darkMode: false,
@@ -70,9 +72,12 @@ export default {
       sleepEntries: this.$store.state.sleepEntries,
       editIndex: null,
       editEntry: false,
+      previousEntryDate: null,
+      showAlert: false,
     };
   },
   computed: {
+    // Pristupamo getterima iz Vuex store-a
     totalEntries() {
       return this.$store.getters.totalSleepEntries;
     },
@@ -97,6 +102,19 @@ export default {
       }
     },
     addSleepEntry() {
+      if (this.previousEntryDate) {
+        const currentDate = new Date(this.newSleepEntry.date);
+        const previousDate = new Date(this.previousEntryDate);
+        const differenceInDays = Math.abs((currentDate - previousDate) / (1000 * 60 * 60 * 24));
+
+        if (differenceInDays > 2) {
+          this.showAlert = true;
+        } else {
+          this.showAlert = false;
+        }
+      }
+      this.previousEntryDate = this.newSleepEntry.date;
+
       this.$store.dispatch('addSleepEntry', { ...this.newSleepEntry });
       this.resetForm();
     },
@@ -104,6 +122,8 @@ export default {
       this.editIndex = index;
       this.newSleepEntry = { ...this.sleepEntries[index] };
       this.editEntry = true;
+
+      this.previousEntryDate = this.newSleepEntry.date;
     },
     saveEditedSleepEntry() {
       this.$store.dispatch('editSleepEntry', { index: this.editIndex, entry: { ...this.newSleepEntry } });
@@ -291,4 +311,15 @@ ul.exercise-display-section {
 .navbar-nav li:last-child {
   margin-right: 0;
 }
+
+/* Stilizacija za upozorenje */
+.alert {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f8d7da; /* Crvenkasta pozadina */
+  color: #721c24; /* Tamno crvena boja teksta */
+  border: 1px solid #f5c6cb; /* Rub */
+  border-radius: 4px; /* Zaobljeni rubovi */
+}
+
 </style>
