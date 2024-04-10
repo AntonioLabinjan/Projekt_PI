@@ -2,6 +2,7 @@
   <div class="music-player-container" :class="{ 'dark-mode': isDarkMode }">
     <div class="header">
       <h1>Music Player</h1>
+      <hr>
       <nav>
       <ul class="navbar">
         <li><button @click="goToImageGallery">Image Gallery</button></li>
@@ -26,7 +27,7 @@
         <div class="button-group">
           <button @click="play(song)">Play</button>
           <button @click="edit(song)">Edit</button>
-          <button @click="deleteSong(id)">Delete</button>
+          <button @click="deleteSong(song.id)">Delete</button>
         </div>
       </li>
     </ul>
@@ -46,6 +47,14 @@
       <button @click="saveEditedSong">Spremi promjene</button>
     </div>
     <button @click="goBackHome" class="back-button">Povratak na početnu</button>
+
+    <!-- Prikaz countera za žanrove -->
+    <div class="genre-counter">
+      <h2>Genre Counter</h2>
+      <div v-for="(count, genre) in genreCounter" :key="genre">
+        {{ genre }}: {{ count }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -60,11 +69,11 @@ export default {
       showEditForm: false, 
       newSong: { title: '', author: '', genre: '', youtubeLink: '' }, 
       editedSong: { id: null, title: '', author: '', genre: '', youtubeLink: '' },
-      isDarkMode: false
+      isDarkMode: false,
     };
   },
   computed: {
-    ...mapState(['songs']),
+    ...mapState(['songs', 'genreCounter']),
     filteredSongs() {
       return this.songs.filter(song =>
         song.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
@@ -94,11 +103,16 @@ export default {
       }
     },
     deleteSong(id) {
-      this.$store.dispatch('deleteSong', id);
+      const song = this.songs.find(song => song.id === id);
+      if (song) {
+        this.$store.commit('deleteSong', id);
+        this.$store.commit('decrementGenreCounter', song.genre);
+      }
     },
     addNewSong() { 
       this.newSong.id = this.songs.length + 1;
       this.addSong({ ...this.newSong });
+      this.$store.commit('incrementGenreCounter', this.newSong.genre);
       this.showAddForm = false;
       this.newSong = { title: '', author: '', genre: '', youtubeLink: '' };
     },
@@ -140,7 +154,7 @@ export default {
     },
     goToScanner() {
       this.$router.push({ path: '/qr-scanner'});
-    },
+    }
   }
 };
 </script>
@@ -230,7 +244,6 @@ export default {
   border-radius: 5px;
   cursor: pointer;
 }
-
 
 .dark-mode .header,
 .dark-mode .search-bar input,
