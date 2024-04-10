@@ -39,6 +39,18 @@
         <h3 class="feature-title">Recommendations</h3>
         <p>Find exercises and meals among our suggestions.</p>
       </div>
+      <div class="feature">
+        <h3 class="feature-title">Music player</h3>
+        <p>Add and play your favourite music</p>
+      </div>
+      <div class="feature">
+        <h3 class="feature-title">Motivate yourself with quotes</h3>
+        <p>Get variety of quotes to improve your motivation</p>
+      </div>
+      <div class="feature">
+        <h3 class="feautre-title">Enable yourself to train persistently</h3>
+        <p>Set notifications to remind you of regular training</p>
+      </div> 
     </div>
 
     <p>For all these features, Vue Trainer provides CRUD operations, along with user authentication through login and sign-up functionalities.</p>
