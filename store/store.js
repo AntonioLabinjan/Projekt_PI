@@ -8,15 +8,16 @@ const store = createStore({
       meals: [],
       images: [],
       exercises: [],
-      selectedDates: [], 
-      currentStreak: null, 
-      recordStreak: null, 
+      selectedDates: [],
+      currentStreak: null,
+      recordStreak: null,
       medalCounter: 0,
       notifications: [],
       songs: [],
       users: [], 
       currentUser: null, 
-      isLoggedIn: false 
+      isLoggedIn: false,
+      genreCounter: {}
     };
   },
   mutations: {
@@ -28,7 +29,13 @@ const store = createStore({
       state.songs.splice(index, 1, song);
     },
     deleteSong(state, index) {
-      state.songs.splice(index, 1);
+      const deletedSong = state.songs.splice(index, 1)[0];
+      if (state.genreCounter[deletedSong.genre]) {
+        state.genreCounter[deletedSong.genre]--;
+        if (state.genreCounter[deletedSong.genre] === 0) {
+          delete state.genreCounter[deletedSong.genre];
+        }
+      }
     },
     addIntake(state, intake) {
       state.waterIntake.push(intake);
@@ -79,61 +86,67 @@ const store = createStore({
     filterExercisesByIntensity(state, intensity) {
       state.exercises = state.exercises.filter(exercise => exercise.intensity.includes(intensity));
     },
-        addDate(state, date) {
-          state.selectedDates.push(date);
-        },
-        removeDate(state, index) {
-          state.selectedDates.splice(index, 1);
-        },
-        updateStreak(state) {
-          let streak = 0;
-          const today = new Date();
-          const yesterday = new Date(today);
+    addDate(state, date) {
+      state.selectedDates.push(date);
+    },
+    removeDate(state, index) {
+      state.selectedDates.splice(index, 1);
+    },
+    updateStreak(state) {
+      let streak = 0;
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      for (let i = state.selectedDates.length - 1; i >= 0; i--) {
+        const currentDate = new Date(state.selectedDates[i]);
+        if (currentDate.toDateString() === yesterday.toDateString()) {
+          streak++;
           yesterday.setDate(yesterday.getDate() - 1);
-    
-          for (let i = state.selectedDates.length - 1; i >= 0; i--) {
-            const currentDate = new Date(state.selectedDates[i]);
-            if (currentDate.toDateString() === yesterday.toDateString()) {
-              streak++;
-              yesterday.setDate(yesterday.getDate() - 1);
-            } else {
-              break;
-            }
-          }
-    
-          state.currentStreak = streak;
-    
-          if (streak > state.recordStreak) {
-            state.recordStreak = streak;
-          }
-        },
-        updateMedalCounter(state) {
-          state.medalCounter = Math.floor(state.recordStreak / 7);
-        },
-        addNotification(state, notification) {
-          state.notifications.push(notification);
-        },
-        addUser(state, user) {
-          state.users.push(user);
-        },
-        loginUser(state, credentials) {
-          // Pronalazimo korisnika u listi korisnika s odgovarajućim korisničkim imenom i lozinkom
-          const user = state.users.find(u => u.username === credentials.username && u.password === credentials.password);
-          if (user) {
-            state.currentUser = user;
-            state.isLoggedIn = true;
-          } else {
-            state.currentUser = null;
-            state.isLoggedIn = false;
-          }
-        },
-        logoutUser(state) {
-          state.currentUser = null;
-          state.isLoggedIn = false;
+        } else {
+          break;
         }
-      },
+      }
+
+      state.currentStreak = streak;
+
+      if (streak > state.recordStreak) {
+        state.recordStreak = streak;
+      }
+    },
+    updateMedalCounter(state) {
+      state.medalCounter = Math.floor(state.recordStreak / 7);
+    },
+    addNotification(state, notification) {
+      state.notifications.push(notification);
+    },
+    addUser(state, user) {
+      state.users.push(user);
+    },
+    loginUser(state, credentials) {
+      const user = state.users.find(u => u.username === credentials.username && u.password === credentials.password);
+      if (user) {
+        state.currentUser = user;
+        state.isLoggedIn = true;
+      } else {
+        state.currentUser = null;
+        state.isLoggedIn = false;
+      }
+    },
+    logoutUser(state) {
+      state.currentUser = null;
+      state.isLoggedIn = false;
+    },
+    incrementGenreCounter(state, genre) {
+      if (state.genreCounter[genre]) {
+        state.genreCounter[genre]++;
+      } else {
+        state.genreCounter[genre] = 1;
+      }
+    }
+  },
   actions: {
-    addSong({ commit }, song) {
+    addSong({ commit }, song) { 
       commit('addSong', song);
     },
     editSong({ commit }, payload) {
@@ -188,31 +201,31 @@ const store = createStore({
       commit('filterExercisesByIntensity', intensity);
     },
     addDate({ commit, dispatch }, date) {
-        commit('addDate', date);
-        dispatch('updateStreak');
-        dispatch('updateMedalCounter');
-      },
-      removeDate({ commit, dispatch }, index) {
-        commit('removeDate', index);
-        dispatch('updateStreak');
-        dispatch('updateMedalCounter');
-      },
-      updateStreak({ commit }) {
-        commit('updateStreak');
-      },
-      updateMedalCounter({ commit }) {
-        commit('updateMedalCounter');
-      },
-      registerUser({ commit }, user) {
-        commit('addUser', user);
-      },
-      loginUser({ commit }, credentials) {
-        commit('loginUser', credentials);
-      },
-      logoutUser({ commit }) {
-        commit('logoutUser');
-      }
+      commit('addDate', date);
+      dispatch('updateStreak');
+      dispatch('updateMedalCounter');
     },
+    removeDate({ commit, dispatch }, index) {
+      commit('removeDate', index);
+      dispatch('updateStreak');
+      dispatch('updateMedalCounter');
+    },
+    updateStreak({ commit }) {
+      commit('updateStreak');
+    },
+    updateMedalCounter({ commit }) {
+      commit('updateMedalCounter');
+    },
+    registerUser({ commit }, user) {
+      commit('addUser', user);
+    },
+    loginUser({ commit }, credentials) {
+      commit('loginUser', credentials);
+    },
+    logoutUser({ commit }) {
+      commit('logoutUser');
+    }
+  },
   getters: {
     totalIntake(state) {
       return state.waterIntake.reduce((total, intake) => total + intake.amount, 0);
@@ -272,7 +285,7 @@ const store = createStore({
       return state.exercises.reduce((total, exercise) => total + exercise.calories, 0);
     },
     totalDuration(state) {
-        return state.exercises.reduce((total, exercise) => total + exercise.duration, 0);
+      return state.exercises.reduce((total, exercise) => total + exercise.duration, 0);
     },
     averageDuration(state, getters) {
       if (getters.totalExercises === 0) {
@@ -282,49 +295,48 @@ const store = createStore({
       return (totalDuration / getters.totalExercises).toFixed(2);
     },
     averageCaloriesPerExercise(state) {
-        if (state.exercises.length === 0) {
-          return 0;
-        }
-        const totalCalories = state.exercises.reduce((total, exercise) => total + exercise.calories, 0);
-        return totalCalories / state.exercises.length;
+      if (state.exercises.length === 0) {
+        return 0;
+      }
+      const totalCalories = state.exercises.reduce((total, exercise) => total + exercise.calories, 0);
+      return totalCalories / state.exercises.length;
     },
     currentStreak(state) {
-        return state.currentStreak;
-      },
-      recordStreak(state) {
-        return state.recordStreak;
-      },
-      selectedDates(state) {
-        return state.selectedDates;
-      },
-      medalCounter(state) {
-        return state.medalCounter;
-      },
-      currentCaloricBalance(state) {
-        const totalCaloriesBurned = state.exercises.reduce((total, exercise) => total + exercise.calories, 0);
-        const totalCaloriesIntake = state.meals.reduce((total, meal) => total + meal.calories, 0);
-        let SdCheck = "totally balanced";
-        if(totalCaloriesBurned<totalCaloriesIntake){
-          SdCheck = "caloric suficit";
-        }
-        else if(totalCaloriesBurned>totalCaloriesIntake){
-          SdCheck = "caloric deficit"
-        }
-        return (totalCaloriesIntake - totalCaloriesBurned) + ' ' + '('+ SdCheck + ')';
-      },
-      notifications(state) {
-        return state.notifications;
-      },
-      addNotification(state, notifications){
-        state.notifications.push(notifications);
-      },
-      getCurrentUser(state) {
-        return state.currentUser;
-      },
-      isLoggedIn(state) {
-        return state.isLoggedIn;
+      return state.currentStreak;
+    },
+    recordStreak(state) {
+      return state.recordStreak;
+    },
+    selectedDates(state) {
+      return state.selectedDates;
+    },
+    medalCounter(state) {
+      return state.medalCounter;
+    },
+    currentCaloricBalance(state) {
+      const totalCaloriesBurned = state.exercises.reduce((total, exercise) => total + exercise.calories, 0);
+      const totalCaloriesIntake = state.meals.reduce((total, meal) => total + meal.calories, 0);
+      let SdCheck = "totally balanced";
+      if (totalCaloriesBurned < totalCaloriesIntake) {
+        SdCheck = "caloric surplus";
+      } else if (totalCaloriesBurned > totalCaloriesIntake) {
+        SdCheck = "caloric deficit";
       }
-      }
+      return (totalCaloriesIntake - totalCaloriesBurned) + ' ' + '(' + SdCheck + ')';
+    },
+    notifications(state) {
+      return state.notifications;
+    },
+    getCurrentUser(state) {
+      return state.currentUser;
+    },
+    isLoggedIn(state) {
+      return state.isLoggedIn;
+    },
+    genreCounter(state) {
+      return state.genreCounter;
     }
-  );
-  export default store;
+  }
+});
+
+export default store;
