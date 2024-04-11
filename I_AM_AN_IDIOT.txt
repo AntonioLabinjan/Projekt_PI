@@ -1,3 +1,5 @@
+// pokušavao sam se povezati na firebaseov firestore, bez da sam prije toga složio kolekcije i bazu na cloudu...oopsie
+
 <template>
     <div>
       <h2>Word List</h2>
