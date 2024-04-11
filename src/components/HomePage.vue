@@ -30,6 +30,7 @@
     <div class="motivational-quote">
       <p>{{ motivationalQuote }}</p>
       <button @click="readMotivationalQuote">Read The Quote</button>
+      <hr>
     </div>
 
     <div class="caloric-balance">
@@ -139,6 +140,22 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  position: relative; 
+}
+
+.container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to bottom right, #4CAF50, #2196F3);
+  opacity: 0.3; 
+  pointer-events: none; 
+}
+
 .container.dark-mode {
   background-color: #262626;
   color: #fff;
@@ -164,7 +181,7 @@ export default {
   margin: 5px;
   cursor: pointer;
   border-radius: 5px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease; 
 }
 
 .login-signup-buttons button:hover,
@@ -173,10 +190,27 @@ export default {
 .caloric-balance button:hover,
 .motivational-quote button:hover {
   background-color: #45a049;
+  transform: scale(1.05); 
+}
+
+.header {
+  position: relative; 
+  z-index: 1; 
 }
 
 .header h1 {
   margin-top: 0;
+  font-size: 2.5em; 
+  text-transform: uppercase; 
+}
+
+.header h4 {
+  font-size: 1.2em; 
+}
+
+.motivational-quote {
+  position: relative; 
+  z-index: 1; 
 }
 
 .motivational-quote p {
@@ -184,7 +218,17 @@ export default {
   margin-top: 20px;
 }
 
+.motivational-quote button {
+  font-weight: bold; 
+  border: 2px solid #4CAF50; 
+}
+
+.motivational-quote button:hover {
+  background-color: #4CAF50; 
+}
+
 .caloric-balance p {
   font-weight: bold;
 }   
+
 </style>
