@@ -1,5 +1,5 @@
 <template>
-  <div class="about" :class="{ 'dark-mode': darkMode }">
+  <div class="about container" :class="{ 'dark-mode': darkMode }">
     <h2>About Vue Trainer</h2>
     <hr>
     <p>Welcome to <b>Vue Trainer</b>, your ultimate fitness companion!</p>
@@ -48,7 +48,7 @@
         <p>Get variety of quotes to improve your motivation</p>
       </div>
       <div class="feature">
-        <h3 class="feautre-title">Enable yourself to train persistently</h3>
+        <h3 class="feature-title">Enable yourself to train persistently</h3>
         <p>Set notifications to remind you of regular training</p>
       </div> 
     </div>
@@ -121,7 +121,7 @@ p {
 
 .feature-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Prilagođava se širini ekrana */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
   gap: 20px;
 }
 
@@ -139,7 +139,7 @@ p {
 }
 
 .feature h3 {
-  color: #007bff;
+  color: #4CAF50;
   margin-bottom: 10px;
 }
 
@@ -154,7 +154,7 @@ p {
 }
 
 button {
-  background-color: #007bff;
+  background-color: #4CAF50;
   color: #fff;
   padding: 12px 24px;
   border: none;
@@ -169,7 +169,7 @@ button:hover {
 }
 
 .dark-mode {
-  background-color: #222; /* Crna pozadina u dark modu */
+  background-color: #222; 
 }
 
 .dark-mode h2,
@@ -177,7 +177,7 @@ button:hover {
 .dark-mode .feature h3,
 .dark-mode .feature p,
 .dark-mode .author-info p {
-  color: #fff; /* Bijeli tekst u dark modu */
+  color: #fff; 
 }
 
 .dark-mode .feature {
@@ -209,4 +209,96 @@ button:hover {
 .dark-mode button:hover {
   background-color: #ddd;
 }
+
+
+.container {
+  position: relative; 
+}
+
+.container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to bottom right, #4CAF50, #2196F3);
+  opacity: 0.3; 
+  pointer-events: none; 
+}
+
+.container.dark-mode {
+  background-color: #262626;
+  color: #fff;
+}
+
+.container {
+  background-color: #f4f4f4;
+}
+
+.highlight {
+  color: #4CAF50;
+}
+
+.login-signup-buttons button,
+.navbar button,
+.about-button button,
+.caloric-balance button,
+.motivational-quote button {
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Added transition for background color change and scaling */
+}
+
+.login-signup-buttons button:hover,
+.navbar button:hover,
+.about-button button:hover,
+.caloric-balance button:hover,
+.motivational-quote button:hover {
+  background-color: #45a049;
+  transform: scale(1.05); /* Increased button size on hover */
+}
+
+.header {
+  position: relative; /* Ensure stacking context for z-index */
+  z-index: 1; /* Place header above overlay */
+}
+
+.header h1 {
+  margin-top: 0;
+  font-size: 2.5em; /* Increase font size for emphasis */
+  text-transform: uppercase; /* Make heading uppercase for boldness */
+}
+
+.header h4 {
+  font-size: 1.2em; /* Increase font size for emphasis */
+}
+
+.motivational-quote {
+  position: relative; /* Ensure stacking context for z-index */
+  z-index: 1; /* Place quote above overlay */
+}
+
+.motivational-quote p {
+  font-style: italic;
+  margin-top: 20px;
+}
+
+.motivational-quote button {
+  font-weight: bold; /* Make button text bold for emphasis */
+  border: 2px solid #4CAF50; /* Add border for extra definition */
+}
+
+.motivational-quote button:hover {
+  background-color: #4CAF50; /* Adjust hover background color to match border color */
+}
+
+.caloric-balance p {
+  font-weight: bold;
+}   
 </style>
