@@ -1,3 +1,6 @@
+## Spojen firebase na drugoj aplikaciji; sad treba malo tuć po modificiranju koda za ovu aplikaciju
+https://github.com/AntonioLabinjan/Todo_with_firebase
+
 ##### ~~Provat sklepat neki basic auth system kroz store.js (pohranjujemo usernames i passworde)~~  (sklepano)
 ##### commitat onaj sleep alert
 # dodan je store.js u sve komponente osim na onu s medaljicama
