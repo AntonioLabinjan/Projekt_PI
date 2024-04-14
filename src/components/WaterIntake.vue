@@ -67,30 +67,14 @@
 </template>
 
 <script>
+import { collection, onSnapshot, addDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { db } from '@/firebase';
+
 export default {
-  computed: {
-    waterIntake() {
-      return this.$store.state.waterIntake;
-    },
-    totalIntake() {
-      return this.$store.getters.totalIntake;
-    },
-    totalIntakes() {
-      return this.$store.getters.totalIntakes;
-    },
-    averageIntakePerTime() {
-      return this.$store.getters.averageIntakePerTime;
-    },
-    intakeColor() {
-      return this.$store.getters.intakeColor;
-    },
-    barWidth() {
-      return this.$store.getters.barWidth;
-    }
-  },
   data() {
     return {
       darkMode: false,
+      waterIntake: [],
       newIntake: {
         type: "",
         amount: 0,
@@ -104,6 +88,37 @@ export default {
       }
     };
   },
+  computed: {
+    totalIntake() {
+      return this.waterIntake.reduce((total, intake) => total + intake.amount, 0);
+    },
+    totalIntakes() {
+      return this.waterIntake.length;
+    },
+    averageIntakePerTime() {
+      if (this.totalIntakes === 0) {
+        return 0;
+      }
+      return (this.totalIntake / this.totalIntakes).toFixed(2);
+    },
+    intakeColor() {
+  const totalIntake = this.waterIntake.reduce((total, intake) => total + intake.amount, 0);
+
+  if (totalIntake >= 2000) {
+    return '#28a745'; 
+  } else if (totalIntake >= 1000) {
+    return '#ffc107'; 
+  } else {
+    return '#dc3545'; 
+  }
+},
+barWidth() {
+  const totalIntake = this.waterIntake.reduce((total, intake) => total + intake.amount, 0);
+
+  return `${Math.min(totalIntake / 4000 * 100, 100)}%`; 
+}
+
+  },
   methods: {
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
@@ -113,22 +128,32 @@ export default {
         document.body.classList.remove('dark-mode');
       }
     },
-    addIntake() {
-      this.$store.dispatch('addIntake', { ...this.newIntake });
-      this.resetForm();
+    async addIntake() {
+      try {
+        const intakeRef = await addDoc(collection(db, 'waterIntake'), this.newIntake);
+        console.log('Intake added successfully:', intakeRef.id);
+        this.resetForm();
+      } catch (error) {
+        console.error('Error adding intake:', error);
+      }
     },
     openEditDialog(index) {
       this.editIndex = index;
       this.editedIntake = { ...this.waterIntake[index] };
     },
-    saveEdit() {
-      this.$store.dispatch('editIntake', { index: this.editIndex, intake: { ...this.editedIntake } });
-      this.editIndex = null;
-      this.editedIntake = {
-        type: "",
-        amount: 0,
-        time: ""
-      };
+    async saveEdit() {
+      try {
+        await updateDoc(doc(db, 'waterIntake', this.waterIntake[this.editIndex].id), this.editedIntake);
+        console.log('Intake updated successfully:', this.waterIntake[this.editIndex].id);
+        this.editIndex = null;
+        this.editedIntake = {
+          type: "",
+          amount: 0,
+          time: ""
+        };
+      } catch (error) {
+        console.error('Error updating intake:', error);
+      }
     },
     confirmDeleteIntake(index) {
       const isConfirmed = window.confirm("Do you really want to delete this intake?");
@@ -136,8 +161,13 @@ export default {
         this.deleteIntake(index);
       }
     },
-    deleteIntake(index) {
-      this.$store.dispatch('removeIntake', index);
+    async deleteIntake(index) {
+      try {
+        await deleteDoc(doc(db, 'waterIntake', this.waterIntake[index].id));
+        console.log('Intake deleted successfully:', this.waterIntake[index].id);
+      } catch (error) {
+        console.error('Error deleting intake:', error);
+      }
     },
     cancelEdit() {
       this.editIndex = null;
@@ -178,11 +208,33 @@ export default {
     goToMusicPlayer(){
       this.$router.push({path: '/music'});
     },
+  },
+  async mounted() {
+    try {
+      onSnapshot(collection(db, 'waterIntake'), (querySnapshot) => {
+        const updatedIntake = [];
+        querySnapshot.forEach((doc) => {
+          const intakeData = doc.data();
+          intakeData.id = doc.id;
+          updatedIntake.push(intakeData);
+        });
+        this.waterIntake = updatedIntake;
+      });
+    } catch (error) {
+      console.error('Error fetching water intake:', error);
+    }
   }
+
 };
 </script>
 
 <style scoped>
+/* CSS styles for water intake tracker component */
+.container.dark-mode {
+  background-color: #000;
+  color: #fff;
+}
+
 .intake-input-section,
 .intake-display-section,
 .statistics {
@@ -276,14 +328,5 @@ export default {
 .intake-bar-chart .bar {
   height: 100%;
   background-color: #007bff; 
-}
-
-.container.dark-mode {
-  background-color: #000;
-  color: #fff;
-}
-.container.dark-mode {
-  background-color: #000;
-  color: #fff;
 }
 </style>
