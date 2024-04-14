@@ -10,7 +10,6 @@
           <li><button @click="goToWaterIntakeTracker" class="btn-secondary">Go to Water Intake Tracker</button></li>
           <li><button @click="goToBMI" class="btn-secondary">Go to BMI Calculator</button></li>
           <li><button @click="goToStreak" class="btn-secondary">Go to Streak Tracker</button></li>
-          <li><button @click="goToMusicPlayer">Music Player</button></li>
           <li><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
         </ul>
       </nav>
@@ -50,12 +49,12 @@
         <strong>Ingredients:</strong> {{ meal.ingredients }}<br>
         <strong>Calories:</strong> {{ meal.calories }} kcal<br>
         <button class="edit-btn" @click="openEditDialog(index)">Edit</button>
-        <button class="delete-btn" @click="confirmDeleteMeal(index)">Delete</button>
+        <button class="delete-btn" @click="deleteMeal(meal.id)">Delete</button> 
       </li>
     </ul>
 
     <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
-    
+
     <div class="statistics">
       <strong>Total Calories:</strong> {{ totalCalories }} kcal<br>
       <strong>Total Meals:</strong> {{ totalMeals }}<br>
@@ -74,6 +73,10 @@
 </template>
 
 <script>
+// import { ref, onMounted } from 'vue'
+import { collection, onSnapshot, addDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore'
+import { db } from '@/firebase'
+
 export default {
   data() {
     return {
@@ -83,6 +86,7 @@ export default {
         ingredients: "",
         calories: 0,
       },
+      meals: [],
       editIndex: null,
       editedMeal: {
         name: "",
@@ -97,20 +101,22 @@ export default {
   },
   computed: {
     totalCalories() {
-      return this.$store.getters.totalCalories; // Povezivanje sa Vuex store-om
+      return this.meals.reduce((total, meal) => total + meal.calories, 0);
     },
     totalMeals() {
-      return this.$store.getters.totalMeals; // Povezivanje sa Vuex store-om
+      return this.meals.length;
     },
     averageCaloriesPerMeal() {
-      return this.$store.getters.averageCaloriesPerMeal; // Povezivanje sa Vuex store-om
+      if (this.totalMeals === 0) {
+        return 0;
+      }
+      return (this.totalCalories / this.totalMeals).toFixed(2);
     },
     filteredMealsByIngredient() {
-      const meals = this.$store.state.meals; // Povezivanje sa Vuex store-om
       if (!this.ingredientFilter) {
-        return meals;
+        return this.meals;
       }
-      return meals.filter(meal => meal.ingredients.toLowerCase().includes(this.ingredientFilter.toLowerCase()));
+      return this.meals.filter(meal => meal.ingredients.toLowerCase().includes(this.ingredientFilter.toLowerCase()));
     },
   },
   methods: {
@@ -122,29 +128,48 @@ export default {
         document.body.classList.remove('dark-mode');
       }
     },
-    addMeal() {
-      this.$store.dispatch('addMeal', { ...this.newMeal }); // Povezivanje sa Vuex store-om
-      this.resetForm();
-      this.updatePieChart();
+    async addMeal() {
+      try {
+        const mealRef = await addDoc(collection(db, 'meals'), this.newMeal);
+        console.log('Meal added successfully:', mealRef.id);
+        this.resetForm();
+        this.updatePieChart();
+      } catch (error) {
+        console.error('Error adding meal:', error);
+      }
     },
     openEditDialog(index) {
       this.editIndex = index;
-      this.editedMeal = { ...this.filteredMealsByIngredient[index] };
+      this.editedMeal = { ...this.meals[index] };
     },
-    saveEdit() {
-      this.$store.dispatch('updateMeal', { index: this.editIndex, meal: { ...this.editedMeal } }); // Povezivanje sa Vuex store-om
-      this.editIndex = null;
-      this.editedMeal = {
-        name: "",
-        ingredients: "",
-        calories: 0,
-      };
-      this.updatePieChart();
+    async saveEdit() {
+      try {
+        await updateDoc(doc(db, 'meals', this.meals[this.editIndex].id), this.editedMeal);
+        console.log('Meal updated successfully:', this.meals[this.editIndex].id);
+        this.editIndex = null;
+        this.editedMeal = {
+          name: "",
+          ingredients: "",
+          calories: 0,
+        };
+        this.updatePieChart();
+      } catch (error) {
+        console.error('Error updating meal:', error);
+      }
     },
     confirmDeleteMeal(index) {
       const isConfirmed = window.confirm("Do you really want to delete this meal?");
       if (isConfirmed) {
-        this.$store.dispatch('deleteMeal', index); // Povezivanje sa Vuex store-om
+        this.deleteMeal(index);
+      }
+    },
+    async deleteMeal(id) {
+      try {
+        await deleteDoc(doc(db, 'meals', id));
+        console.log('Meal deleted successfully:', id);
+        this.updatePieChart();
+      } catch (error) {
+        console.error('Error deleting meal:', error);
       }
     },
     cancelEdit() {
@@ -163,29 +188,24 @@ export default {
       };
     },
     updatePieChart() {
-      // Postavite veličinu canvasa
       const canvas = this.$refs.pieChartCanvas;
       canvas.width = 300;
       canvas.height = 300;
       this.pieChartContext = canvas.getContext('2d');
       
-      // Postavite središte grafikona
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
       const radius = Math.min(centerX, centerY);
 
-      // Izračunaj ukupne kalorije
-      const totalCalories = this.$store.state.meals.reduce((total, meal) => total + meal.calories, 0);
+      const totalCalories = this.meals.reduce((total, meal) => total + meal.calories, 0);
 
-      // Izračunajte udjele kalorija za svaki obrok
-      this.pieChartData = this.$store.state.meals.map(meal => {
+      this.pieChartData = this.meals.map(meal => {
         return {
           name: meal.name,
           percentage: (meal.calories / totalCalories) * 100
         };
       });
 
-      // Nacrtajte pie chart
       let startAngle = 0;
       this.pieChartData.forEach((data, index) => {
         const sliceAngle = (data.percentage / 100) * Math.PI * 2;
@@ -197,7 +217,6 @@ export default {
         this.pieChartContext.closePath();
         this.pieChartContext.fill();
 
-        // Postavite kutove za sljedeći segment
         startAngle += sliceAngle;
       });
     },
@@ -220,23 +239,34 @@ export default {
       this.$router.push({ path: '/BMI-calculator' });
     },
     goToStreak() {
-      this.$router.push({ path: '/streak' });
-    },
-    goToMusicPlayer(){
-      this.$router.push({path: '/music'});
+      this.$router.push({path: '/streak'});
     },
   },
-  mounted() {
-    this.updatePieChart();
+  async mounted() {
+    try {
+      onSnapshot(collection(db, 'meals'), (querySnapshot) => {
+        const updatedMeals = [];
+        querySnapshot.forEach((doc) => {
+          const mealData = doc.data();
+          mealData.id = doc.id;
+          updatedMeals.push(mealData);
+        });
+        this.meals = updatedMeals;
+      });
+    } catch (error) {
+      console.error('Error fetching meals:', error);
+    }
   }
 };
 </script>
-
 <style scoped>
+/* CSS styles for meal tracker component */
 .container.dark-mode {
   background-color: #000;
   color: #fff;
 }
+
+
 
 .pie-chart-section {
   text-align: center;
