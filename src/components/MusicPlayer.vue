@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { collection, addDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 
 export default {
@@ -96,12 +96,17 @@ export default {
       this.editedSong = { ...song };
       this.showEditForm = true;
     },
-    saveEditedSong() {
+    async saveEditedSong() {
       const index = this.$store.state.songs.findIndex(song => song.id === this.editedSong.id);
       if (index !== -1) {
-        this.$store.dispatch('editSong', { index, song: { ...this.editedSong } });
-        this.showEditForm = false;
-        this.editedSong = { id: null, title: '', author: '', genre: '', youtubeLink: '' };
+        try {
+          await updateDoc(doc(db, 'songs', this.editedSong.id), this.editedSong);
+          this.$store.dispatch('editSong', { index, song: { ...this.editedSong } });
+          this.showEditForm = false;
+          this.editedSong = { id: null, title: '', author: '', genre: '', youtubeLink: '' };
+        } catch (error) {
+          console.error('Error saving edited song:', error);
+        }
       }
     },
     async deleteSong(id) {
