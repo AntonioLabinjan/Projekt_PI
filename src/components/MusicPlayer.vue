@@ -4,16 +4,16 @@
       <h1>Music Player</h1>
       <hr>
       <nav>
-      <ul class="navbar">
-        <li><button @click="goToImageGallery">Image Gallery</button></li>
-        <li><button @click="goToVueTrainer">Training App</button></li>
-        <li><button @click="goToMealTracker">Meal Tracker</button></li>
-        <li><button @click="goToSleepTracker">Sleep Tracker</button></li>
-        <li><button @click="goToWaterIntake">Water Intake Tracker</button></li>
-        <li><button @click="goToBMI">BMI Calculator</button></li>
-        <li><button @click="goToStreak">Streak Tracker</button></li>
-      </ul>
-    </nav>
+        <ul class="navbar">
+          <li><button @click="goToImageGallery">Image Gallery</button></li>
+          <li><button @click="goToVueTrainer">Training App</button></li>
+          <li><button @click="goToMealTracker">Meal Tracker</button></li>
+          <li><button @click="goToSleepTracker">Sleep Tracker</button></li>
+          <li><button @click="goToWaterIntake">Water Intake Tracker</button></li>
+          <li><button @click="goToBMI">BMI Calculator</button></li>
+          <li><button @click="goToStreak">Streak Tracker</button></li>
+        </ul>
+      </nav>
       <button @click="toggleDarkMode" class="dark-mode-button">{{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}</button>
     </div>
     <div class="search-bar">
@@ -59,7 +59,8 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { collection, addDoc, deleteDoc, doc } from 'firebase/firestore';
+import { db } from '@/firebase';
 
 export default {
   data() {
@@ -73,19 +74,20 @@ export default {
     };
   },
   computed: {
-    ...mapState(['songs', 'genreCounter']),
     filteredSongs() {
-      return this.songs.filter(song =>
+      return this.$store.state.songs.filter(song =>
         song.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         song.author.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         song.genre.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
+    },
+    genreCounter() {
+      return this.$store.state.genreCounter;
     }
   },
   methods: {
-    ...mapActions(['addSong', 'editSong', 'deleteSong']),
     search() {
-      // ovo mi ustvari ne treba, jer filter radi istu stvar
+      // Ova metoda trenutno nije potrebna jer filter radi istu stvar
     },
     play(song) {
       window.open(song.youtubeLink);
@@ -95,28 +97,40 @@ export default {
       this.showEditForm = true;
     },
     saveEditedSong() {
-      const index = this.songs.findIndex(song => song.id === this.editedSong.id);
+      const index = this.$store.state.songs.findIndex(song => song.id === this.editedSong.id);
       if (index !== -1) {
-        this.editSong({ index, song: { ...this.editedSong } });
+        this.$store.dispatch('editSong', { index, song: { ...this.editedSong } });
         this.showEditForm = false;
         this.editedSong = { id: null, title: '', author: '', genre: '', youtubeLink: '' };
       }
     },
-    deleteSong(id) {
-      const song = this.songs.find(song => song.id === id);
-      if (song) {
+    async deleteSong(id) {
+      console.log('Deleting song with ID:', id);
+      try {
+        await deleteDoc(doc(db, 'songs', id));
         this.$store.commit('deleteSong', id);
-        this.$store.commit('decrementGenreCounter', song.genre);
+        const song = this.$store.state.songs.find(song => song.id === id);
+        if (song) {
+          this.$store.commit('decrementGenreCounter', song.genre);
+        }
+      } catch (error) {
+        console.error('Error deleting song:', error);
       }
     },
-    addNewSong() { 
-      this.newSong.id = this.songs.length + 1;
-      this.addSong({ ...this.newSong });
-      this.$store.commit('incrementGenreCounter', this.newSong.genre);
-      this.showAddForm = false;
-      this.newSong = { title: '', author: '', genre: '', youtubeLink: '' };
+    async addNewSong() { 
+      try {
+        console.log('Adding new song:', this.newSong);
+        const docRef = await addDoc(collection(db, 'songs'), this.newSong);
+        console.log('Song added successfully with ID:', docRef.id);
+        this.$store.commit('addSong', { ...this.newSong, id: docRef.id });
+        this.$store.commit('incrementGenreCounter', this.newSong.genre);
+        this.showAddForm = false;
+        this.newSong = { title: '', author: '', genre: '', youtubeLink: '' };
+      } catch (error) {
+        console.error('Error adding song:', error);
+      }
     },
-    goBackHome(){
+    goBackHome() {
       this.$router.push('/');
     },
     toggleDarkMode() {
@@ -131,12 +145,6 @@ export default {
     goToMealTracker() {
       this.$router.push({ path: '/meal-tracker' });
     },
-    goToLogIn() {
-      this.$router.push({ path: '/login' });
-    },
-    goToSignUp() {
-      this.$router.push({ path: '/sign-up' });
-    },
     goToSleepTracker() {
       this.$router.push({ path: '/sleep-tracker' });
     },
@@ -146,14 +154,8 @@ export default {
     goToBMI() {
       this.$router.push({ path: '/BMI-calculator' });
     },
-    goToAbout() {
-      this.$router.push({ path: '/about' });
-    },
     goToStreak() {
       this.$router.push({ path: '/streak' });
-    },
-    goToScanner() {
-      this.$router.push({ path: '/qr-scanner'});
     }
   }
 };
@@ -267,4 +269,5 @@ export default {
   background-color: #ccc;
   color: #000;
 }
+
 </style>
