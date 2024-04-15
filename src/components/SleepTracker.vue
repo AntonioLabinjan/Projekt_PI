@@ -13,8 +13,9 @@
         <li><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
       </ul> 
     </nav>
-<hr>
-    <form v-if="!editIndex" @submit.prevent="addOrEditSleepEntry" class="sleep-input-section">
+    <hr>
+
+    <form v-if="!editEntry" @submit.prevent="addOrEditSleepEntry" class="sleep-input-section">
       <h3 v-if="!editEntry">Sleep Entry</h3>
       <h3 v-else>Edit Sleep Entry</h3>
       <label for="date">Date:</label>
@@ -40,9 +41,9 @@
         <strong>Start Time:</strong> {{ entry.startTime }},
         <strong>Wake Time:</strong> {{ entry.wakeTime }},
         <strong>Quality:</strong> {{ entry.quality }}
-        <strong>Duration:</strong> {{ calculateDuration(entry.startTime, entry.wakeTime) }}
+        <strong>Duration:</strong> {{ calculateDuration(entry) }}
         <button class="edit-btn" @click="editSleepEntry(index)">Edit</button>
-        <button class="delete-btn" @click="deleteSleepEntry(index)">Delete</button>
+        <button class="delete-btn" @click="deleteSleepEntry(entry.id)">Delete</button>
       </li>
     </ul>
 
@@ -52,6 +53,7 @@
       <strong>Total Entries:</strong> {{ totalEntries }}<br>
       <strong>Average Quality:</strong> {{ averageQuality }}
     </div>
+
     <div v-if="showAlert" class="alert">
       <p>Između dva uzastopna unosa za san ima više od 2 dana! Razmislite o tome da malo popravite sleep schedule!!!</p>
     </div>
@@ -59,7 +61,10 @@
 </template>
 
 <script>
-  export default {
+import { collection, onSnapshot, addDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore'
+import { db } from '@/firebase'
+
+export default {
   data() {
     return {
       darkMode: false,
@@ -69,7 +74,7 @@
         wakeTime: "",
         quality: 0,
       },
-      sleepEntries: this.$store.state.sleepEntries,
+      sleepEntries: [],
       editIndex: null,
       editEntry: false,
       previousEntryDate: null,
@@ -77,100 +82,24 @@
     };
   },
   computed: {
-    // Pristupamo getterima iz Vuex store-a
     totalEntries() {
-      return this.$store.getters.totalSleepEntries;
+      return this.sleepEntries.length;
     },
     averageQuality() {
-      return this.$store.getters.averageSleepQuality;
+      const totalQuality = this.sleepEntries.reduce((acc, entry) => acc + entry.quality, 0);
+      return this.totalEntries ? (totalQuality / this.totalEntries).toFixed(2) : '0.00';
     },
   },
   methods: {
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
-      if (this.darkMode) {
-        document.body.classList.add('dark-mode');
-      } else {
-        document.body.classList.remove('dark-mode');
-      }
-    },
-    addOrEditSleepEntry() {
-      if (this.editEntry) {
-        this.saveEditedSleepEntry();
-      } else {
-        this.addSleepEntry();
-      }
-    },
-    addSleepEntry() {
-      if (this.previousEntryDate) {
-        const currentDate = new Date(this.newSleepEntry.date);
-        const previousDate = new Date(this.previousEntryDate);
-        const differenceInDays = Math.abs((currentDate - previousDate) / (1000 * 60 * 60 * 24));
-
-        if (differenceInDays > 2) {
-          this.showAlert = true;
-        } else {
-          this.showAlert = false;
-        }
-      }
-      this.previousEntryDate = this.newSleepEntry.date;
-
-      this.$store.dispatch('addSleepEntry', { ...this.newSleepEntry });
-      this.resetForm();
-    },
-    editSleepEntry(index) {
-      this.editIndex = index;
-      this.newSleepEntry = { ...this.sleepEntries[index] };
-      this.editEntry = true;
-
-      this.previousEntryDate = this.newSleepEntry.date;
-    },
-    saveEditedSleepEntry() {
-      this.$store.dispatch('editSleepEntry', { index: this.editIndex, entry: { ...this.newSleepEntry } });
-      this.resetForm();
-      this.editEntry = false;
-      this.editIndex = null;
-    },
-    deleteSleepEntry(index) {
-      this.$store.dispatch('removeSleepEntry', index);
-    },
-    resetForm() {
-      this.newSleepEntry = {
-        date: "",
-        startTime: "",
-        wakeTime: "",
-        quality: 0,
-      };
-    },
-    cancelEdit() {
-      this.editEntry = false;
-      this.editIndex = null;
-      this.resetForm();
-    },
-    calculateDuration(startTime, wakeTime) {
-      const [startHour, startMinute] = startTime.split(":").map(Number);
-      const [wakeHour, wakeMinute] = wakeTime.split(":").map(Number);
-
-      let durationInMinutes;
-
-      if (wakeHour < startHour || (wakeHour === startHour && wakeMinute < startMinute)) {
-        durationInMinutes = (wakeHour + 24) * 60 + wakeMinute - startHour * 60 - startMinute;
-      } else {
-        durationInMinutes = wakeHour * 60 + wakeMinute - startHour * 60 - startMinute;
-      }
-
-      const hours = Math.floor(durationInMinutes / 60);
-      const minutes = durationInMinutes % 60;
-      return `${hours}h ${minutes}m`;
-    },
-    goBackHome() {
-      this.$router.push({ path: '/' });
-    },
-    goToImageGallery() {
-      this.$router.push({ path: '/image-gallery' });
+      document.body.classList.toggle('dark-mode', this.darkMode);
     },
     goToTrainingApp() {
       this.$router.push({ path: '/vue-trainer' });
+    },
+    goToImageGallery() {
+      this.$router.push({ path: '/image-gallery' });
     },
     goToMealTracker() {
       this.$router.push({ path: '/meal-tracker' });
@@ -184,142 +113,106 @@
     goToStreak() {
       this.$router.push({ path: '/streak' });
     },
-    goToMusicPlayer(){
-      this.$router.push({path: '/music'});
+    goToMusicPlayer() {
+      this.$router.push({ path: '/music' });
+    },
+    goBackHome() {
+      this.$router.push({ path: '/' });
+    },
+    addOrEditSleepEntry() {
+      if (this.editEntry) {
+        this.saveEditedSleepEntry();
+      } else {
+        this.addSleepEntry();
+      }
+    },
+    async addSleepEntry() {
+      try {
+        const docRef = await addDoc(collection(db, 'sleepEntries'), this.newSleepEntry);
+        console.log('Document written with ID: ', docRef.id);
+        this.resetForm();
+      } catch (error) {
+        console.error('Error adding document: ', error);
+      }
+    },
+    editSleepEntry(index) {
+      this.editIndex = index;
+      this.newSleepEntry = { ...this.sleepEntries[index] };
+      this.editEntry = true;
+      this.previousEntryDate = this.newSleepEntry.date;
+    },
+    async saveEditedSleepEntry() {
+      try {
+        await updateDoc(doc(db, 'sleepEntries', this.sleepEntries[this.editIndex].id), this.newSleepEntry);
+        console.log('Document successfully updated');
+        this.resetForm();
+        this.editEntry = false;
+        this.editIndex = null;
+      } catch (error) {
+        console.error('Error updating document: ', error);
+      }
+    },
+    async deleteSleepEntry(id) {
+      try {
+        await deleteDoc(doc(db, 'sleepEntries', id));
+        console.log('Document successfully deleted');
+      } catch (error) {
+        console.error('Error removing document: ', error);
+      }
+    },
+    cancelEdit() {
+      this.editEntry = false;
+      this.editIndex = null;
+      this.resetForm();
+    },
+    resetForm() {
+      this.newSleepEntry = {
+        date: "",
+        startTime: "",
+        wakeTime: "",
+        quality: 0,
+      };
+    },
+    calculateDuration(entry) {
+      const { startTime, wakeTime } = entry;
+      if (typeof startTime !== 'string' || typeof wakeTime !== 'string') {
+        return 'Invalid time format';
+      }
+
+      const [startHour, startMinute] = startTime.split(":").map(Number);
+      const [wakeHour, wakeMinute] = wakeTime.split(":").map(Number);
+      let durationInMinutes;
+      if (wakeHour < startHour || (wakeHour === startHour && wakeMinute < startMinute)) {
+        durationInMinutes = (wakeHour + 24) * 60 + wakeMinute - startHour * 60 - startMinute;
+      } else {
+        durationInMinutes = wakeHour * 60 + wakeMinute - startHour * 60 - startMinute;
+      }
+      const hours = Math.floor(durationInMinutes / 60);
+      const minutes = durationInMinutes % 60;
+      return `${hours}h ${minutes}m`;
     },
   },
+  mounted() {
+    try {
+      onSnapshot(collection(db, 'sleepEntries'), (querySnapshot) => {
+        const updatedSleepEntries = [];
+        querySnapshot.forEach((doc) => {
+          const sleepEntryData = doc.data();
+          sleepEntryData.id = doc.id;
+          updatedSleepEntries.push(sleepEntryData);
+        });
+        this.sleepEntries = updatedSleepEntries;
+      });
+    } catch (error) {
+      console.error('Error fetching sleep entries:', error);
+    }
+  }
 };
 </script>
+
 <style scoped>
 .container.dark-mode {
   background-color: #000;
   color: #fff;
 }
-
-#app {
-  max-width: 800px;
-  margin: 0 auto;
-  font-family: 'Arial', sans-serif;
-  background-color: #f2f2f2; 
-  padding: 20px; 
-}
-
-h1 {
-  text-align: center;
-  color: #333; 
-}
-
-.user-input-section,
-.exercise-input-section,
-.statistics {
-  margin-top: 20px;
-  padding: 15px;
-  border: 1px solid #ccc; 
-  border-radius: 8px; 
-  background-color: #f8f8f8; 
-}
-
-.user-input-section strong,
-.exercise-input-section strong,
-.statistics strong {
-  color: #555; 
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  margin-top: 15px;
-}
-
-label {
-  margin-bottom: 5px;
-  color: #333; /* Tamno siva boja za oznake */
-}
-
-input {
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc; /* Siva granica */
-  border-radius: 4px; /* Zaobljeni rubovi */
-}
-
-/* Stilizacija za gumbove */
-button {
-  padding: 10px 20px;
-  margin-top: 10px;
-  color: #fff; /* Bijela boja teksta */
-  background-color: #007bff; /* Plava pozadina */
-  border: none; /* Bez granice */
-  border-radius: 4px; /* Zaobljeni rubovi */
-  cursor: pointer; /* Pokazivač miša */
-  transition: background-color 0.3s ease; /* Glatki prijelaz boje */
-}
-
-/* Stilizacija za gumbove koji su oznaceni kao cancel */
-button.cancel {
-  background-color: #dc3545; /* Crvena pozadina */
-}
-
-/* Stilizacija za sekciju sa prikazom vježbi */
-ul.exercise-display-section {
-  list-style: none; /* Ukloni oznake liste */
-  padding: 0; /* Ukloni unutarnji razmak */
-}
-
-.exercise-item {
-  margin: 10px 0;
-  padding: 10px;
-  border: 1px solid #ddd; /* Siva granica */
-  border-radius: 4px; /* Zaobljeni rubovi */
-  background-color: #fff; /* Bijela pozadina */
-}
-
-/* Stilizacija za gumbove za uređivanje i brisanje */
-.edit-btn {
-  margin-right: 10px;
-  color: #fff; /* Bijela boja teksta */
-  background-color: #28a745; /* Zelena pozadina */
-}
-
-.delete-btn {
-  color: #fff; /* Bijela boja teksta */
-  background-color: #dc3545; /* Crvena pozadina */
-}
-
-/* Responsivni stilovi za mobilne uređaje */
-@media only screen and (max-width: 600px) {
-  #app {
-    width: 90%; /* Smanji širinu aplikacije na mobilnim uređajima */
-  }
-}
-
-.navbar {
-  padding: 10px 20px;
-}
-
-.navbar-nav {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.navbar-nav li {
-  display: inline;
-  margin-right: 10px;
-}
-
-.navbar-nav li:last-child {
-  margin-right: 0;
-}
-
-/* Stilizacija za upozorenje */
-.alert {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #f8d7da; /* Crvenkasta pozadina */
-  color: #721c24; /* Tamno crvena boja teksta */
-  border: 1px solid #f5c6cb; /* Rub */
-  border-radius: 4px; /* Zaobljeni rubovi */
-}
-
 </style>
