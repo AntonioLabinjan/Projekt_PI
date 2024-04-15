@@ -1,68 +1,74 @@
 <template>
-  <div class="workout-tracker">
-    <nav class="navbar">
-      <ul>
-        <li><button @click="goToImageGallery">Go to Image Gallery</button></li>
-        <li><button @click="goToVueTrainer">Go to Training App</button></li>
-        <li><button @click="goToMealTracker">Go to Meal Tracker</button></li>
-        <li><button @click="goToSleepTracker">Go to Sleep Tracker</button></li>
-        <li><button @click="goToWaterIntake">Go to Water Intake Tracker</button></li>
-        <li><button @click="goToBMI">Go to BMI Calculator</button></li>
-        <li><button @click="goToMusicPlayer">Music Player</button></li>
-        <li><button @click="goBackHome">Go Back Home</button></li>
-      </ul>
-    </nav>
-    <hr>
+  <keep-alive>
+    <div class="workout-tracker">
+      <nav class="navbar">
+        <ul>
+          <li><button @click="goToImageGallery">Go to Image Gallery</button></li>
+          <li><button @click="goToVueTrainer">Go to Training App</button></li>
+          <li><button @click="goToMealTracker">Go to Meal Tracker</button></li>
+          <li><button @click="goToSleepTracker">Go to Sleep Tracker</button></li>
+          <li><button @click="goToWaterIntake">Go to Water Intake Tracker</button></li>
+          <li><button @click="goToBMI">Go to BMI Calculator</button></li>
+          <li><button @click="goToMusicPlayer">Music Player</button></li>
+          <li><button @click="goBackHome">Go Back Home</button></li>
+        </ul>
+      </nav>
+      <hr>
 
-    <h1>Training Streak Tracker</h1>
-    <form @submit.prevent="addCustomDate">
-      <label for="customDate">Add your date:</label>
-      <input type="date" id="customDate" v-model="customDate">
-      <button type="submit">Add</button>
-    </form>
+      <h1>Training Streak Tracker</h1>
+      <form @submit.prevent="addCustomDate">
+        <label for="customDate">Add your date:</label>
+        <input type="date" id="customDate" v-model="customDate">
+        <button type="submit">Add</button>
+      </form>
 
-    <vue-calendar @dateSelected="addDate"></vue-calendar>
+      <vue-calendar @dateSelected="addDate"></vue-calendar>
 
-    <div class="selected-dates">
-      <div v-for="(date, index) in selectedDates" :key="index">
-        <span>{{ formatDate(date) }}</span>
-        <button @click="removeDate(index)">Remove</button>
+
+      <div class="selected-dates">
+        <div v-for="(date, index) in selectedDates" :key="index">
+          <span>{{ formatDate(date) }}</span>
+          <button @click="removeDate(index)">Remove</button>
+        </div>
+      </div>
+
+      <div class="streak">
+        <p>Current streak: {{ currentStreak }}</p>
+        <p>Record streak: {{ recordStreak }}</p>
+        <div v-if="currentStreak >= 3 && currentStreak % 3 === 0" class="reward">
+          <p>Congratulations! You've earned 3-day streak award!</p>
+          <img src="@/assets/silver_medal.jpg" alt="Streak Master Badge">
+        </div>
+        <div v-if="currentStreak >= 7 && currentStreak % 7 === 0" class="reward">
+          <p>Congratulations! You've earned 7-day streak award!</p>
+          <img src="@/assets/medal.jpg" alt="Streak Master Badge">
+        </div>
+      </div>
+
+      <div class="medal-counter">
+        <p>Medal Counter: {{ medalCounter }}</p>
       </div>
     </div>
-
-    <div class="streak">
-      <p>Current streak: {{ currentStreak }}</p>
-      <p>Record streak: {{ recordStreak }}</p>
-      <div v-if="currentStreak >= 3 && currentStreak%3==0" class="reward">
-        <p>Congratulations! You've earned 3-day streak award!</p>
-        <img src="@/assets/silver_medal.jpg" alt="Streak Master Badge">
-      </div>
-      <div v-if="currentStreak >=7 && currentStreak%7==0" class="reward">
-        <p>Congratulations! You've earned 7-day streak award!</p>
-        <img src="@/assets/medal.jpg" alt="Streak Master Badge">
-      </div>
-    </div>
-
-    <div class="medal-counter">
-      <p>Medal Counter: {{ medalCounter }}</p>
-    </div>
-  </div>
+  </keep-alive>
 </template>
 
 <script>
+import { db } from '@/firebase';
+import { collection, addDoc, getDoc, updateDoc, doc, getDocs, deleteDoc } from 'firebase/firestore';
+
 export default {
   data() {
     return {
-      selectedDates: [], // Odabrani datumi
-      currentStreak: 0, // Trenutni streak
-      recordStreak: 0, // Rekordni streak
-      customDate: '', // Datum koji korisnik unosi ručno
-      medalCounter: 0, // Brojač medalja
-      prevStreak: 0 // Prethodni streak
+      selectedDates: [],
+      currentStreak: 0,
+      recordStreak: 0,
+      customDate: null,
+      medalCounter: 0,
+      prevStreak: 0,
+      isNewMedalAdded: false
     };
   },
   methods: {
-    // Funkcije za navigaciju
     goToImageGallery() {
       this.$router.push({ path: '/image-gallery' });
     },
@@ -81,33 +87,59 @@ export default {
     goToBMI() {
       this.$router.push({ path: '/BMI-calculator' });
     },
-    goToMusicPlayer(){
-      this.$router.push({path: '/music'});
-    },
-    goToStreak() {
-      this.$router.push({ path: '/streak' });
+    goToMusicPlayer() {
+      this.$router.push({ path: '/music' });
     },
     goBackHome() {
       this.$router.push({ path: '/' });
     },
-    // datum koji je korisnik unio ručno
+
+    formatDate(dateString) {
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    },
     addCustomDate() {
       if (this.customDate) {
-        this.selectedDates.push(this.customDate);
-        this.updateStreak();
-        this.customDate = ''; 
+        const selectedDateExists = this.selectedDates.some(selectedDate => {
+  return new Date(selectedDate).toISOString().slice(0, 10) === this.customDate;
+});
+
+        if (!selectedDateExists) {
+          addDoc(collection(db, 'trainingDates'), { trainingDate: new Date(this.customDate) })
+            .then(() => {
+              this.selectedDates.push(new Date(this.customDate));
+              this.updateStreak();
+              this.customDate = ''; 
+            })
+            .catch(error => {
+              console.error('Error adding document: ', error);
+            });
+        } else {
+          alert('This date already exists. Please choose a different date.');
+        }
       }
     },
-    // datum iz kalendara
-    addDate(date) {
-      this.selectedDates.push(date);
-      this.updateStreak();
+    async fetchData() {
+      try {
+        const docRef = doc(db, 'streaks', 'userStreaks');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const { currentStreak, recordStreak } = docSnap.data();
+          this.currentStreak = currentStreak;
+          this.recordStreak = recordStreak;
+        } else {
+          this.currentStreak = 0;
+          this.recordStreak = 0;
+          this.medalCounter = 0; // nova linija
+        }
+      } catch (error) {
+        console.error('Error getting streaks document: ', error);
+      }
     },
-    removeDate(index) {
-      this.selectedDates.splice(index, 1);
-      this.updateStreak();
-    },
-updateStreak() {
+    async updateStreak() {
+
+  this.isNewMedalAdded = false;
+
   if (this.selectedDates.length === 0) {
     this.currentStreak = 0;
     this.recordStreak = 0;
@@ -127,122 +159,110 @@ updateStreak() {
     if ((currentTime - prevTime) / oneDay === 1) {
       streak++;
     } else {
-      streak = 1; // resetiramo streak ako se prekine
+      streak = 1;
     }
   }
 
-  if ((streak % 3 === 0 || streak % 7 === 0) && streak !== 0) { // tu su uvjeti za dobit medalju
-    this.medalCounter++;
+  this.recordStreak = Math.max(this.recordStreak, streak);
+
+  if ((streak % 3 === 0 || streak % 7 === 0) && streak !== 0) {
+    if (!this.isNewMedalAdded) { // je li već dodana nova medalja
+      this.medalCounter++;
+      this.isNewMedalAdded = true; // nova medalja dodana
+    }
+  } else {
+    this.isNewMedalAdded = false; // ako nije dodana nova medalja
   }
 
   this.currentStreak = streak;
-  this.recordStreak = Math.max(this.recordStreak, streak);
-  this.prevStreak = streak;
 
-  this.updateReward();
+  try {
+    const docRef = doc(db, 'streaks', 'userStreaks', 'medalCounter');
+    await updateDoc(docRef, {
+      currentStreak: this.currentStreak,
+      recordStreak: this.recordStreak,
+      medalCounter: this.medalCounter
+    });
+  } catch (error) {
+    console.error('Error updating streaks document: ', error);
+  }
 },
 
 
-// Ažuriranje nagrade 
-updateReward() {
-},
+    addDate(date) {
+      this.selectedDates.push(date);
+      this.updateStreak();
+    },
+    removeDate(index) {
+      console.log('Removing date at index:', index);
+  const dateToRemove = this.selectedDates[index];
+  console.log('Date to remove:', dateToRemove);
+  const dateToRemoveISO = new Date(dateToRemove).toISOString().slice(0, 10); 
 
-formatDate(dateString) {
-  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  return new Date(dateString).toLocaleDateString(undefined, options);
+  getDocs(collection(db, 'trainingDates')).then(snapshot => {
+    snapshot.forEach(doc => {
+      const trainingDate = new Date(doc.data().trainingDate.seconds * 1000); 
+
+      if (trainingDate.toISOString().slice(0, 10) === dateToRemoveISO) {
+
+        deleteDoc(doc.ref).then(() => {
+          console.log('Document successfully deleted from Firestore!');
+          const indexToRemove = this.selectedDates.indexOf(dateToRemove);
+if (indexToRemove !== -1) {
+  this.selectedDates.splice(indexToRemove, 1);
 }
+          this.updateStreak();
+        }).catch(error => {
+          console.error('Error removing document: ', error);
+        });
+      }
+    });
+  }).catch(error => {
+    console.error('Error getting documents: ', error);
+  });
+},
 
+    saveDataLocally() {
+      localStorage.setItem('selectedDates', JSON.stringify(this.selectedDates));
+      localStorage.setItem('currentStreak', this.currentStreak);
+      localStorage.setItem('recordStreak', this.recordStreak);
+      localStorage.setItem('medalCounter', this.medalCounter);
+    },
+    loadDataLocally() {
+      const selectedDates = JSON.parse(localStorage.getItem('selectedDates'));
+      if (selectedDates) {
+        this.selectedDates = selectedDates;
+      }
+      const currentStreak = localStorage.getItem('currentStreak');
+      if (currentStreak) {
+        this.currentStreak = parseInt(currentStreak);
+      }
+      const recordStreak = localStorage.getItem('recordStreak');
+      if (recordStreak) {
+        this.recordStreak = parseInt(recordStreak);
+      }
+      const medalCounter = localStorage.getItem('medalCounter');
+      if (medalCounter) {
+        this.medalCounter = parseInt(medalCounter);
+      }
+    }
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.fetchData().then(() => {
+        vm.updateStreak();
+      });
+    });
+  },
+  async beforeRouteUpdate(to, from, next) {
+    await this.fetchData();
+    next();
+  },
+  mounted() {
+    this.loadDataLocally();
+  },
+  updated() {
+    this.saveDataLocally();
   }
 };
 </script>
-
-<style scoped>
-.workout-tracker {
-  font-family: Arial, sans-serif;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.selected-dates {
-  margin-top: 20px;
-}
-
-.selected-dates > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
-}
-
-.selected-dates span {
-  flex-grow: 1;
-  margin-right: 10px;
-}
-
-.selected-dates button {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.selected-dates button:hover {
-  background-color: #d32f2f;
-}
-
-.streak {
-  margin-top: 20px;
-}
-
-.navbar ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.navbar ul li {
-  display: inline;
-  margin-right: 10px;
-}
-
-.navbar ul li button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.navbar ul li button:hover {
-  background-color: #0056b3;
-}
-
-.reward {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.reward p {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.reward img {
-  width: 100px;
-  height: 100px;
-}
-
-.medal-counter {
-  margin-top: 20px;
-}
-
-.medal-counter p {
-  font-size: 16px;
-}
-</style>
