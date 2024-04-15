@@ -34,13 +34,13 @@
     </form>
 
     <ul class="exercise-display-section">
-      <li v-for="(exercise, index) in filteredExercises" :key="index" class="exercise-item">
+      <li v-for="(exercise, index) in exercises" :key="index" class="exercise-item">
         <strong>Exercise Name:</strong> {{ exercise.name }}<br>
         <strong>Duration (min):</strong> {{ exercise.duration }}<br>
         <strong>Intensity:</strong> {{ exercise.intensity }}<br>
         <strong>Spent Calories:</strong> {{ exercise.calories }} kcal<br>
         <button class="edit-btn" @click="openEditDialog(index)">Edit</button>
-        <button class="delete-btn" @click="confirmDeleteExercise(index)">Delete</button>
+        <button class="delete-btn" @click="confirmDeleteExercise(exercise.id)">Delete</button>
       </li>
     </ul>
 
@@ -85,6 +85,9 @@
 </template>
 
 <script>
+import { collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { db } from '@/firebase';
+
 export default {
   data() {
     return {
@@ -96,32 +99,37 @@ export default {
         calories: 0,
       },
       editIndex: null,
-      editedExercise: null,
+      editedExercise: {
+        name: "",
+        duration: "",
+        intensity: 0,
+        calories: 0
+      },
       intensityFilter: "",
       pieChartContext: null,
       pieChartData: [],
       pieChartColors: ['#ff6d38', '#ffc107', '#28a745', '#007bff', '#dc3545', '#6c757d', '#17a2b8', '#343a40', '#6f42c1', '#fd7e14'],
+      exercises: [],
     };
   },
   computed: {
     totalCalories() {
-      return this.$store.getters.totalCaloriesBurned;
+      return this.exercises.reduce((total, exercise) => total + exercise.calories, 0);
     },
     totalExerciseDuration() {
-      return this.$store.getters.totalDuration;
+      return this.exercises.reduce((total, exercise) => total + exercise.duration, 0);
     },
     totalExercises() {
-      return this.$store.getters.totalExercises;
+      return this.exercises.length;
     },
     averageCaloriesPerExercise() {
-      return this.$store.getters.averageCaloriesPerExercise;
+      return this.totalCalories / this.totalExercises || 0;
     },
     filteredExercises() {
-      const exercises = this.$store.state.exercises;
       if (!this.intensityFilter) {
-        return exercises;
+        return this.exercises;
       }
-      return exercises.filter(exercise => exercise.intensity.includes(this.intensityFilter));
+      return this.exercises.filter(exercise => exercise.intensity.includes(this.intensityFilter));
     },
   },
   methods: {
@@ -146,59 +154,46 @@ export default {
       this.$router.push({ path:'/water-intake' });
     },
     goToBMI() {
-      this.$router.push({ path:'/BMI-calculator' });
+      this.$router.push({ path:'/bmi' });
     },
     goToStreak() {
       this.$router.push({ path:'/streak' });
     },
-    goBackHome(){
-      this.$router.push({ path: '/' });
+    goToMusicPlayer() {
+      this.$router.push({ path:'/music-player' });
     },
-    goToMusicPlayer(){
-      this.$router.push({path: '/music'});
+    goBackHome() {
+      this.$router.push({ path:'/' });
     },
     addExercise() {
-      this.$store.dispatch('addExercise', { ...this.newExercise});
-      this.resetForm();
-      this.updatePieChart();
-    },
-    openEditDialog(index) {
-      this.editIndex = index;
-      this.editedExercise = {...this.$store.state.exercises[index]};
-    },
-    saveEdit() {
-      this.$store.dispatch('saveExerciseEdit', {index: this.editIndex, exercise: {...this.editedExercise}});
-      this.editIndex = null;
-      this.editedExercise = null;
-      this.updatePieChart();
-    },
-    confirmDeleteExercise(index) {
-      const isConfirmed = window.confirm("Do you really want to delete this exercise?");
-      if (isConfirmed) {
-        this.$store.dispatch('deleteExercise', index).then(() => {
-          this.updatePieChart();
-        });
-      }
-    },
-    cancelEdit() {
-      this.editIndex = null;
-      this.editedExercise = null;
-    },
-    resetForm() {
+      addDoc(collection(db, 'exercises'), this.newExercise);
       this.newExercise = {
         name: "",
         duration: 0,
         intensity: "",
-        calories: 0,
+        calories: 0
       };
     },
-    filterByIntensity() {
-      if (!this.intensityFilter) {
-        return this.$store.state.exercises;
+    confirmDeleteExercise(id) {
+      const isConfirmed = window.confirm('Are you sure you want to delete this exercise?');
+      if (isConfirmed) {
+        deleteDoc(doc(db, 'exercises', id));
       }
-      return this.$store.state.exercises.filter(exercise => exercise.intensity.includes(this.intensityFilter));
     },
-
+    openEditDialog(index) {
+      this.editIndex = index;
+      this.editedExercise = { ...this.filteredExercises[index] };
+    },
+    saveEdit() {
+      updateDoc(doc(db, 'exercises', this.editedExercise.id), this.editedExercise);
+      this.editIndex = null;
+    },
+    cancelEdit() {
+      this.editIndex = null;
+    },
+    filterByIntensity() {
+      this.updatePieChart();
+    },
     updatePieChart() {
       const canvas = this.$refs.pieChartCanvas;
       canvas.width = 300;
@@ -208,20 +203,17 @@ export default {
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
       const radius = Math.min(centerX, centerY);
-      
-      // Exercise duration data
-      const exerciseDurationData = this.$store.state.exercises.reduce((total, exercise) => total + exercise.duration, 0);
 
-      this.pieChartData = this.$store.state.exercises.map(exercise => {
+      this.pieChartData = this.filteredExercises.map(exercise => {
         return {
           name: exercise.name,
-          percentage: (exercise.duration / exerciseDurationData) * 100
+          percentage: (exercise.duration / this.totalExerciseDuration) * 100
         };
       });
-      
+
       let startAngle = 0;
       this.pieChartData.forEach((data, index) => {
-        const sliceAngle = (data.percentage / 100) * Math.PI *2;
+        const sliceAngle = (data.percentage / 100) * Math.PI * 2;
 
         this.pieChartContext.fillStyle = this.pieChartColors[index];
         this.pieChartContext.beginPath();
@@ -232,138 +224,76 @@ export default {
 
         startAngle += sliceAngle;
       });
-    },
+    }
   },
   mounted() {
-    this.updatePieChart();
-  },
+    const exercisesRef = collection(db, 'exercises');
+    onSnapshot(exercisesRef, (querySnapshot) => {
+      const exerciseData = [];
+      querySnapshot.forEach((doc) => {
+        exerciseData.push({ id: doc.id, ...doc.data() });
+      });
+      this.exercises = exerciseData;
+      this.updatePieChart();
+    });
+  }
 };
 </script>
 
-
 <style scoped>
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  font-family: 'Arial', sans-serif;
-  background-color: #f2f2f2;
-  padding: 20px;
+/* Dark mode styling */
+.dark-mode {
+  background-color: #222;
+  color: #fff;
 }
-h1 {
-  text-align: center;
-  color: #333;
-}
+/* Navbar styling */
 .navbar {
-  padding: 10px 20px;
+  margin-bottom: 20px;
 }
 .navbar-nav {
   list-style-type: none;
-  margin: 0;
   padding: 0;
+  display: flex;
+  flex-wrap: wrap;
 }
 .navbar-nav li {
-  display: inline;
   margin-right: 10px;
 }
-.navbar-nav li:last-child {
-  margin-right: 0;
+/* Exercise input form styling */
+.exercise-input-section {
+  margin-bottom: 20px;
 }
-hr {
-  border-top: 1px solid #ccc;
-  margin: 20px 0;
-}
-.exercise-input-section,
-.statistics,
-.filter-container {
-  margin-top: 20px;
-}
-.exercise-input-section strong,
-.statistics strong {
-  color: #555;
-}
-form {
-  display: flex;
-  flex-direction: column;
-  margin-top: 15px;
-}
-label {
-  margin-bottom: 5px;
-  color: #333;
-}
-input,
-textarea {
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-button {
-  padding: 10px;
-  margin-top: 10px;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 4px;
-}
-button.cancel {
-  background-color: #dc3545;
-}
-ul.exercise-display-section {
-  list-style: none;
+/* Exercise display styling */
+.exercise-display-section {
+  list-style-type: none;
   padding: 0;
 }
 .exercise-item {
-  margin: 10px 0;
+  margin-bottom: 10px;
   padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: #fff;
-}
-.edit-btn {
-  margin-right: 10px;
-  color: #fff;
-  background-color: #28a745;
-}
-.delete-btn {
-  color: #fff;
-  background-color: #dc3545;
-}
-.filter-container {
-  display: flex;
-  align-items: center;
-}
-.filter-container label {
-  margin-right: 10px;
-}
-.filter-container input {
-  margin-right: 10px;
-  padding: 8px;
   border: 1px solid #ccc;
-  border-radius: 4px;
 }
-.filter-container button {
-  margin-top: 0;
-  padding: 8px 15px;
+.edit-btn, .delete-btn {
+  margin-left: 10px;
 }
+/* Edit form styling */
+.edit-form {
+  margin-bottom: 20px;
+}
+/* Statistics section styling */
+.statistics {
+  margin-bottom: 20px;
+}
+/* Filter container styling */
+.filter-container {
+  margin-bottom: 20px;
+}
+/* Pie chart section styling */
 .pie-chart-section {
-  text-align: center;
+  margin-bottom: 20px;
 }
-@media only screen and (max-width: 600px){
-  #app {
-    width: 90%;
-}
-}
-.container.dark-mode {
-  background-color: #000;
-  color: #fff;
-}
-
-.dark-mode h1,
-.dark-mode h3,
-.dark-mode label {
-  color: #000;
-}
-ul.exercise-display-section.dark-mode{
-  background-color:#000 ;
+canvas {
+  display: block;
+  margin: 0 auto;
 }
 </style>
