@@ -34,15 +34,18 @@
     </div>
 
     <div class="caloric-balance">
-      <p>Current caloric balance: {{ currentCaloricBalance }}</p>
+      <p>Total calories consumed: {{ totalCaloriesConsumed }}</p>
+      <p>Total calories burned: {{ totalCaloriesBurned }}</p>
+      <p>Caloric balance: {{ caloricBalance }}</p>
     </div>
-<hr>
+    <hr>
     <notification-maker></notification-maker>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/firebase';
 
 export default {
   data() {
@@ -73,16 +76,40 @@ export default {
         "The only way to achieve the impossible is to believe it is possible. - Charles Kingsleigh (Alice in Wonderland)",
         "Never gonna give you up, never gonna let you down, never gonna run around and desert you, never gonna make you cry, never gonna say goodbye, never gonna tell a lie and hurt you. - Rick Astley"
       ],
-      motivationalQuote: ""
+      motivationalQuote: "",
+      totalCaloriesConsumed: 0,
+      totalCaloriesBurned: 0,
     };
   },
   computed: {
-    ...mapGetters(['currentCaloricBalance']),
+    caloricBalance() {
+      return this.totalCaloriesConsumed - this.totalCaloriesBurned;
+    },
   },
   methods: {
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
       document.body.classList.toggle('dark-mode', this.darkMode);
+    },
+    async fetchMeals() {
+      try {
+        const mealsSnapshot = await getDocs(collection(db, 'meals'));
+        mealsSnapshot.forEach((doc) => {
+          this.totalCaloriesConsumed += doc.data().calories;
+        });
+      } catch (error) {
+        console.error('Error fetching meals:', error);
+      }
+    },
+    async fetchExercises() {
+      try {
+        const exercisesSnapshot = await getDocs(collection(db, 'exercises'));
+        exercisesSnapshot.forEach((doc) => {
+          this.totalCaloriesBurned += doc.data().calories;
+        });
+      } catch (error) {
+        console.error('Error fetching exercises:', error);
+      }
     },
     goToImageGallery() {
       this.$router.push({ path: '/image-gallery' });
@@ -134,6 +161,8 @@ export default {
     }
   },
   mounted() {
+    this.fetchExercises();
+    this.fetchMeals();
     this.selectRandomQuote();
   }
 };
