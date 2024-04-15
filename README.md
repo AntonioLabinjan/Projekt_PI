@@ -1,4 +1,4 @@
-## Spojen firebase na drugoj aplikaciji; sad treba malo tuć po modificiranju koda za ovu aplikaciju (složija san ga na music i na meals i na water)
+## Spojen firebase na drugoj aplikaciji; sad treba malo tuć po modificiranju koda za ovu aplikaciju (složija san ga na music i na meals i na water i na sleep i na exercises)
 https://github.com/AntonioLabinjan/Todo_with_firebase
 
 ##### ~~Provat sklepat neki basic auth system kroz store.js (pohranjujemo usernames i passworde)~~  (sklepano)
