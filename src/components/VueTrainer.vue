@@ -34,7 +34,7 @@
     </form>
 
     <ul class="exercise-display-section">
-      <li v-for="(exercise, index) in exercises" :key="index" class="exercise-item">
+      <li v-for="(exercise, index) in filteredExercises" :key="index" class="exercise-item">
         <strong>Exercise Name:</strong> {{ exercise.name }}<br>
         <strong>Duration (min):</strong> {{ exercise.duration }}<br>
         <strong>Intensity:</strong> {{ exercise.intensity }}<br>
@@ -74,6 +74,7 @@
       <input v-model="intensityFilter" type="text" id="intensityFilter" />
       <button @click="filterByIntensity" class="btn btn-primary">Apply Filter</button>
     </div>
+
 
     <!-- Pie Chart container -->
     <div class="pie-chart-section">
@@ -129,7 +130,7 @@ export default {
       if (!this.intensityFilter) {
         return this.exercises;
       }
-      return this.exercises.filter(exercise => exercise.intensity.includes(this.intensityFilter));
+      return this.exercises.filter(exercise => exercise.intensity.toLowerCase().includes(this.intensityFilter.toLowerCase()));
     },
   },
   methods: {
