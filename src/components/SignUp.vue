@@ -39,6 +39,9 @@
 </template>
 
 <script>
+import { createUserWithEmailAndPassword } from 'firebase/auth'; 
+import { auth } from '@/firebase'; 
+
 export default {
   data() {
     return {
@@ -61,38 +64,36 @@ export default {
       }
     },
     signUp() {
-  if (this.signupPassword.length < 8) {
-    alert("Password must be at least 8 characters long.");
-    return;
-  }
+      if (this.signupPassword.length < 8) {
+        alert("Password must be at least 8 characters long.");
+        return;
+      }
+    
+      if (!/\d/.test(this.signupPassword)) {
+        alert("Password must contain at least one digit.");
+        return;
+      }
+    
+      if (!/[A-Z]/.test(this.signupPassword)) {
+        alert("Password must contain at least one uppercase letter.");
+        return;
+      }
+    
+      if (this.signupPassword !== this.confirmPassword) {
+        alert("Passwords don't match. Please enter matching passwords.");
+        return;
+      }
 
-  if (!/\d/.test(this.signupPassword)) {
-    alert("Password must contain at least one digit.");
-    return;
-  }
-
-  if (!/[A-Z]/.test(this.signupPassword)) {
-    alert("Password must contain at least one uppercase letter.");
-    return;
-  }
-
-  if (this.signupPassword !== this.confirmPassword) {
-    alert("Passwords don't match. Please enter matching passwords.");
-    return;
-  }
-
-  this.$store.dispatch('registerUser', {
-    username: this.signupUsername,
-    password: this.signupPassword
-  }).then(() => {
-    alert('Registration successful. You can now login.');
-    this.$router.push({ path: '/login' });
-  }).catch(error => {
-    alert('An error occurred during registration. Please try again later.');
-    console.error('Registration error:', error);
-  });
-},
-
+      createUserWithEmailAndPassword(auth, this.signupUsername, this.signupPassword)
+        .then(() => {
+          alert('Registration successful. You can now login.');
+          this.$router.push({ path: '/login' });
+        })
+        .catch(error => {
+          alert('An error occurred during registration. Please try again later.');
+          console.error('Registration error:', error);
+        });
+    },
     goToLogIn() {
       this.$router.push({ path: '/login' });
     },
@@ -102,7 +103,6 @@ export default {
   }
 }
 </script>
-
 
 <style scoped>
 .signup-container {
