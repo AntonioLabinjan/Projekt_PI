@@ -169,6 +169,12 @@ export default {
 </script>
 
 <style scoped>
+
+h1 {
+    font-size: 5rem;
+    text-shadow: 5px 5px 0px green;
+}
+
 .container {
   position: relative; 
 }
