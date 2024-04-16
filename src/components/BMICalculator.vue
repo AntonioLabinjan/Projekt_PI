@@ -4,14 +4,14 @@
     
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <ul class="navbar-nav">
-        <li class="nav-item"><button @click="goToVueTrainer" class="btn btn-secondary">Go to Training app</button></li>
-        <li class="nav-item"><button @click="goToImageGallery" class="btn btn-secondary">Go to Image Gallery</button></li>
-        <li class="nav-item"><button @click="goToSleepTracker" class="btn btn-secondary">Go to Sleep Tracker</button></li>
-        <li class="nav-item"><button @click="goToMealTracker" class="btn btn-secondary">Go to Meal Tracker</button></li>
-        <li class="nav-item"><button @click="goToWaterIntake" class="btn btn-secondary">Go to Water Intake Tracker</button></li>
-        <li class="nav-item"><button @click="goToStreak" class="btn btn-secondary">Go to Streak Tracker</button></li>
-        <li><button @click="goToMusicPlayer">Music Player</button></li>
-        <li class="nav-item"><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
+        <li class="nav-item"><button @click="goToVueTrainer" class="btn btn-secondary"><i class="fas fa-dumbbell"></i> Training app</button></li>
+        <li class="nav-item"><button @click="goToImageGallery" class="btn btn-secondary"><i class="fas fa-images"></i> Image Gallery</button></li>
+        <li class="nav-item"><button @click="goToSleepTracker" class="btn btn-secondary"><i class="fas fa-bed"></i> Sleep Tracker</button></li>
+        <li class="nav-item"><button @click="goToMealTracker" class="btn btn-secondary"><i class="fas fa-utensils"></i> Meal Tracker</button></li>
+        <li class="nav-item"><button @click="goToWaterIntake" class="btn btn-secondary"><i class="fas fa-tint"></i> Water Intake Tracker</button></li>
+        <li class="nav-item"><button @click="goToStreak" class="btn btn-secondary"><i class="fas fa-fire"></i> Streak Tracker</button></li>
+        <li><button @click="goToMusicPlayer"><i class="fas fa-music"></i> Music Player</button></li>
+        <li class="nav-item"><button @click="goBackHome" class="btn btn-secondary"><i class="fas fa-home"></i> Go back home</button></li>
       </ul>
     </nav>
     <hr>
@@ -24,12 +24,15 @@
         <label for="weight">Weight (kg):</label>
         <input v-model="weight" type="number" id="weight" class="form-control" required />
       </div>
-      <button type="submit" class="btn btn-primary">Calculate BMI</button>
+      <button class="btn btn-secondary">Calculate BMI</button>
     </form>
+<hr>
+    <div v-if="bmi" class="bmi-result" :class="[bmiColor, { 'show-result': bmi }]">
 
-    <div v-if="bmi" class="bmi-result" :class="bmiColor">
-      <p>Your BMI: {{ bmi }}</p>
+      <p><i class="fas fa-heartbeat"></i> Your BMI: {{ bmi }}</p>
+      <p>{{ bmiAdvice }}</p>
     </div>
+    
     <button @click="toggleDarkMode" class="btn btn-dark">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
   </div>
 </template>
@@ -55,6 +58,18 @@ export default {
         return 'bg-warning'; // Overweight (less than 15% above normal)
       } else {
         return 'bg-danger'; // Obese (more than 15% above normal)
+      }
+    },
+    bmiAdvice() {
+      if (!this.bmi) return '';
+      if (this.bmi < 18.5) {
+        return 'You are underweight. Please consult a healthcare provider for advice.';
+      } else if (this.bmi >= 18.5 && this.bmi <= 24.9) {
+        return 'You are in the healthy weight range. Keep it up!';
+      } else if (this.bmi >= 25 && this.bmi <= 29.9) {
+        return 'You are overweight. Consider consulting a healthcare provider.';
+      } else {
+        return 'You are obese. Please consult a healthcare provider for advice.';
       }
     }
   },
@@ -142,11 +157,34 @@ export default {
 .dark-mode {
   background-color: #333;
   color: #fff;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.nav-item button i {
+  margin-right: 5px;
+}
+
+.nav-item button:hover {
+  transform: translateY(-2px);
 }
 
 @media only screen and (max-width: 600px) {
   #app {
     width: 90%;
+  }
+}
+
+.show-result {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 </style>
