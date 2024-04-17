@@ -1,6 +1,6 @@
 <template>
   <keep-alive>
-    <div class="workout-tracker">
+    <div class="container" :class="{ 'dark-mode': darkMode }">
       <nav class="navbar">
         <ul>
           <li><button @click="goToImageGallery">Go to Image Gallery</button></li>
@@ -41,13 +41,14 @@
         </div>
         <div v-if="currentStreak >= 7 && currentStreak % 7 === 0" class="reward">
           <p>Congratulations! You've earned 7-day streak award!</p>
-          <img src="@/assets/medal.jpg" alt="Streak Master Badge" @click="playCheer">
+          <img src="@/assets/medal.jpg" alt="Streak Master Badge" @click="playGoldenCheer">
         </div>
       </div>
 
       <div class="medal-counter">
         <p>Medal Counter: {{ medalCounter }}</p>
       </div>
+      <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     </div>
   </keep-alive>
 </template>
@@ -59,6 +60,7 @@ import { collection, addDoc, getDoc, updateDoc, doc, getDocs, deleteDoc } from '
 export default {
   data() {
     return {
+      darkMode: false,
       selectedDates: [],
       currentStreak: 0,
       recordStreak: 0,
@@ -69,9 +71,20 @@ export default {
     };
   },
   methods: {
+  toggleDarkMode() {
+  var element = document.body;
+  this.darkMode = !this.darkMode; // Ažurirajte stanje darkMode varijable
+  element.classList.toggle('dark-mode', this.darkMode);
+ },
     playCheer() {
   const cheerSound = new Audio(require('@/assets/cheer.mp3')); 
   cheerSound.play().catch((error) => {
+    console.error("Failed to play the audio:", error);
+  });
+},
+playGoldenCheer(){
+  const goldenCheer = new Audio(require('@/assets/golden_medal.mp3'));
+  goldenCheer.play().catch((error) => {
     console.error("Failed to play the audio:", error);
   });
 },
@@ -233,6 +246,7 @@ if (indexToRemove !== -1) {
       localStorage.setItem('currentStreak', this.currentStreak);
       localStorage.setItem('recordStreak', this.recordStreak);
       localStorage.setItem('medalCounter', this.medalCounter);
+      localStorage.setItem('darkMode', this.darkMode);
     },
     loadDataLocally() {
       const selectedDates = JSON.parse(localStorage.getItem('selectedDates'));
@@ -251,6 +265,10 @@ if (indexToRemove !== -1) {
       if (medalCounter) {
         this.medalCounter = parseInt(medalCounter);
       }
+      const darkMode = localStorage.getItem('darkMode');
+  if (darkMode !== null) {
+    this.darkMode = JSON.parse(darkMode); 
+  }
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -266,9 +284,182 @@ if (indexToRemove !== -1) {
   },
   mounted() {
     this.loadDataLocally();
+    this.toggleDarkMode();
   },
   updated() {
     this.saveDataLocally();
   }
 };
 </script>
+<style scoped>
+.workout-tracker {
+  font-family: 'Arial', sans-serif;
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f4f4f4;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.navbar li button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.navbar li button:hover {
+  background-color: #45a049;
+}
+
+hr {
+  margin: 20px 0;
+  border: none;
+  border-top: 2px solid #ddd;
+}
+
+h1 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+form label {
+  margin-right: 10px;
+}
+
+form input[type="date"] {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+form button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #0056b3;
+}
+
+.selected-dates {
+  margin-bottom: 20px;
+}
+
+.selected-dates div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #e9e9e9;
+  margin-bottom: 10px;
+}
+
+.selected-dates div button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.selected-dates div button:hover {
+  background-color: #d32f2f;
+}
+
+.streak {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.reward {
+  background-color: #ffeb3b;
+  color: #333;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.medal-counter {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.medal-counter p {
+  font-size: 24px;
+  color: #333;
+}
+
+.dark-mode {
+  background-color: black;
+  color: white;
+}
+
+.dark-mode .exercise-input-section label,
+.dark-mode .exercise-input-section input,
+.dark-mode .edit-form label,
+.dark-mode .edit-form input,
+.dark-mode .filter-container label,
+.dark-mode .statistics strong {
+  color: #fff; 
+}
+
+.dark-mode .navbar {
+  background-color: #333; 
+}
+
+.dark-mode .btn-secondary,
+.dark-mode .btn-primary {
+  background-color: #444; 
+  color: #fff; 
+  border-color: #555; 
+}
+
+.dark-mode h1{
+  color: #fff
+}
+
+.dark-mode .medal-counter p {
+  font-size: 24px;
+  color: #fff;
+}
+
+.dark-mode .selected-dates div {
+  display: center;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: black;
+  margin-bottom: 10px;
+}
+
+
+</style>
