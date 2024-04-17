@@ -37,11 +37,11 @@
         <p>Record streak: {{ recordStreak }}</p>
         <div v-if="currentStreak >= 3 && currentStreak % 3 === 0" class="reward">
           <p>Congratulations! You've earned 3-day streak award!</p>
-          <img src="@/assets/silver_medal.jpg" alt="Streak Master Badge">
+          <img src="@/assets/silver_medal.jpg" alt="Streak Master Badge" @click="playCheer">
         </div>
         <div v-if="currentStreak >= 7 && currentStreak % 7 === 0" class="reward">
           <p>Congratulations! You've earned 7-day streak award!</p>
-          <img src="@/assets/medal.jpg" alt="Streak Master Badge">
+          <img src="@/assets/medal.jpg" alt="Streak Master Badge" @click="playCheer">
         </div>
       </div>
 
@@ -69,6 +69,12 @@ export default {
     };
   },
   methods: {
+    playCheer() {
+  const cheerSound = new Audio(require('@/assets/cheer.mp3')); 
+  cheerSound.play().catch((error) => {
+    console.error("Failed to play the audio:", error);
+  });
+},
     goToImageGallery() {
       this.$router.push({ path: '/image-gallery' });
     },
@@ -130,7 +136,7 @@ export default {
         } else {
           this.currentStreak = 0;
           this.recordStreak = 0;
-          this.medalCounter = 0; // nova linija
+          this.medalCounter = 0; 
         }
       } catch (error) {
         console.error('Error getting streaks document: ', error);
