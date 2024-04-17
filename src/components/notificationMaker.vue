@@ -4,7 +4,7 @@
     <input type="datetime-local" id="training-date" v-model="trainingDateTime">
     
     <label for="notification-time">Vrijeme za notifikaciju (u minutama):</label>
-    <input type="number" id="notification-time" v-model.number="notificationTime">
+    <input type="number" id="notification-time" v-model.number="notificationTime">  
     
     <button @click="scheduleNotification">Zabilježi trening i postavi notifikaciju</button>
 
@@ -16,6 +16,7 @@
       <p>{{ notification.title }} - {{ notification.message }}</p>
     </div>
 
+    <audio ref="notificationSound" src="@/assets/notification.mp3"></audio>
   </div>
 </template>
 
@@ -72,12 +73,25 @@ export default {
       });
 
       const notification = new Notification(title, { body: message });
+      this.playNotificationSound(); 
       return notification;
-    }
+    },
+    playNotificationSound() {
+      const notificationSound = new Audio(require('@/assets/notification.mp3'));
+      notificationSound.play().catch((error) => {
+        console.error("Failed to play the audio: ", error);
+      });
+    },
+
+    playLionRoar() {
+  const roarSound = new Audio(require('@/assets/roar.mp3')); 
+  roarSound.play().catch((error) => {
+    console.error("Failed to play the audio:", error);
+  });
+},
   }
 };
 </script>
 
 <style scoped>
-/* Stiliziraj komponentu prema potrebi */
 </style>
