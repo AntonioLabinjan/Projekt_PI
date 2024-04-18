@@ -14,26 +14,25 @@
       </ul>
     </nav>
     <hr>
-    <!-- Content -->
+    
     <div class="container" :class="{ 'dark-mode': darkMode }">
       <input type="file" @change="handleFileChange" accept="image/*" />
-      <div class="row">
-        <div v-if="filteredImages.length > 0">
-          <div v-for="(image, index) in filteredImages" :key="index" class="col-md-6">
-            <div class="image-container">
-              <img :src="image.url" alt="Image" class="img-fluid" />
-              <div class="image-details">
-                <p>{{ image.date }}</p>
-                <p>{{ image.description }}</p>
-                <p>{{ image.weight }} KG</p>
-                <button @click="deleteImage(index)" class="btn btn-danger">Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div v-else>
-          <p>No images found for the selected weight.</p>
-        </div>
+      <div v-if="filteredImages.length > 0" class="image-grid">
+  <div v-for="(image, index) in filteredImages" :key="index" class="col-md-6">
+    <div class="image-container">
+      <img :src="image.url" alt="Image" class="img-fluid" @click="showImageModal(image)" />
+      <div class="image-details">
+        <p>{{ image.date }}</p>
+        <p>{{ image.description }}</p>
+        <p>{{ image.weight }} KG</p>
+        <button @click="deleteImage(index)" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+      <div v-else>
+        <p>No images found for the selected weight.</p>
       </div>
       <div class="form-container">
         <label for="description">Description:</label>
@@ -42,6 +41,12 @@
         <input v-model="newImage.weight" type="number" id="weight" /><br>
         <button @click="addImage" class="btn btn-primary">Add Image</button>
       </div>
+      
+<div v-if="selectedImage" class="image-modal">
+  <span @click="selectedImage = null" class="close-btn">&times;</span>
+  <img :src="selectedImage.url" alt="Full-sized Image" class="modal-image" />
+</div>
+
       <div class="filter-container">
         <label for="weightFilter">Filter by Weight (Kg):</label>
         <input v-model="weightFilter" type="number" id="weightFilter" />
@@ -53,7 +58,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'; // Dodano
+import { mapState, mapMutations } from 'vuex'; 
 
 export default {
   data() {
@@ -64,10 +69,11 @@ export default {
         weight: 0,
       },
       weightFilter: null,
+      selectedImage: null,
     };
   },
   computed: {
-    ...mapState(['images']), // Dodano
+    ...mapState(['images']), 
     filteredImages() {
       if (this.weightFilter) {
         const filteredWeight = parseInt(this.weightFilter);
@@ -138,11 +144,18 @@ export default {
     goToMusicPlayer(){
       this.$router.push({path: '/music'});
     },
+    showImageModal(image) {
+      this.selectedImage = image;
+    },
+
+    closeImageModal() {
+      this.selectedImage = null;
+    },
   },
 };
 </script>
 
-<style>
+<style scoped>
 .container.dark-mode {
   background-color: #000; 
   color: #fff; 
@@ -160,4 +173,172 @@ h1 {
 h1.dark-mode {
   color: #fff; 
 }
+
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+
+.exercise {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.exercise img {
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  margin-top: 10px;
+}
+
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  margin-left: 5px;
+}
+
+button.delete {
+  background-color: #dc3545;
+}
+
+button.edit {
+  background-color: #28a745;
+}
+
+form {
+  margin-top: 20px;
+  background-color: #f8f8f8;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+form input[type="text"],
+form input[type="number"],
+form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+form button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.dark-mode {
+  background-color: #333;
+  color: #fff;
+}
+
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.image-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.img-fluid {
+  max-width: 100%; 
+  max-height: 100%; 
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.image-details {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  color: #fff;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.image-details p {
+  margin: 5px 0;
+}
+
+.btn-danger {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-image {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
 </style>
