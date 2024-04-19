@@ -1,6 +1,6 @@
 <template>
   <div class="container" :class="{'dark-mode': darkMode}">
-    <h1 class="display-4">Galerija Obroka</h1>
+    <h1 class="h1" :class="{'dark-mode': darkMode}">Galerija Obroka</h1>
     <hr>
     <!-- Prikaz hardkodiranih obroka -->
     <div v-for="(meal, index) in meals" :key="index" class="meal">
@@ -70,33 +70,26 @@ export default {
   },
   methods: {
     addMeal() {
-      // Dodavanje novog obroka u listu
       this.meals.push({ ...this.newMeal });
-      // Resetiranje forme za unos novog obroka
       this.resetForm();
     },
     editMeal(index) {
-      // Postavljanje podataka o obroku u formu za uređivanje
       this.newMeal = { ...this.meals[index] };
       this.editIndex = index;
       this.editMode = true;
     },
     deleteMeal(index) {
-      // Brisanje obroka iz liste
       this.meals.splice(index, 1);
     },
     submitMeal() {
       if (this.editMode) {
-        // Ažuriranje postojećeg obroka
         this.meals.splice(this.editIndex, 1, { ...this.newMeal });
         this.resetForm();
       } else {
-        // Dodavanje novog obroka
         this.addMeal();
       }
     },
     cancelEdit() {
-      // Poništavanje uređivanja i resetiranje forme
       this.resetForm();
     },
     resetForm() {
@@ -146,7 +139,7 @@ h1 {
   color: #333;
 }
 
-/* Stilizacija pojedinačnih obroka */
+
 .meal {
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -156,12 +149,12 @@ h1 {
 }
 
 .meal img {
-  max-width: 100%;
-  height: auto;
+  max-width: 100%; 
+  height: auto; 
   margin-top: 10px;
+  object-fit: contain; 
+  max-height: 200px; 
 }
-
-/* Stilizacija gumba */
 button {
   background-color: #007bff;
   color: #fff;
@@ -180,7 +173,7 @@ button.edit {
   background-color: #28a745;
 }
 
-/* Stilizacija forme */
+
 form {
   margin-top: 20px;
   background-color: #f8f8f8;
@@ -217,4 +210,8 @@ form button {
   color: #fff;
 }
 
+.h1.dark-mode{
+  background-color: #000;
+  color: #fff;
+}
 </style>
