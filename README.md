@@ -1,8 +1,12 @@
-# Još je potrebno samo spojit imagegallery na firebase, napravit auth i nešto za admina
+# Još je potrebno samo spojit imagegallery na firebase, finiširat auth i nešto za admina
 #### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
 #### Trainingapp (nije definitivni naziv)
 #### Koncept aplikacije (ideja...moguće da će se modificirat u hodu)
 
+
+#### TEST CREDENTIALS: 
+#### mail: alabinjan6@gmail.com
+#### password: Ovo_je_Lozinka?!1234
 Aplikacija za praćenje raznih aktivnosti važnih za zdrav život i treniranje.
 
 Te su aktivnosti: 
