@@ -15,8 +15,8 @@
         <input type="date" class="form-control" id="dob" v-model="dob" required>
       </div>
       <div class="form-group">
-        <label for="signupUsername">Username</label>
-        <input type="text" class="form-control" id="signupUsername" v-model="signupUsername" required>
+        <label for="signupEmail">E-mail</label>
+        <input type="text" class="form-control" id="signupEmail" v-model="signupEmail" required>
       </div>
       <div class="form-group">
         <label for="signupPassword">Password</label>
@@ -49,7 +49,7 @@ export default {
       firstName: '',
       lastName: '',
       dob: '',
-      signupUsername: '',
+      signupEmail: '',
       signupPassword: '',
       confirmPassword: ''
     }
@@ -84,13 +84,31 @@ export default {
         return;
       }
 
-      createUserWithEmailAndPassword(auth, this.signupUsername, this.signupPassword)
+      if (!this.validateEmail(this.signupEmail)) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+
+      createUserWithEmailAndPassword(auth, this.signupEmail, this.signupPassword)
         .then(() => {
           alert('Registration successful. You can now login.');
           this.$router.push({ path: '/login' });
         })
         .catch(error => {
-          alert('An error occurred during registration. Please try again later.');
+          switch (error.code) {
+            case 'auth/invalid-email':
+              alert('Invalid email address.');
+              break;
+            case 'auth/weak-password':
+              alert('Password is too weak.');
+              break;
+            case 'auth/email-already-in-use':
+              alert('Email is already in use.');
+              break;
+            default:
+              alert('An error occurred during registration. Please try again later.');
+              break;
+          }
           console.error('Registration error:', error);
         });
     },
@@ -99,10 +117,16 @@ export default {
     },
     goBackHome() {
       this.$router.push({ path: '/' });
+    },
+    validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
     }
   }
 }
 </script>
+
+
 
 <style scoped>
 .signup-container {
