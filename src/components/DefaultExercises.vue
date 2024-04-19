@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'dark-mode': darkMode }">
-    <h1 class="display-4">Galerija Vježbi</h1>
+    <h1 class="h1" :class="{'dark-mode': darkMode}">Galerija Vježbi</h1>
     <hr>
     <!-- Prikaz hardkodiranih vježbi -->
     <div v-for="(exercise, index) in exercises" :key="index" class="exercise">
@@ -16,7 +16,6 @@
       <hr>
     </div>
 
-    <!-- Forma za dodavanje/novo uređivanje vježbe -->
     <h2 v-if="editMode">Uredi vježbu</h2>
     <h2 v-else>Dodaj novu vježbu</h2>
     <form @submit.prevent="submitExercise">
@@ -39,10 +38,9 @@
       <button type="button" @click="cancelEdit" v-if="editMode">Odustani</button>
     </form>
     <div>
-      <img src = "../assets/QR1.png" alt = "QR kod za vježbu">
+    <!-- <img src = "../assets/QR1.png" alt = "QR kod za vježbu"> -->
       
     </div>
-    <!-- Button to go back to the about page -->
     <button @click="toggleDarkMode" class="btn btn-dark">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     <button @click="goBack">Go Back</button>
   </div>
@@ -80,33 +78,26 @@ export default {
   },
   methods: {
     addExercise() {
-      // Dodavanje nove vježbe u listu
       this.exercises.push({ ...this.newExercise });
-      // Resetiranje forme za unos nove vježbe
       this.resetForm();
     },
     editExercise(index) {
-      // Postavljanje podataka o vježbi u formu za uređivanje
       this.newExercise = { ...this.exercises[index] };
       this.editIndex = index;
       this.editMode = true;
     },
     deleteExercise(index) {
-      // Brisanje vježbe iz liste
       this.exercises.splice(index, 1);
     },
     submitExercise() {
       if (this.editMode) {
-        // Ažuriranje postojeće vježbe
         this.exercises.splice(this.editIndex, 1, { ...this.newExercise });
         this.resetForm();
       } else {
-        // Dodavanje nove vježbe
         this.addExercise();
       }
     },
     cancelEdit() {
-      // Poništavanje uređivanja i resetiranje forme
       this.resetForm();
     },
     resetForm() {
@@ -157,7 +148,6 @@ h1 {
   text-align: center;
 }
 
-/* Stilizacija pojedinačnih vježbi */
 .exercise {
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -167,9 +157,11 @@ h1 {
 }
 
 .exercise img {
-  max-width: 100%;
-  height: auto;
+  max-width: 100%; /* Maksimalna širina slike je 100% roditeljskog elementa */
+  height: auto; /* Održavanje proporcija slike */
   margin-top: 10px;
+  object-fit: contain; /* Osigurava da se slika neće izrezati, ali će se prilagoditi dimenzijama */
+  max-height: 200px; /* Maksimalna visina slike */
 }
 
 /* Stilizacija gumba */
@@ -226,6 +218,11 @@ form button {
 
 .dark-mode {
   background-color: #333;
+  color: #fff;
+}
+
+.h1.dark-mode{
+  background-color: #000;
   color: #fff;
 }
 
