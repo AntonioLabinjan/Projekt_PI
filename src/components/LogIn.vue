@@ -3,8 +3,8 @@
     <h2>Login</h2>
     <form @submit.prevent="login" class="login-form">
       <div class="form-group">
-        <label for="loginUsername">Username</label>
-        <input type="text" class="form-control" id="loginUsername" v-model="loginUsername" required>
+        <label for="loginEmail">Email</label>
+        <input type="email" class="form-control" id="loginEmail" v-model="loginEmail" required>
       </div>
       <div class="form-group">
         <label for="loginPassword">Password</label>
@@ -21,30 +21,37 @@
 </template>
 
 <script>
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/firebase';
+
 export default {
   data() {
     return {
-      loginUsername: '',
+      loginEmail: '',
       loginPassword: '',
       darkMode: false
     };
   },
   methods: {
     login() {
-      this.$store.dispatch('loginUser', {
-        username: this.loginUsername,
-        password: this.loginPassword
-      }).then(() => {
-        if (this.$store.getters.isLoggedIn) {
+      signInWithEmailAndPassword(auth, this.loginEmail, this.loginPassword)
+        .then(() => {
           alert('Login successful.');
           this.$router.push({ path: '/' });
-        } else {
-          alert('Invalid username or password');
-        }
-      }).catch(error => {
-        alert('An error occurred during login. Please try again later.');
-        console.error('Login error:', error);
-      });
+        })
+        .catch(error => {
+          switch (error.code) {
+            case 'auth/invalid-email':
+            case 'auth/user-not-found':
+            case 'auth/wrong-password':
+              alert('Invalid email or password');
+              break;
+            default:
+              alert('An error occurred during login. Please try again later.');
+              break;
+          }
+          console.error('Login error:', error);
+        });
     },
     goToSignUp() {
       this.$router.push({ path: '/sign-up' });
@@ -64,9 +71,7 @@ export default {
 };
 </script>
 
-
 <style scoped>
-/*dark mode */
 .login-container {
   max-width: 400px;
   margin: 0 auto;
