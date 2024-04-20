@@ -1,7 +1,7 @@
-// konfiguracija rutera i komponenti
 import { createApp } from 'vue';
 import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
+import store from './store/store.js';
 import ImageGallery from './components/ImageGallery.vue';
 import VueTrainer from './components/VueTrainer.vue';
 import HomePage from './components/HomePage.vue';
@@ -18,34 +18,60 @@ import StreakCheck from './components/StreakCheck.vue';
 import QrScanner from './components/QrScanner.vue';
 import notificationMaker from './components/notificationMaker.vue';
 import MusicPlayer from './components/MusicPlayer.vue';
-import store from './store/store.js';
+import { getAuth } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+let isUserLoggedIn = false;
+
+const auth = getAuth();  
+
+onAuthStateChanged(auth, (user) => {
+  isUserLoggedIn = !!user;  
+});
+
+function isLoggedIn() {
+  return isUserLoggedIn;
+}
 
 const routes = [
   { path: '/', component: HomePage },
-  { path: '/image-gallery', component: () => import('./components/ImageGallery.vue') },
-  { path: '/vue-trainer', component: () => import('./components/VueTrainer.vue') }, 
-  { path: '/sign-up', component: () => import('./components/SignUp.vue') },
-  { path: '/login', component: () => import('./components/LogIn.vue') }, 
-  { path: '/meal-tracker', component: () => import('./components/MealTracker.vue') },
-  { path: '/sleep-tracker', component: () => import('./components/SleepTracker.vue') },
-  { path: '/water-intake', component: () => import('./components/WaterIntake.vue') },
-  { path: '/BMI-calculator', component: () => import('./components/BMICalculator.vue') },
-  { path: '/about', component: () => import('./components/AboutPage.vue') },
-  {path: '/streak', component: () => import('./components/StreakCheck.vue') },
-  {path: '/default-exercises', component: () => import('./components/DefaultExercises.vue') },
-  {path: '/default-meals', component: () => import('./components/DefaultMeals.vue') },
-  {path: '/qr-scanner', component: () => import('./components/QrScanner.vue')},
-  {path: '/notification-maker', component: () => import('./components/notificationMaker.vue')},
-  {path: '/music', component: ()=> import('./components/MusicPlayer.vue')}
+  { path: '/image-gallery', component: ImageGallery, meta: { requiresAuth: true } },
+  { path: '/vue-trainer', component: VueTrainer, meta: { requiresAuth: true } },
+  { path: '/sign-up', component: SignUp },
+  { path: '/login', component: LogIn },
+  { path: '/meal-tracker', component: MealTracker, meta: { requiresAuth: true } },
+  { path: '/sleep-tracker', component: SleepTracker, meta: { requiresAuth: true } },
+  { path: '/water-intake', component: WaterIntake, meta: { requiresAuth: true } },
+  { path: '/BMI-calculator', component: BMICalculator, meta: { requiresAuth: true } },
+  { path: '/about', component: AboutPage },
+  { path: '/streak', component: StreakCheck, meta: { requiresAuth: true } },
+  { path: '/default-exercises', component: DefaultExercises },
+  { path: '/default-meals', component: DefaultMeals },
+  { path: '/qr-scanner', component: QrScanner, meta: { requiresAuth: true } },
+  { path: '/notification-maker', component: notificationMaker },
+  { path: '/music', component: MusicPlayer, meta: { requiresAuth: true } },
 ];
-
 
 const router = createRouter({
   history: createWebHistory(),
   routes
 });
 
+
+router.beforeEach((to, from, next) => {
+  const isRequiresAuth = to.meta.requiresAuth;
+  
+  if (isRequiresAuth && !isLoggedIn()) {
+    next('/login');  // Ako nismo ulogirani, šalje nas na login
+  } else if (!isRequiresAuth && isLoggedIn() && to.path === '/login') {
+    console.log("već ste ulogirani, ne možete opet") // ne pusti nas da se opet ulogiramo ako smo ulogirani i šalje nas na homepage
+    next('/');  
+  } else {
+    next();  // ako smo ulogirani i klikćemo na neku rutu koja ni login, onda je okej i šalje nas na traženu rutu
+  }
+});
+
 const app = createApp(App);
+// Registracija komponenti
 app.component('ImageGallery', ImageGallery);
 app.component('VueTrainer', VueTrainer);
 app.component('HomePage', HomePage);
@@ -64,4 +90,5 @@ app.component('notificationMaker', notificationMaker);
 app.component('MusicPlayer', MusicPlayer);
 app.use(router);
 app.use(store);
+
 app.mount('#app');
