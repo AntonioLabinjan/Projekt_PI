@@ -21,22 +21,24 @@
 </template>
 
 <script>
+import { getFirestore, doc, setDoc, getDocs, collection, onSnapshot } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+
+const db = getFirestore();
+const auth = getAuth();
+
 export default {
   data() {
     return {
       trainingDateTime: '',
       notificationTime: 0,
       countdown: 0,
-      timer: null
+      timer: null,
+      notifications: []  
     };
   },
-  computed: {
-    notifications() {
-      return this.$store.state.notifications; 
-    }
-  },
   methods: {
-    scheduleNotification() {
+    async scheduleNotification() {
       const trainingTime = new Date(this.trainingDateTime).getTime();
       const notificationTimeInMilliseconds = this.notificationTime * 60 * 1000;
       const notificationDateTime = new Date(trainingTime + notificationTimeInMilliseconds);
@@ -52,6 +54,26 @@ export default {
           this.sendNotification();
         }
       }, 1000);
+
+      await this.addNotificationToFirebase();
+    },
+    async addNotificationToFirebase() {
+      const user = auth.currentUser;
+      if (user) {
+        const notificationsRef = collection(db, 'notifications');
+        await setDoc(doc(notificationsRef, user.uid), {
+          title: 'Vrijeme za trening',
+          message: `Vrijeme je za trening koji je zakazan za: ${new Date(this.trainingDateTime).toLocaleString()}`
+        });
+      }
+    },
+    async fetchNotifications() {
+      const user = auth.currentUser;
+      if (user) {
+        const notificationsRef = collection(db, 'notifications');
+        const querySnapshot = await getDocs(notificationsRef);
+        this.notifications = querySnapshot.docs.map(doc => doc.data());
+      }
     },
     sendNotification() {
       if (Notification.permission === 'granted') {
@@ -67,13 +89,8 @@ export default {
       }
     },
     createNotification(title, message) {
-      this.$store.commit('addNotification', {
-        title: title,
-        message: message
-      });
-
       const notification = new Notification(title, { body: message });
-      this.playNotificationSound(); 
+      this.playNotificationSound();
       return notification;
     },
     playNotificationSound() {
@@ -81,17 +98,22 @@ export default {
       notificationSound.play().catch((error) => {
         console.error("Failed to play the audio: ", error);
       });
-    },
+    }
+  },
+  created() {
+    this.fetchNotifications();  
 
-    playLionRoar() {
-  const roarSound = new Audio(require('@/assets/roar.mp3')); 
-  roarSound.play().catch((error) => {
-    console.error("Failed to play the audio:", error);
-  });
-},
+    const user = auth.currentUser;
+    if (user) {
+      const notificationsRef = collection(db, 'notifications');
+      onSnapshot(notificationsRef, (querySnapshot) => {
+        this.notifications = querySnapshot.docs.map(doc => doc.data());
+      });
+    }
   }
 };
 </script>
 
 <style scoped>
+  
 </style>
