@@ -1,4 +1,9 @@
-# Još je potrebno samo spojit imagegallery na firebase, finiširat auth i nešto za admina
+### TODO:
+<ul>Razrada administratora</ul>
+<ul>Spajanje imagegallery-ja na firebase</ul>
+<ul>Popravak CSS-a;  ovo je grdo</ul>
+
+
 #### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
 #### Trainingapp (nije definitivni naziv)
 #### Koncept aplikacije (ideja...moguće da će se modificirat u hodu)
