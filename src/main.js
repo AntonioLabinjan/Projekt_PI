@@ -63,7 +63,7 @@ router.beforeEach((to, from, next) => {
   if (isRequiresAuth && !isLoggedIn()) {
     next('/login');  // Ako nismo ulogirani, šalje nas na login
   } else if (!isRequiresAuth && isLoggedIn() && to.path === '/login') {
-    console.log("već ste ulogirani, ne možete opet") // ne pusti nas da se opet ulogiramo ako smo ulogirani i šalje nas na homepage
+    window.alert("već ste ulogirani, ne možete opet") // ne pusti nas da se opet ulogiramo ako smo ulogirani i šalje nas na homepage
     next('/');  
   } else {
     next();  // ako smo ulogirani i klikćemo na neku rutu koja ni login, onda je okej i šalje nas na traženu rutu
