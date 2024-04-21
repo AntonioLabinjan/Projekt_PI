@@ -1,5 +1,6 @@
 ### TODO:
 <ul>Razrada administratora</ul>
+<ul>Napravit da se svi inputi u aplikaciju filtriraju prema useru koji ih postavi</ul>
 <ul>Spajanje imagegallery-ja na firebase</ul>
 <ul>Popravak CSS-a;  ovo je grdo</ul>
 
