@@ -40,12 +40,17 @@
     </div>
     <hr>
     <notification-maker></notification-maker>
+
+    <div class="user-info" v-if="currentUser">
+      <p><b>Trenutno ulogirani korisnik:</b> {{ currentUser.email }}</p>
+    </div>
   </div>
 </template>
 
 <script>
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/firebase';
+import {onAuthStateChanged} from 'firebase/auth';
+import { db, auth } from '@/firebase';
 
 export default {
   data() {
@@ -105,6 +110,7 @@ export default {
       motivationalQuote: "",
       totalCaloriesConsumed: 0,
       totalCaloriesBurned: 0,
+      currentUser: null,
     };
   },
   computed: {
@@ -136,6 +142,24 @@ export default {
       } catch (error) {
         console.error('Error fetching exercises:', error);
       }
+    },
+    selectRandomQuote() {
+      const randomIndex = Math.floor(Math.random() * this.motivationalQuotes.length);
+      this.motivationalQuote = this.motivationalQuotes[randomIndex];
+    },
+    readMotivationalQuote() {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(this.motivationalQuote);
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert('Your browser does not support text-to-speech.');
+      }
+    },
+    playLionRoar() {
+      const roarSound = new Audio(require('@/assets/roar.mp3')); 
+      roarSound.play().catch((error) => {
+        console.error("Failed to play the audio:", error);
+      });
     },
     goToImageGallery() {
       this.$router.push({ path: '/image-gallery' });
@@ -173,35 +197,24 @@ export default {
     goToMusicPlayer(){
       this.$router.push({path: '/music'});
     },
-    selectRandomQuote() {
-      const randomIndex = Math.floor(Math.random() * this.motivationalQuotes.length);
-      this.motivationalQuote = this.motivationalQuotes[randomIndex];
-    },
-    readMotivationalQuote() {
-      if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(this.motivationalQuote);
-        window.speechSynthesis.speak(utterance);
-      } else {
-        alert('Your browser does not support text-to-speech.');
-      }
-    },
-    playLionRoar() {
-  const roarSound = new Audio(require('@/assets/roar.mp3')); 
-  roarSound.play().catch((error) => {
-    console.error("Failed to play the audio:", error);
-  });
-},
   },
   mounted() {
     this.fetchExercises();
     this.fetchMeals();
     this.selectRandomQuote();
-  }
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.currentUser = user;
+      } else {
+        this.currentUser = null;
+      }
+    });
+  },
 };
 </script>
 
 <style scoped>
-
 h1 {
     font-size: 5rem;
     text-shadow: 5px 5px 0px green;
@@ -313,4 +326,8 @@ h1 {
   filter: brightness(100%) contrast(100%);
 }
 
+.user-info {
+  margin-top: 20px;
+  text-align: center;
+}
 </style>
