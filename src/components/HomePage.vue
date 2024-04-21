@@ -43,13 +43,14 @@
 
     <div class="user-info" v-if="currentUser">
       <p><b>Trenutno ulogirani korisnik:</b> {{ currentUser.email }}</p>
+      <li><button @click="logout">Odlogiraj se</button></li>
     </div>
   </div>
 </template>
 
 <script>
 import { collection, getDocs } from 'firebase/firestore';
-import {onAuthStateChanged} from 'firebase/auth';
+import {onAuthStateChanged, signOut} from 'firebase/auth';
 import { db, auth } from '@/firebase';
 
 export default {
@@ -119,6 +120,16 @@ export default {
     },
   },
   methods: {
+    async logout() {
+      try {
+        await signOut(auth);
+        window.alert("Uspješno ste se odlogirali.");
+        this.$router.push('/');
+      } catch (error) {
+        console.error('Greška prilikom odlogiranja:', error);
+        window.alert("Došlo je do pogreške prilikom odlogiranja.");
+      }
+    },
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
       document.body.classList.toggle('dark-mode', this.darkMode);
