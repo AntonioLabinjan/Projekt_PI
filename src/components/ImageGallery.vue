@@ -343,3 +343,70 @@ form button {
 }
 
 </style>
+
+
+<!-- Evo jedan mali neuspješni pokušaj uploadanja slike u firebase preko nekog čudnovatog indijskog tutoriala :)
+<template>
+  <div>
+    <input type="file" @change="handleFileUpload">
+    <button @click="uploadFile">Upload</button>
+    
+    <div v-if="imageUrl">
+      <img :src="imageUrl" alt="Uploaded Image" style="max-width: 300px;">
+      <p>Uploaded Image URL: {{ imageUrl }}</p>
+    </div>
+  </div>
+</template>
+
+<script>
+import { ref } from 'vue';
+import firebase from 'firebase/app';
+import 'firebase/storage';
+
+export default {
+  name: 'ImageUploader',
+  setup() {
+    const selectedFile = ref(null);
+    const imageUrl = ref(null);
+
+    const handleFileUpload = (event) => {
+      const file = event.target.files[0];
+      selectedFile.value = file;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        imageUrl.value = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    const uploadFile = async () => {
+      if (selectedFile.value) {
+        const storageRef = firebase.storage().ref();
+        const fileRef = storageRef.child(selectedFile.value.name);
+
+        try {
+          await fileRef.put(selectedFile.value);
+          const url = await fileRef.getDownloadURL();
+          imageUrl.value = url;
+        } catch (error) {
+          console.error('Error uploading file:', error);
+        }
+      } else {
+        console.warn('No file selected');
+      }
+    };
+
+    return {
+      handleFileUpload,
+      uploadFile,
+      imageUrl
+    };
+  }
+};
+</script>
+
+<style scoped>
+</style>
+
+-->
