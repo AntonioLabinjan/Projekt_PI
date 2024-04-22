@@ -40,11 +40,7 @@
     </div>
     <hr>
     <notification-maker></notification-maker>
-
-    <div class="user-info" v-if="currentUser">
-      <p><b>Trenutno ulogirani korisnik:</b> {{ currentUser.email }}</p>
-      <li><button @click="logout">Odlogiraj se</button></li>
-    </div>
+    <user-bar></user-bar>
   </div>
 </template>
 
