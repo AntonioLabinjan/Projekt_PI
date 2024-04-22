@@ -35,9 +35,13 @@
     
     <button @click="toggleDarkMode" class="btn btn-dark">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
   </div>
+  <user-bar></user-bar>
+
 </template>
 
 <script>
+import {onAuthStateChanged, signOut} from 'firebase/auth';
+import { db, auth } from '@/firebase';
 export default {
   data() {
     return {
@@ -74,6 +78,7 @@ export default {
     }
   },
   methods: {
+    
     calculateBMI() {
       if (!this.height || !this.weight) {
         alert('Please enter both height and weight');
@@ -121,6 +126,15 @@ export default {
         document.body.classList.remove('dark-mode');
       }
     },
+  }, 
+  mounted(){
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.currentUser = user;
+      } else {
+        this.currentUser = null;
+      }
+    });
   }
 };
 </script>
@@ -187,4 +201,10 @@ export default {
     opacity: 1;
   }
 }
+
+.user-info {
+  margin-top: 20px;
+  text-align: center;
+}
+
 </style>
