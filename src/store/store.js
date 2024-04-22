@@ -143,7 +143,10 @@ const store = createStore({
       } else {
         state.genreCounter[genre] = 1;
       }
-    }
+    },
+    setImages(state, images) {
+      state.images = images;
+    },
   },
   actions: {
     addSong({ commit }, song) { 
