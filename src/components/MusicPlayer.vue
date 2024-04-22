@@ -48,7 +48,6 @@
     </div>
     <button @click="goBackHome" class="back-button">Povratak na početnu</button>
 
-    <!-- Prikaz countera za žanrove -->
     <div class="genre-counter">
       <h2>Genre Counter</h2>
       <div v-for="(count, genre) in genreCounter" :key="genre">
@@ -56,6 +55,7 @@
       </div>
     </div>
   </div>
+  <user-bar></user-bar>
 </template>
 
 <script>
