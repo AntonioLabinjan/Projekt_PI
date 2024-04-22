@@ -58,6 +58,7 @@
       <p>Između dva uzastopna unosa za san ima više od 2 dana! Razmislite o tome da malo popravite sleep schedule!!!</p>
     </div>
   </div>
+  <user-bar></user-bar>
 </template>
 
 <script>
