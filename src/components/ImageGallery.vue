@@ -55,6 +55,7 @@
       <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     </div>
   </div>
+  <user-bar></user-bar>
 </template>
 
 <script>
