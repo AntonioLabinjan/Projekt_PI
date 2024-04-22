@@ -70,6 +70,7 @@
       <canvas ref="pieChartCanvas"></canvas>
     </div>
   </div>
+  <user-bar></user-bar>
 </template>
 
 <script>
