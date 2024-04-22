@@ -28,6 +28,7 @@
       </div>
     </div>
   </div>
+  <user-bar></user-bar>
 </template>
 
 <script>
