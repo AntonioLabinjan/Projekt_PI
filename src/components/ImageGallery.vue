@@ -17,23 +17,25 @@
     
     <div class="container" :class="{ 'dark-mode': darkMode }">
       <input type="file" @change="handleFileChange" accept="image/*" />
+      
       <div v-if="filteredImages.length > 0" class="image-grid">
-  <div v-for="(image, index) in filteredImages" :key="index" class="col-md-6">
-    <div class="image-container">
-      <img :src="image.url" alt="Image" class="img-fluid" @click="showImageModal(image)" />
-      <div class="image-details">
-        <p>{{ image.date }}</p>
-        <p>{{ image.description }}</p>
-        <p>{{ image.weight }} KG</p>
-        <button @click="deleteImage(index)" class="btn btn-danger">Delete</button>
+        <div v-for="(image, index) in filteredImages" :key="index" class="col-md-6">
+          <div class="image-container">
+            <img :src="image.url" alt="Image" class="img-fluid" @click="showImageModal(image)" />
+            <div class="image-details">
+              <p>{{ image.date }}</p>
+              <p>{{ image.description }}</p>
+              <p>{{ image.weight }} KG</p>
+              <button @click="deleteImage(index)" class="btn btn-danger">Delete</button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
       <div v-else>
         <p>No images found for the selected weight.</p>
       </div>
+
       <div class="form-container">
         <label for="description">Description:</label>
         <input v-model="newImage.description" type="text" id="description" />
@@ -41,25 +43,28 @@
         <input v-model="newImage.weight" type="number" id="weight" /><br>
         <button @click="addImage" class="btn btn-primary">Add Image</button>
       </div>
-      
-<div v-if="selectedImage" class="image-modal">
-  <span @click="selectedImage = null" class="close-btn">&times;</span>
-  <img :src="selectedImage.url" alt="Full-sized Image" class="modal-image" />
-</div>
+
+      <div v-if="selectedImage" class="image-modal">
+        <span @click="selectedImage = null" class="close-btn">&times;</span>
+        <img :src="selectedImage.url" alt="Full-sized Image" class="modal-image" />
+      </div>
 
       <div class="filter-container">
         <label for="weightFilter">Filter by Weight (Kg):</label>
         <input v-model="weightFilter" type="number" id="weightFilter" />
         <button @click="filterByWeight" class="btn btn-primary">Apply Filter</button>
       </div>
+
       <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     </div>
+    
+    <user-bar></user-bar>
   </div>
-  <user-bar></user-bar>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'; 
+import { mapState } from 'vuex';
+import { getFirestore, collection, addDoc, deleteDoc, query, where, getDocs, doc } from 'firebase/firestore';
 
 export default {
   data() {
@@ -68,13 +73,16 @@ export default {
       newImage: {
         description: '',
         weight: 0,
+        url: '',
+        date: ''
       },
       weightFilter: null,
       selectedImage: null,
     };
   },
   computed: {
-    ...mapState(['images']), 
+    ...mapState(['images']),
+
     filteredImages() {
       if (this.weightFilter) {
         const filteredWeight = parseInt(this.weightFilter);
@@ -83,10 +91,20 @@ export default {
         }
       }
       return this.images;
-    }
+    },
   },
   methods: {
-    ...mapMutations(['addImage', 'deleteImage']), 
+    async loadImages() {
+  const imageCollection = collection(this.$db, 'images');
+  const snapshot = await getDocs(imageCollection);
+  return snapshot.docs.map(doc => {
+    const data = doc.data();
+    data.id = doc.id;
+    return data;
+  });
+},
+
+
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
       if (this.darkMode) {
@@ -106,20 +124,39 @@ export default {
         reader.readAsDataURL(file);
       }
     },
-    addImage() {
-      if (this.newImage.url) {
-        this.$store.commit('addImage', { ...this.newImage });
-        this.newImage = {
-          description: '',
-          weight: 0,
-        };
-      }
-    },
-    deleteImage(index) {
-      this.$store.commit('deleteImage', index);
-    },
+    async addImage() {
+  if (this.newImage.url) {
+    const { description, weight, url, date } = this.newImage;
+    const docRef = await addDoc(collection(this.$db, 'images'), {
+      description,
+      weight,
+      url,
+      date,
+    });
+    
+    this.newImage.id = docRef.id;
+
+    this.images.push(this.newImage);
+
+    this.newImage = {
+      description: '',
+      weight: 0,
+      url: '',
+      date: '',
+    };
+  }
+},
+async deleteImage(index) {
+  const imageToDelete = this.images[index];
+  const imageRef = collection(this.$db, 'images');
+
+  // Koristimo ID dokumenta za brisanje
+  await deleteDoc(doc(imageRef, imageToDelete.id));
+  this.images.splice(index, 1);
+},
+
     filterByWeight() {
-      // Ovo iman u computed
+      // ovo već iman u computed
     },
     goToVueTrainer() {
       this.$router.push({ path:'/vue-trainer' }); 
@@ -148,15 +185,41 @@ export default {
     showImageModal(image) {
       this.selectedImage = image;
     },
-
-    closeImageModal() {
-      this.selectedImage = null;
-    },
   },
+  async mounted() {
+  const db = getFirestore();
+  this.$db = db;
+
+  try {
+    const images = await this.loadImages();
+    this.$store.commit('setImages', images);
+  } catch (error) {
+    console.error('Error loading images:', error);
+  }
+},
+
 };
 </script>
 
 <style scoped>
+.container.dark-mode {
+  background-color: #000; 
+  color: #fff; 
+}
+
+.navbar.dark-mode {
+  background-color: #000; 
+  color: #fff; 
+}
+
+h1 {
+  color: #000; 
+}
+
+h1.dark-mode {
+  color: #fff; 
+}
+
 .container.dark-mode {
   background-color: #000; 
   color: #fff; 
@@ -342,71 +405,7 @@ form button {
   cursor: pointer;
 }
 
+
+
+
 </style>
-
-
-<!-- Evo jedan mali neuspješni pokušaj uploadanja slike u firebase preko nekog čudnovatog indijskog tutoriala :)
-<template>
-  <div>
-    <input type="file" @change="handleFileUpload">
-    <button @click="uploadFile">Upload</button>
-    
-    <div v-if="imageUrl">
-      <img :src="imageUrl" alt="Uploaded Image" style="max-width: 300px;">
-      <p>Uploaded Image URL: {{ imageUrl }}</p>
-    </div>
-  </div>
-</template>
-
-<script>
-import { ref } from 'vue';
-import firebase from 'firebase/app';
-import 'firebase/storage';
-
-export default {
-  name: 'ImageUploader',
-  setup() {
-    const selectedFile = ref(null);
-    const imageUrl = ref(null);
-
-    const handleFileUpload = (event) => {
-      const file = event.target.files[0];
-      selectedFile.value = file;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        imageUrl.value = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    };
-
-    const uploadFile = async () => {
-      if (selectedFile.value) {
-        const storageRef = firebase.storage().ref();
-        const fileRef = storageRef.child(selectedFile.value.name);
-
-        try {
-          await fileRef.put(selectedFile.value);
-          const url = await fileRef.getDownloadURL();
-          imageUrl.value = url;
-        } catch (error) {
-          console.error('Error uploading file:', error);
-        }
-      } else {
-        console.warn('No file selected');
-      }
-    };
-
-    return {
-      handleFileUpload,
-      uploadFile,
-      imageUrl
-    };
-  }
-};
-</script>
-
-<style scoped>
-</style>
-
--->
