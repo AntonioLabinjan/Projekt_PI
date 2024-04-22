@@ -26,7 +26,6 @@
         <label for="confirmPassword">Confirm Password</label>
         <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required>
       </div>
-      
       <div class="button-group">
         <button type="submit" class="btn btn-primary">Sign Up</button>
         <button @click="goToLogIn" class="btn btn-secondary">Login</button>
@@ -39,8 +38,8 @@
 </template>
 
 <script>
-import { createUserWithEmailAndPassword } from 'firebase/auth'; 
-import { auth } from '@/firebase'; 
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { auth } from '@/firebase';
 
 export default {
   data() {
@@ -63,54 +62,55 @@ export default {
         document.body.classList.remove('dark-mode');
       }
     },
-    signUp() {
+    async signUp() {
       if (this.signupPassword.length < 8) {
         alert("Password must be at least 8 characters long.");
         return;
       }
-    
       if (!/\d/.test(this.signupPassword)) {
         alert("Password must contain at least one digit.");
         return;
       }
-    
       if (!/[A-Z]/.test(this.signupPassword)) {
         alert("Password must contain at least one uppercase letter.");
         return;
       }
-    
       if (this.signupPassword !== this.confirmPassword) {
         alert("Passwords don't match. Please enter matching passwords.");
         return;
       }
-
       if (!this.validateEmail(this.signupEmail)) {
         alert("Please enter a valid email address.");
         return;
       }
 
-      createUserWithEmailAndPassword(auth, this.signupEmail, this.signupPassword)
-        .then(() => {
-          alert('Registration successful. You can now login.');
-          this.$router.push({ path: '/login' });
-        })
-        .catch(error => {
-          switch (error.code) {
-            case 'auth/invalid-email':
-              alert('Invalid email address.');
-              break;
-            case 'auth/weak-password':
-              alert('Password is too weak.');
-              break;
-            case 'auth/email-already-in-use':
-              alert('Email is already in use.');
-              break;
-            default:
-              alert('An error occurred during registration. Please try again later.');
-              break;
-          }
-          console.error('Registration error:', error);
-        });
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, this.signupEmail, this.signupPassword);
+        await sendEmailVerification(auth.currentUser);
+        
+        const date = new Date();
+        const registrationDate = date.toLocaleDateString();
+        const registrationTime = date.toLocaleTimeString();
+        
+        alert('Registration successful. You can now login.');
+        this.$router.push({ path: '/login' });
+      } catch (error) {
+        switch (error.code) {
+          case 'auth/invalid-email':
+            alert('Invalid email address.');
+            break;
+          case 'auth/weak-password':
+            alert('Password is too weak.');
+            break;
+          case 'auth/email-already-in-use':
+            alert('Email is already in use.');
+            break;
+          default:
+            alert('An error occurred during registration. Please try again later.');
+            break;
+        }
+        console.error('Registration error:', error);
+      }
     },
     goToLogIn() {
       this.$router.push({ path: '/login' });
@@ -125,8 +125,6 @@ export default {
   }
 }
 </script>
-
-
 
 <style scoped>
 .signup-container {
