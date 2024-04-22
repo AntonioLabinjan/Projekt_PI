@@ -1,7 +1,6 @@
 <template>
   <div class="container" :class="{ 'dark-mode': darkMode }">
     <h1>Exercise Tracker</h1>
-    <!-- Navbar -->
     <nav class="navbar">
       <ul class="navbar-nav">
         <li><button @click="goToMealTracker" class="btn-secondary">Go to Meal Tracker</button></li>
@@ -15,7 +14,6 @@
       </ul>
     </nav>
     <hr>
-    <!-- Content -->
     <form @submit.prevent="addExercise" class="exercise-input-section">
       <h3>Exercise Info</h3>
       <label for="exerciseName">Exercise Name:</label>
@@ -76,13 +74,13 @@
     </div>
 
 
-    <!-- Pie Chart container -->
     <div class="pie-chart-section">
       <h3>Exercise Duration Pie Chart</h3>
       <canvas ref="pieChartCanvas"></canvas>
     </div>
     <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
   </div>
+  <user-bar></user-bar>
 </template>
 
 <script>
@@ -242,12 +240,10 @@ export default {
 </script>
 
 <style scoped>
-/* Dark mode styling */
 .dark-mode {
   background-color: #222;
   color: #fff;
 }
-/* Navbar styling */
 .navbar {
   margin-bottom: 20px;
 }
@@ -260,11 +256,9 @@ export default {
 .navbar-nav li {
   margin-right: 10px;
 }
-/* Exercise input form styling */
 .exercise-input-section {
   margin-bottom: 20px;
 }
-/* Exercise display styling */
 .exercise-display-section {
   list-style-type: none;
   padding: 0;
@@ -277,19 +271,15 @@ export default {
 .edit-btn, .delete-btn {
   margin-left: 10px;
 }
-/* Edit form styling */
 .edit-form {
   margin-bottom: 20px;
 }
-/* Statistics section styling */
 .statistics {
   margin-bottom: 20px;
 }
-/* Filter container styling */
 .filter-container {
   margin-bottom: 20px;
 }
-/* Pie chart section styling */
 .pie-chart-section {
   margin-bottom: 20px;
 }
