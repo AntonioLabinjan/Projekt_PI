@@ -150,7 +150,6 @@ async deleteImage(index) {
   const imageToDelete = this.images[index];
   const imageRef = collection(this.$db, 'images');
 
-  // Koristimo ID dokumenta za brisanje
   await deleteDoc(doc(imageRef, imageToDelete.id));
   this.images.splice(index, 1);
 },
@@ -202,46 +201,44 @@ async deleteImage(index) {
 </script>
 
 <style scoped>
+
+.container {
+  position: relative; 
+}
+
+.container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to bottom right, #4CAF50, #2196F3);
+  opacity: 0.3; 
+  pointer-events: none; 
+}
+
 .container.dark-mode {
-  background-color: #000; 
+  background-color: #262626; 
   color: #fff; 
 }
 
 .navbar.dark-mode {
-  background-color: #000; 
+  background-color: #262626; 
   color: #fff; 
 }
 
 h1 {
-  color: #000; 
+  color: #4CAF50; 
 }
 
 h1.dark-mode {
-  color: #fff; 
+  color: #ffcc00; 
 }
-
-.container.dark-mode {
-  background-color: #000; 
-  color: #fff; 
-}
-
-.navbar.dark-mode {
-  background-color: #000; 
-  color: #fff; 
-}
-
-h1 {
-  color: #000; 
-}
-
-h1.dark-mode {
-  color: #fff; 
-}
-
 
 body {
   font-family: Arial, sans-serif;
-  background-color: #f2f2f2;
+  background-color: #f4f4f4; 
   margin: 0;
   padding: 0;
 }
@@ -256,25 +253,8 @@ h1 {
   text-align: center;
 }
 
-
-.exercise {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  padding: 10px;
-  background-color: #fff;
-}
-
-.exercise img {
-  width: 100%; 
-  height: 100%; 
-  object-fit: cover; 
-  margin-top: 10px;
-}
-
-
 button {
-  background-color: #007bff;
+  background-color: #4CAF50; 
   color: #fff;
   border: none;
   padding: 5px 10px;
@@ -284,16 +264,16 @@ button {
 }
 
 button.delete {
-  background-color: #dc3545;
+  background-color: #DC3545; 
 }
 
 button.edit {
-  background-color: #28a745;
+  background-color: #28a745; 
 }
 
 form {
   margin-top: 20px;
-  background-color: #f8f8f8;
+  background-color: #f4f4f4; 
   padding: 20px;
   border-radius: 5px;
 }
@@ -315,7 +295,7 @@ form textarea {
 }
 
 form button {
-  background-color: #007bff;
+  background-color: #4CAF50; 
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -327,7 +307,6 @@ form button {
   background-color: #333;
   color: #fff;
 }
-
 
 .image-grid {
   display: grid;
@@ -343,8 +322,8 @@ form button {
 }
 
 .img-fluid {
-  max-width: 100%; 
-  max-height: 100%; 
+  max-width: 100%;
+  max-height: 100%;
   border-radius: 5px;
   overflow: hidden;
 }
@@ -369,7 +348,7 @@ form button {
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: #dc3545;
+  background-color: #DC3545;
   color: #fff;
   border: none;
   padding: 5px 10px;
@@ -405,6 +384,9 @@ form button {
   cursor: pointer;
 }
 
+.navbar .navbar-nav li button.active {
+  background-color: #007bff;
+}
 
 
 
