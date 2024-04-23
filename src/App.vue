@@ -1,12 +1,32 @@
 <template>
-  <div id="app">
-  <h1>TrainingApp</h1>
-    <router-view /> <!-- Ovdje će se dinamički učitavati komponente prema rutama iz main.js -->
+  <div>
+    <div class="loading-pulse" v-if="isLoading">
+      <div class="pulse"></div>
+    </div>
+    <router-view></router-view>
   </div>
 </template>
+
 <script>
 export default {
   name: 'App',
+  data() {
+    return {
+      isLoading: false,
+    };
+  },
+  created() {
+    this.$router.beforeEach((to, from, next) => {
+      this.isLoading = true;
+      next();
+    });
+
+    this.$router.afterEach(() => {
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 300);
+    });
+  },
 };
 </script>
 
@@ -18,5 +38,35 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.loading-pulse {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.pulse {
+  width: 100px;
+  height: 100px;
+  background-color: #3498db;
+  border-radius: 50%;
+  animation: pulseAnimation 1s infinite ease-in-out;
+}
+
+@keyframes pulseAnimation {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
 }
 </style>
