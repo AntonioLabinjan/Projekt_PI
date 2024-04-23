@@ -35,11 +35,11 @@
       <div class="streak">
         <p>Current streak: {{ currentStreak }}</p>
         <p>Record streak: {{ recordStreak }}</p>
-        <div v-if="currentStreak >= 3 && currentStreak % 3 === 0" class="reward">
+        <div v-if="currentStreak >= 3 && currentStreak % 3 === 0" class="reward bounce-animation">
           <p>Congratulations! You've earned 3-day streak award!</p>
           <img src="@/assets/silver_medal.jpg" alt="Streak Master Badge" @click="playCheer">
         </div>
-        <div v-if="currentStreak >= 7 && currentStreak % 7 === 0" class="reward">
+        <div v-if="currentStreak >= 7 && currentStreak % 7 === 0" class="reward bounce-animation">
           <p>Congratulations! You've earned 7-day streak award!</p>
           <img src="@/assets/medal.jpg" alt="Streak Master Badge" @click="playGoldenCheer">
         </div>
@@ -74,7 +74,7 @@ export default {
   methods: {
   toggleDarkMode() {
   var element = document.body;
-  this.darkMode = !this.darkMode; // Ažurirajte stanje darkMode varijable
+  this.darkMode = !this.darkMode; 
   element.classList.toggle('dark-mode', this.darkMode);
  },
     playCheer() {
@@ -89,6 +89,15 @@ playGoldenCheer(){
     console.error("Failed to play the audio:", error);
   });
 },
+playAnimation() {
+    const rewardElements = document.querySelectorAll('.reward.bounce-animation');
+    rewardElements.forEach(element => {
+      element.classList.add('playing-animation');
+      element.addEventListener('animationend', () => {
+        element.classList.remove('bounce-animation', 'playing-animation');
+      }, { once: true });
+    });
+  },
     goToImageGallery() {
       this.$router.push({ path: '/image-gallery' });
     },
@@ -158,7 +167,7 @@ playGoldenCheer(){
     },
     async updateStreak() {
 
-  this.isNewMedalAdded = false;
+  this.isNewMedalAdded = true; // tu je prije bilo false
 
   if (this.selectedDates.length === 0) {
     this.currentStreak = 0;
@@ -187,8 +196,8 @@ playGoldenCheer(){
 
   if ((streak % 3 === 0 || streak % 7 === 0) && streak !== 0) {
     if (!this.isNewMedalAdded) { // je li već dodana nova medalja
-      this.medalCounter++;
       this.isNewMedalAdded = true; // nova medalja dodana
+      this.medalCounter++;
     }
   } else {
     this.isNewMedalAdded = false; // ako nije dodana nova medalja
@@ -284,9 +293,10 @@ if (indexToRemove !== -1) {
     next();
   },
   mounted() {
-    this.loadDataLocally();
-    this.toggleDarkMode();
-  },
+  this.loadDataLocally();
+  this.toggleDarkMode();
+  this.isNewMedalAdded = false; // Resetiranje flaga
+},
   updated() {
     this.saveDataLocally();
   }
@@ -462,5 +472,25 @@ form button:hover {
   margin-bottom: 10px;
 }
 
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+}
+
+.reward.bounce-animation {
+  animation: bounce 2s ease-in-out;
+  animation-fill-mode: both;
+}
+
+.reward.playing-animation {
+  animation: none;
+}
 
 </style>
