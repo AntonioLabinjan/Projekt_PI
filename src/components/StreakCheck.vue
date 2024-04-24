@@ -1,5 +1,6 @@
 <template>
   <keep-alive>
+  <div>
     <div class="container" :class="{ 'dark-mode': darkMode }">
       <nav class="navbar">
         <ul>
@@ -51,6 +52,7 @@
       <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     </div>
     <user-bar></user-bar>
+    </div>
   </keep-alive>
 </template>
 
@@ -166,55 +168,53 @@ playAnimation() {
       }
     },
     async updateStreak() {
+    this.isNewMedalAdded = false; 
 
-  this.isNewMedalAdded = true; // tu je prije bilo false
-
-  if (this.selectedDates.length === 0) {
-    this.currentStreak = 0;
-    this.recordStreak = 0;
-    this.medalCounter = 0;
-    this.prevStreak = 0;
-    return;
-  }
-
-  let streak = 1;
-  for (let i = 1; i < this.selectedDates.length; i++) {
-    const prevDate = new Date(this.selectedDates[i - 1]);
-    const currentDate = new Date(this.selectedDates[i]);
-    const prevTime = prevDate.getTime();
-    const currentTime = currentDate.getTime();
-    const oneDay = 1000 * 60 * 60 * 24;
-
-    if ((currentTime - prevTime) / oneDay === 1) {
-      streak++;
-    } else {
-      streak = 1;
+    if (this.selectedDates.length === 0) {
+        this.currentStreak = 0;
+        this.recordStreak = 0;
+        this.medalCounter = 0;
+        this.prevStreak = 0;
+        return;
     }
-  }
 
-  this.recordStreak = Math.max(this.recordStreak, streak);
+    let streak = 1;
+    for (let i = 1; i < this.selectedDates.length; i++) {
+        const prevDate = new Date(this.selectedDates[i - 1]);
+        const currentDate = new Date(this.selectedDates[i]);
+        const prevTime = prevDate.getTime();
+        const currentTime = currentDate.getTime();
+        const oneDay = 1000 * 60 * 60 * 24;
 
-  if ((streak % 3 === 0 || streak % 7 === 0) && streak !== 0) {
-    if (!this.isNewMedalAdded) { // je li već dodana nova medalja
-      this.isNewMedalAdded = true; // nova medalja dodana
-      this.medalCounter++;
+        if ((currentTime - prevTime) / oneDay === 1) {
+            streak++;
+        } else {
+            streak = 1;
+        }
     }
-  } else {
-    this.isNewMedalAdded = false; // ako nije dodana nova medalja
-  }
 
-  this.currentStreak = streak;
+    this.recordStreak = Math.max(this.recordStreak, streak);
 
-  try {
-    const docRef = doc(db, 'streaks', 'userStreaks', 'medalCounter');
-    await updateDoc(docRef, {
-      currentStreak: this.currentStreak,
-      recordStreak: this.recordStreak,
-      medalCounter: this.medalCounter
-    });
-  } catch (error) {
-    console.error('Error updating streaks document: ', error);
-  }
+
+    if ((streak % 3 === 0 || streak % 7 === 0) && streak !== 0) {
+        if (!this.isNewMedalAdded) { 
+            this.medalCounter++;
+            this.isNewMedalAdded = true;
+        }
+    }
+
+    this.currentStreak = streak;
+
+    try {
+        const docRef = doc(db, 'streaks', 'userStreaks');
+        await updateDoc(docRef, {
+            currentStreak: this.currentStreak,
+            recordStreak: this.recordStreak,
+            medalCounter: this.medalCounter
+        });
+    } catch (error) {
+        console.error('Error updating streaks document: ', error);
+    }
 },
 
 
@@ -295,7 +295,7 @@ if (indexToRemove !== -1) {
   mounted() {
   this.loadDataLocally();
   this.toggleDarkMode();
-  this.isNewMedalAdded = false; // Resetiranje flaga
+  this.isNewMedalAdded = false; 
 },
   updated() {
     this.saveDataLocally();
