@@ -55,7 +55,8 @@
     </div>
 
     <div v-if="showAlert" class="alert">
-      <p>Između dva uzastopna unosa za san ima više od 2 dana! Razmislite o tome da malo popravite sleep schedule!!!</p>
+      <p>Između nekih uzastopnih unosa za san ima i po više od 2 dana! Razmislite o tome da malo popravite sleep schedule. OVO NIKAKO NIJE ZDRAVO!!!</p>
+      <button @click="hideAlert" class="close-btn">x</button>
     </div>
   </div>
   <user-bar></user-bar>
@@ -125,23 +126,44 @@ export default {
         this.saveEditedSleepEntry();
       } else {
         this.addSleepEntry();
+        this.checkDateDifference(); 
       }
     },
     async addSleepEntry() {
-      try {
-        const docRef = await addDoc(collection(db, 'sleepEntries'), this.newSleepEntry);
-        console.log('Document written with ID: ', docRef.id);
-        this.resetForm();
-      } catch (error) {
-        console.error('Error adding document: ', error);
-      }
-    },
-    editSleepEntry(index) {
-      this.editIndex = index;
-      this.newSleepEntry = { ...this.sleepEntries[index] };
-      this.editEntry = true;
-      this.previousEntryDate = this.newSleepEntry.date;
-    },
+  try {
+    const docRef = await addDoc(collection(db, 'sleepEntries'), this.newSleepEntry);
+    console.log('Document written with ID: ', docRef.id);
+    
+    this.previousEntryDate = this.newSleepEntry.date; 
+
+    this.resetForm();
+    this.checkDateDifference();
+  } catch (error) {
+    console.error('Error adding document: ', error);
+  }
+},
+
+
+checkDateDifference() {
+  if (this.previousEntryDate) {
+    const currentDate = new Date(this.newSleepEntry.date);
+    const previousDate = new Date(this.previousEntryDate);
+    const differenceInDays = Math.abs((currentDate - previousDate) / (1000 * 60 * 60 * 24));
+    
+    if(differenceInDays > 2) {
+      this.showAlert = true;
+    } 
+  } else {
+    this.showAlert = false;
+  }
+},
+
+editSleepEntry(index) {
+  this.editIndex = index;
+  this.newSleepEntry = { ...this.sleepEntries[index] };
+  this.editEntry = true;
+  this.previousEntryDate = this.newSleepEntry.date; 
+},
     async saveEditedSleepEntry() {
       try {
         await updateDoc(doc(db, 'sleepEntries', this.sleepEntries[this.editIndex].id), this.newSleepEntry);
@@ -192,6 +214,9 @@ export default {
       const minutes = durationInMinutes % 60;
       return `${hours}h ${minutes}m`;
     },
+    hideAlert() {
+    this.showAlert = false;
+  },
   },
   mounted() {
     try {
@@ -215,5 +240,14 @@ export default {
 .container.dark-mode {
   background-color: #000;
   color: #fff;
+}
+
+.alert {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f8d7da; 
+  color: #721c24; 
+  border: 1px solid #f5c6cb; 
+  border-radius: 4px; 
 }
 </style>
