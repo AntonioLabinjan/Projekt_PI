@@ -85,12 +85,12 @@ export default {
       }
 
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, this.signupEmail, this.signupPassword);
+        await createUserWithEmailAndPassword(auth, this.signupEmail, this.signupPassword);
         await sendEmailVerification(auth.currentUser);
         
-        const date = new Date();
-        const registrationDate = date.toLocaleDateString();
-        const registrationTime = date.toLocaleTimeString();
+         // const date = new Date();
+         // const registrationDate = date.toLocaleDateString();
+         // const registrationTime = date.toLocaleTimeString();
         
         alert('Registration successful. You can now login.');
         this.$router.push({ path: '/login' });
