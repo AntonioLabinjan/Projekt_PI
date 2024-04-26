@@ -11,12 +11,12 @@
       <p><strong>Dio tijela:</strong> {{ exercise.bodyPart }}</p>
       <p><strong>Upute:</strong> {{ exercise.instructions }}</p>
       <img :src="exercise.image" alt="Demonstracija vježbe">
-      <button @click="editExercise(index)" class="edit">Uredi</button>
-      <button @click="deleteExercise(index)" class="delete">Obriši</button>
       <hr>
     </div>
     <button @click="toggleDarkMode" class="btn btn-dark">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
+    <button @click="editAsAdmin">Edit exercises as admin</button>
     <button @click="goBack">Go Back</button>
+
   </div>
 </template>
 
@@ -42,6 +42,9 @@ export default {
     
     goBack() {
       this.$router.push({ path: '/about' });
+    },
+    editAsAdmin(){
+      this.$router.push({path: '/default-exercises'});
     },
     toggleDarkMode() {
   this.darkMode = !this.darkMode;
