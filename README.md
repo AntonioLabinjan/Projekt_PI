@@ -1,6 +1,6 @@
 ### TODO:
-<ul>Razrada administratora</ul>
-<ul>Napravit da se svi inputi u aplikaciju filtriraju prema useru koji ih postavi</ul>
+<ul>Razrada administratora => sad postoje tipke edit as admin, ali i dalje nema real admina u firebaseu</ul>
+<ul>Napravit da se svi inputi u aplikaciju filtriraju prema useru koji ih postavi => tu je ideja dodat FK s id-jen autora posta i onda filtrirat po temu</ul>
 <ul>Popravak CSS-a;  ovo je grdo</ul>
 
 
