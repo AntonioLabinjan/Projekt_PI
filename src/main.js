@@ -21,7 +21,9 @@ import QrScanner from './components/QrScanner.vue';
 import notificationMaker from './components/notificationMaker.vue';
 import UserBar from './components/UserBar.vue';
 import MusicPlayer from './components/MusicPlayer.vue';
+import ErrorPage from './components/ErrorPage.vue';
 
+import firebase from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
 let isUserLoggedIn = false;
@@ -37,7 +39,7 @@ function isLoggedIn() {
 }
 
 function requiresAdmin(to, from, next) {
-  const currentUser = firebase.auth().currentUser;
+  const currentUser = getAuth().currentUser;
 
   if (currentUser) {
     firebase.firestore().collection('users').doc(currentUser.uid).get()
@@ -45,12 +47,12 @@ function requiresAdmin(to, from, next) {
         if (doc.exists && doc.data().isAdmin) {
           next();
         } else {
-          next({ path: '/' }); // tu bin moga napravit custom not admin error komponentu
+          next({ path: '/error' }); // tu bin moga napravit custom not admin error komponentu
         }
       })
       .catch(error => {
         console.error("Error getting user document:", error);
-        next({ path: '/' }); 
+        next({ path: '/error' }); 
       });
   } else {
     next({ path: '/' }); 
@@ -70,13 +72,14 @@ const routes = [
   { path: '/BMI-calculator', component: BMICalculator, meta: { requiresAuth: true } },
   { path: '/about', component: AboutPage },
   { path: '/streak', component: StreakCheck, meta: { requiresAuth: true } },
-  { path: '/default-exercises', component: DefaultExercises, meta: {requiresAdmin: true} },
-  { path: '/default-meals', component: DefaultMeals, meta: {requiresAdmin: true} },
+  { path: '/default-exercises', component: DefaultExercises  }, //tu još nadodat ovu liniju kad složin admina u FB => meta: {requiresAdmin: true}
+  { path: '/default-meals', component: DefaultMeals }, // tu još nadodat ovu liniju kad složin admina u FB => meta: {requiresAdmin: true}
   { path: '/NA-exercises', component: DefaultExercisesNotAdmin},
   { path: '/NA-meals', component: DefaultMealsNotAdmin},
   { path: '/qr-scanner', component: QrScanner, meta: { requiresAuth: true } },
   { path: '/notification-maker', component: notificationMaker },
   { path: '/music', component: MusicPlayer, meta: { requiresAuth: true } },
+  { path: '/error', component: ErrorPage}
 ];
 
 const router = createRouter({
@@ -87,19 +90,20 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const isRequiresAuth = to.meta.requiresAuth;
-  
+  const isRequiresAdmin = to.meta.requiresAdmin;
+
   if (isRequiresAuth && !isLoggedIn()) {
-    next('/login');  // Ako nismo ulogirani, šalje nas na login
+    next('/error');
+  } else if (isRequiresAdmin && !requiresAdmin(to, from, next)) {
   } else if (!isRequiresAuth && isLoggedIn() && to.path === '/login') {
-    window.alert("već ste ulogirani, ne možete opet") // ne pusti nas da se opet ulogiramo ako smo ulogirani i šalje nas na homepage
-    next('/');   // forši ću napravit neki custom error page
+    alert("You are already logged in");
+    next('/');
   } else {
-    next();  // ako smo ulogirani i klikćemo na neku rutu koja ni login, onda je okej i šalje nas na traženu rutu
+    next();
   }
 });
 
 const app = createApp(App);
-// Registracija komponenti
 app.component('ImageGallery', ImageGallery);
 app.component('VueTrainer', VueTrainer);
 app.component('HomePage', HomePage);
@@ -119,6 +123,7 @@ app.component('MusicPlayer', MusicPlayer);
 app.component('UserBar', UserBar)
 app.component('DefaultExercisesNotAdmin', DefaultExercisesNotAdmin)
 app.component('DefaultMealsNotAdmin', DefaultMealsNotAdmin);
+app.component('ErrorPage', ErrorPage)
 app.use(router);
 app.use(store);
 
