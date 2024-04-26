@@ -93,10 +93,10 @@ export default {
       this.$router.push({ path: '/' });
     },
     goToExerciseSuggestions() {
-      this.$router.push({ path: '/default-exercises' });
+      this.$router.push({ path: '/NA-exercises' });
     },
     goToMealSuggestions() {
-      this.$router.push({ path: '/default-meals' });
+      this.$router.push({ path: '/NA-meals' });
     },
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
