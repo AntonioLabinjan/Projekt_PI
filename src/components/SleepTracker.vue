@@ -15,25 +15,32 @@
     </nav>
     <hr>
 
-    <form v-if="!editEntry" @submit.prevent="addOrEditSleepEntry" class="sleep-input-section">
-      <h3 v-if="!editEntry">Sleep Entry</h3>
-      <h3 v-else>Edit Sleep Entry</h3>
-      <label for="date">Date:</label>
-      <input v-model="newSleepEntry.date" type="date" id="date" required />
+<form v-if="!editEntry" @submit.prevent="addSleepEntry" class="sleep-input-section">
+  <h3>Add New Sleep Entry</h3>
+  <label for="date">Date:</label>
+  <input v-model="newSleepEntry.date" type="date" id="date" required />
+  <label for="startTime">Start Time:</label>
+  <input v-model="newSleepEntry.startTime" type="time" id="startTime" required />
+  <label for="wakeTime">Wake Time:</label>
+  <input v-model="newSleepEntry.wakeTime" type="time" id="wakeTime" required />
+  <label for="quality">Quality (1-10):</label>
+  <input v-model="newSleepEntry.quality" type="number" id="quality" min="1" max="10" required />
+  <button type="submit">Add Sleep Entry</button>
+</form>
 
-      <label for="startTime">Start Time:</label>
-      <input v-model="newSleepEntry.startTime" type="time" id="startTime" required />
-
-      <label for="wakeTime">Wake Time:</label>
-      <input v-model="newSleepEntry.wakeTime" type="time" id="wakeTime" required />
-
-      <label for="quality">Quality (1-10):</label>
-      <input v-model="newSleepEntry.quality" type="number" id="quality" min="1" max="10" required />
-
-      <button v-if="!editEntry" type="submit">Add Sleep Entry</button>
-      <button v-else type="submit">Save</button>
-      <button v-if="editEntry" @click="cancelEdit">Cancel</button>
-    </form>
+<form v-else @submit.prevent="saveEditedSleepEntry" class="sleep-input-section">
+  <h3>Edit Sleep Entry</h3>
+  <label for="date">Date:</label>
+  <input v-model="newSleepEntry.date" type="date" id="date" required />
+  <label for="startTime">Start Time:</label>
+  <input v-model="newSleepEntry.startTime" type="time" id="startTime" required />
+  <label for="wakeTime">Wake Time:</label>
+  <input v-model="newSleepEntry.wakeTime" type="time" id="wakeTime" required />
+  <label for="quality">Quality (1-10):</label>
+  <input v-model="newSleepEntry.quality" type="number" id="quality" min="1" max="10" required />
+  <button type="submit">Save Changes</button>
+  <button @click="cancelEdit">Cancel</button>
+</form>
 
     <ul class="sleep-display-section">
       <li v-for="(entry, index) in sleepEntries" :key="index" class="sleep-item">
@@ -162,7 +169,6 @@ editSleepEntry(index) {
   this.editIndex = index;
   this.newSleepEntry = { ...this.sleepEntries[index] };
   this.editEntry = true;
-  this.previousEntryDate = this.newSleepEntry.date; 
 },
     async saveEditedSleepEntry() {
       try {
