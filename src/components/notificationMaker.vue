@@ -115,5 +115,55 @@ export default {
 </script>
 
 <style scoped>
-  
+div {
+  font-family: 'Arial', sans-serif;
+  max-width: 1500px;
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 14px;
+}
+
+input[type="datetime-local"],
+input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #00ff48;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+p {
+  color: #666;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+audio {
+  display: none;
+}
+
 </style>
