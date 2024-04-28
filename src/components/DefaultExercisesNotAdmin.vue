@@ -124,6 +124,9 @@ export default {
     },
     editAsAdmin(){
       this.$router.push('/default-exercises');
+    },
+    goBack(){
+      this.$router.push('/about');
     }
   }
 };
