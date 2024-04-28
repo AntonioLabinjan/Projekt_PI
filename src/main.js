@@ -95,6 +95,7 @@ router.beforeEach((to, from, next) => {
   if (isRequiresAuth && !isLoggedIn()) {
     next('/error');
   } else if (isRequiresAdmin && !requiresAdmin(to, from, next)) {
+    next('/');
   } else if (!isRequiresAuth && isLoggedIn() && to.path === '/login') {
     alert("You are already logged in");
     next('/');
