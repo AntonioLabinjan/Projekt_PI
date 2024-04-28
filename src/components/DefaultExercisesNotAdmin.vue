@@ -123,7 +123,7 @@ export default {
       }
     },
     editAsAdmin(){
-      this.$router.push('/default-exercises');
+      this.$router.push('/admin-login');
     },
     goBack(){
       this.$router.push('/about');
