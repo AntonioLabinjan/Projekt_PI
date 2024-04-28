@@ -1,8 +1,7 @@
 ### TODO:
-<ul>Razrada administratora => sad postoje tipke edit as admin, ali i dalje nema real admina u firebaseu</ul>
-<ul>Napravit da se svi inputi u aplikaciju filtriraju prema useru koji ih postavi => tu je ideja dodat FK s id-jen autora posta i onda filtrirat po temu</ul>
-<ul>Popravak CSS-a;  ovo je grdo</ul>
-
+<ol>* popravak CSS-a</ol>
+<ol>* sklepat filtriranje "postova" prema current useru (vidi samo ono ča je on stavija</ol>
+<ol>* nać neku alternativu za vue kalendar zbog kojega se ne želi deployat na vercel</ol>
 
 #### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
 #### Trainingapp (nije definitivni naziv)
