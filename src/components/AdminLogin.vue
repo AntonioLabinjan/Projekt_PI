@@ -18,29 +18,22 @@
         isLoggedIn: false
       };
     },
-    methods: {
-        login() {
-  console.log("Current route path:", this.$route.path); // Ovo ni pomoglo, samo me još više buni
-  if (this.email === 'admin@trainingApp.com' && this.password === '123456789') {
-    this.isLoggedIn = true;
-    switch (this.$route.path) {
-      case '/NA-exercises':
-        this.$router.push('/default-exercises');
-        break;
-      case '/NA-meals':
-        this.$router.push('/default-meals');
-        break;
-      default:
-        // Ako nismo ni na jednoj, preusmjerimo se na default početnu stranicu
-        this.$router.push('/');
-        break;
+    methods: {login() {
+    console.log("Current route path:", this.$route.path);
+    if (this.email === this.trueEmail && this.password === this.truePassword) {
+        this.isLoggedIn = true;
+        const redirectPath = this.$route.query.redirect || '/';
+        console.log(`Redirecting to ${redirectPath}`);
+        this.$router.push(redirectPath);
+    } else {
+        this.$router.push('/error');
     }
-  } else {
-    alert('Invalid credentials');
-  }
 }
+
+
 
     }
   }
+  // sve dela ako se mičen kroz searchbar preko /-a
   </script>
   
