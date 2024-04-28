@@ -22,6 +22,7 @@ import notificationMaker from './components/notificationMaker.vue';
 import UserBar from './components/UserBar.vue';
 import MusicPlayer from './components/MusicPlayer.vue';
 import ErrorPage from './components/ErrorPage.vue';
+import AdminLogin from './components/AdminLogin.vue';
 
 import firebase from 'firebase/app';
 import { getAuth } from 'firebase/auth';
@@ -79,7 +80,8 @@ const routes = [
   { path: '/qr-scanner', component: QrScanner, meta: { requiresAuth: true } },
   { path: '/notification-maker', component: notificationMaker },
   { path: '/music', component: MusicPlayer, meta: { requiresAuth: true } },
-  { path: '/error', component: ErrorPage}
+  { path: '/error', component: ErrorPage},
+  { path: '/admin-login', component: AdminLogin}
 ];
 
 const router = createRouter({
@@ -125,6 +127,7 @@ app.component('UserBar', UserBar)
 app.component('DefaultExercisesNotAdmin', DefaultExercisesNotAdmin)
 app.component('DefaultMealsNotAdmin', DefaultMealsNotAdmin);
 app.component('ErrorPage', ErrorPage)
+app.component('AdminLogin', AdminLogin)
 app.use(router);
 app.use(store);
 
