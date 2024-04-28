@@ -46,8 +46,8 @@ export default {
     goBack(){
       this.$router.push('/about');
     },
-    editAsAdmin(){
-      this.$router.push('/default-meals');
+    editAsAdmin(fromPage){
+      this.$router.push({path:'/admin-login', query: { redirect: '/default-meals'}});
     },
     async fetchMeals() {
       const querySnapshot = await getDocs(collection(db, "mealSuggestions"));
@@ -121,7 +121,6 @@ export default {
 
   
   <style scoped>
-  /* Globalni stilovi */
   body {
     font-family: Arial, sans-serif;
     background-color: #f2f2f2;
@@ -140,7 +139,6 @@ export default {
     color: #333;
   }
   
-  /* Stilizacija pojedinačnih obroka */
   .meal {
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -150,13 +148,13 @@ export default {
   }
   
   .meal img {
-    max-width: 100%; /* Maksimalna širina slike je 100% roditeljskog elementa */
-    height: auto; /* Održavanje proporcija slike */
+    max-width: 100%; 
+    height: auto; 
     margin-top: 10px;
-    object-fit: contain; /* Osigurava da se slika neće izrezati, ali će se prilagoditi dimenzijama */
-    max-height: 200px; /* Maksimalna visina slike */
+    object-fit: contain; 
+    max-height: 200px; 
   }
-  /* Stilizacija gumba */
+  
   button {
     background-color: #007bff;
     color: #fff;
@@ -175,7 +173,7 @@ export default {
     background-color: #28a745;
   }
   
-  /* Stilizacija forme */
+  
   form {
     margin-top: 20px;
     background-color: #f8f8f8;
