@@ -122,8 +122,8 @@ export default {
         app.classList.remove('dark-mode');
       }
     },
-    editAsAdmin(){
-      this.$router.push('/admin-login');
+    editAsAdmin(fromPage){
+      this.$router.push({path:'/admin-login', query: { redirect: '/default-exercises'}});
     },
     goBack(){
       this.$router.push('/about');
