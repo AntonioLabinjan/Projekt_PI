@@ -1,7 +1,6 @@
 ### TODO:
 <ol>* popravak CSS-a</ol>
 <ol>* sklepat filtriranje "postova" prema current useru (vidi samo ono ča je on stavija</ol>
-<ol>* nać neku alternativu za vue kalendar zbog kojega se ne želi deployat na vercel</ol>
 
 #### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
 #### Trainingapp (nije definitivni naziv)
