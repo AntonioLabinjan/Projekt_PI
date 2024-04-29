@@ -28,8 +28,14 @@
   
   <style scoped>
   .local-time {
-    font-size: 24px;
+    font-size: 16px;
     font-weight: bold;
+    color: rgba(0,0,0,6); 
+    background-color: #1abd28; 
+    padding: 10px 20px; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+    text-align: center; 
   }
   </style>
   
