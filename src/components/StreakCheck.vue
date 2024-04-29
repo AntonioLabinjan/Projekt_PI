@@ -1,57 +1,55 @@
 <template>
   <keep-alive>
-  <div>
-    <div class="container" :class="{ 'dark-mode': darkMode }">
-      <nav class="navbar">
-        <ul>
-          <li><button @click="goToImageGallery">Go to Image Gallery</button></li>
-          <li><button @click="goToVueTrainer">Go to Training App</button></li>
-          <li><button @click="goToMealTracker">Go to Meal Tracker</button></li>
-          <li><button @click="goToSleepTracker">Go to Sleep Tracker</button></li>
-          <li><button @click="goToWaterIntake">Go to Water Intake Tracker</button></li>
-          <li><button @click="goToBMI">Go to BMI Calculator</button></li>
-          <li><button @click="goToMusicPlayer">Music Player</button></li>
-          <li><button @click="goBackHome">Go Back Home</button></li>
-        </ul>
-      </nav>
-      <hr>
+    <div>
+      <div class="container" :class="{ 'dark-mode': darkMode }">
+        <nav class="navbar">
+          <ul>
+            <!-- Buttons for navigation -->
+            <li><button @click="goToImageGallery">Go to Image Gallery</button></li>
+            <li><button @click="goToVueTrainer">Go to Training App</button></li>
+            <li><button @click="goToMealTracker">Go to Meal Tracker</button></li>
+            <li><button @click="goToSleepTracker">Go to Sleep Tracker</button></li>
+            <li><button @click="goToWaterIntake">Go to Water Intake Tracker</button></li>
+            <li><button @click="goToBMI">Go to BMI Calculator</button></li>
+            <li><button @click="goToMusicPlayer">Music Player</button></li>
+            <li><button @click="goBackHome">Go Back Home</button></li>
+          </ul>
+        </nav>
+        <hr>
 
-      <h1>Training Streak Tracker</h1>
-      <form @submit.prevent="addCustomDate">
-        <label for="customDate">Add your date:</label>
-        <input type="date" id="customDate" v-model="customDate">
-        <button type="submit">Add</button>
-      </form>
+        <h1>Training Streak Tracker</h1>
+        <form @submit.prevent="addCustomDate">
+          <label for="customDate">Add your date:</label>
+          <input type="date" id="customDate" v-model="customDate">
+          <button type="submit">Add</button>
+        </form>
 
-      <vue-calendar @dateSelected="addDate"></vue-calendar>
-
-
-      <div class="selected-dates">
-        <div v-for="(date, index) in selectedDates" :key="index">
-          <span>{{ formatDate(date) }}</span>
-          <button @click="removeDate(index)">Remove</button>
+        <div class="selected-dates">
+          <div v-for="(date, index) in selectedDates" :key="index">
+            <span>{{ formatDate(date) }}</span>
+            <button @click="removeDate(index)">Remove</button>
+          </div>
         </div>
-      </div>
 
-      <div class="streak">
-        <p>Current streak: {{ currentStreak }}</p>
-        <p>Record streak: {{ recordStreak }}</p>
-        <div v-if="currentStreak >= 3 && currentStreak % 3 === 0" class="reward bounce-animation">
-          <p>Congratulations! You've earned 3-day streak award!</p>
-          <img src="@/assets/silver_medal.jpg" alt="Streak Master Badge" @click="playCheer">
+        <div class="streak">
+          <p>Current streak: {{ currentStreak }}</p>
+          <p>Record streak: {{ recordStreak }}</p>
+          <div v-if="currentStreak >= 3 && currentStreak % 3 === 0" class="reward bounce-animation">
+            <p>Congratulations! You've earned 3-day streak award!</p>
+            <img src="@/assets/silver_medal.jpg" alt="Streak Master Badge" @click="playCheer">
+          </div>
+          <div v-if="currentStreak >= 7 && currentStreak % 7 === 0" class="reward bounce-animation">
+            <p>Congratulations! You've earned 7-day streak award!</p>
+            <img src="@/assets/medal.jpg" alt="Streak Master Badge" @click="playGoldenCheer">
+          </div>
         </div>
-        <div v-if="currentStreak >= 7 && currentStreak % 7 === 0" class="reward bounce-animation">
-          <p>Congratulations! You've earned 7-day streak award!</p>
-          <img src="@/assets/medal.jpg" alt="Streak Master Badge" @click="playGoldenCheer">
-        </div>
-      </div>
 
-      <div class="medal-counter">
-        <p>Medal Counter: {{ medalCounter }}</p>
+        <div class="medal-counter">
+          <p>Medal Counter: {{ medalCounter }}</p>
+        </div>
+        <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
       </div>
-      <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
-    </div>
-    <user-bar></user-bar>
+      <user-bar></user-bar>
     </div>
   </keep-alive>
 </template>
@@ -74,32 +72,32 @@ export default {
     };
   },
   methods: {
-  toggleDarkMode() {
-  var element = document.body;
-  this.darkMode = !this.darkMode; 
-  element.classList.toggle('dark-mode', this.darkMode);
- },
+    toggleDarkMode() {
+      var element = document.body;
+      this.darkMode = !this.darkMode;
+      element.classList.toggle('dark-mode', this.darkMode);
+    },
     playCheer() {
-  const cheerSound = new Audio(require('@/assets/cheer.mp3')); 
-  cheerSound.play().catch((error) => {
-    console.error("Failed to play the audio:", error);
-  });
-},
-playGoldenCheer(){
-  const goldenCheer = new Audio(require('@/assets/golden_medal.mp3'));
-  goldenCheer.play().catch((error) => {
-    console.error("Failed to play the audio:", error);
-  });
-},
-playAnimation() {
-    const rewardElements = document.querySelectorAll('.reward.bounce-animation');
-    rewardElements.forEach(element => {
-      element.classList.add('playing-animation');
-      element.addEventListener('animationend', () => {
-        element.classList.remove('bounce-animation', 'playing-animation');
-      }, { once: true });
-    });
-  },
+      const cheerSound = new Audio(require('@/assets/cheer.mp3'));
+      cheerSound.play().catch((error) => {
+        console.error("Failed to play the audio:", error);
+      });
+    },
+    playGoldenCheer() {
+      const goldenCheer = new Audio(require('@/assets/golden_medal.mp3'));
+      goldenCheer.play().catch((error) => {
+        console.error("Failed to play the audio:", error);
+      });
+    },
+    playAnimation() {
+      const rewardElements = document.querySelectorAll('.reward.bounce-animation');
+      rewardElements.forEach(element => {
+        element.classList.add('playing-animation');
+        element.addEventListener('animationend', () => {
+          element.classList.remove('bounce-animation', 'playing-animation');
+        }, { once: true });
+      });
+    },
     goToImageGallery() {
       this.$router.push({ path: '/image-gallery' });
     },
@@ -124,7 +122,6 @@ playAnimation() {
     goBackHome() {
       this.$router.push({ path: '/' });
     },
-
     formatDate(dateString) {
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
       return new Date(dateString).toLocaleDateString(undefined, options);
@@ -132,15 +129,14 @@ playAnimation() {
     addCustomDate() {
       if (this.customDate) {
         const selectedDateExists = this.selectedDates.some(selectedDate => {
-  return new Date(selectedDate).toISOString().slice(0, 10) === this.customDate;
-});
-
+          return new Date(selectedDate).toISOString().slice(0, 10) === this.customDate;
+        });
         if (!selectedDateExists) {
           addDoc(collection(db, 'trainingDates'), { trainingDate: new Date(this.customDate) })
             .then(() => {
               this.selectedDates.push(new Date(this.customDate));
               this.updateStreak();
-              this.customDate = ''; 
+              this.customDate = ''; // Reset the input after adding
             })
             .catch(error => {
               console.error('Error adding document: ', error);
@@ -161,25 +157,25 @@ playAnimation() {
         } else {
           this.currentStreak = 0;
           this.recordStreak = 0;
-          this.medalCounter = 0; 
+          this.medalCounter = 0;
         }
       } catch (error) {
         console.error('Error getting streaks document: ', error);
       }
     },
     async updateStreak() {
-    this.isNewMedalAdded = false; 
+      this.isNewMedalAdded = false;
 
-    if (this.selectedDates.length === 0) {
+      if (this.selectedDates.length === 0) {
         this.currentStreak = 0;
         this.recordStreak = 0;
         this.medalCounter = 0;
         this.prevStreak = 0;
         return;
-    }
+      }
 
-    let streak = 1;
-    for (let i = 1; i < this.selectedDates.length; i++) {
+      let streak = 1;
+      for (let i = 1; i < this.selectedDates.length; i++) {
         const prevDate = new Date(this.selectedDates[i - 1]);
         const currentDate = new Date(this.selectedDates[i]);
         const prevTime = prevDate.getTime();
@@ -187,70 +183,66 @@ playAnimation() {
         const oneDay = 1000 * 60 * 60 * 24;
 
         if ((currentTime - prevTime) / oneDay === 1) {
-            streak++;
+          streak++;
         } else {
-            streak = 1;
+          streak = 1;
         }
-    }
+      }
 
-    this.recordStreak = Math.max(this.recordStreak, streak);
+      this.recordStreak = Math.max(this.recordStreak, streak);
 
-
-    if ((streak % 3 === 0 || streak % 7 === 0) && streak !== 0) {
-        if (!this.isNewMedalAdded) { 
-            this.medalCounter++;
-            this.isNewMedalAdded = true;
+      if ((streak % 3 === 0 || streak % 7 === 0) && streak !== 0) {
+        if (!this.isNewMedalAdded) {
+          this.medalCounter++;
+          this.isNewMedalAdded = true;
         }
-    }
+      }
 
-    this.currentStreak = streak;
+      this.currentStreak = streak;
 
-    try {
+      try {
         const docRef = doc(db, 'streaks', 'userStreaks');
         await updateDoc(docRef, {
-            currentStreak: this.currentStreak,
-            recordStreak: this.recordStreak,
-            medalCounter: this.medalCounter
+          currentStreak: this.currentStreak,
+          recordStreak: this.recordStreak,
+          medalCounter: this.medalCounter
         });
-    } catch (error) {
+      } catch (error) {
         console.error('Error updating streaks document: ', error);
-    }
-},
-
-
+      }
+    },
     addDate(date) {
       this.selectedDates.push(date);
       this.updateStreak();
     },
     removeDate(index) {
       console.log('Removing date at index:', index);
-  const dateToRemove = this.selectedDates[index];
-  console.log('Date to remove:', dateToRemove);
-  const dateToRemoveISO = new Date(dateToRemove).toISOString().slice(0, 10); 
+      const dateToRemove = this.selectedDates[index];
+      console.log('Date to remove:', dateToRemove);
+      const dateToRemoveISO = new Date(dateToRemove).toISOString().slice(0, 10);
 
-  getDocs(collection(db, 'trainingDates')).then(snapshot => {
-    snapshot.forEach(doc => {
-      const trainingDate = new Date(doc.data().trainingDate.seconds * 1000); 
+      getDocs(collection(db, 'trainingDates')).then(snapshot => {
+        snapshot.forEach(doc => {
+          const trainingDate = new Date(doc.data().trainingDate.seconds * 1000);
 
-      if (trainingDate.toISOString().slice(0, 10) === dateToRemoveISO) {
+          if (trainingDate.toISOString().slice(0, 10) === dateToRemoveISO) {
 
-        deleteDoc(doc.ref).then(() => {
-          console.log('Document successfully deleted from Firestore!');
-          const indexToRemove = this.selectedDates.indexOf(dateToRemove);
-if (indexToRemove !== -1) {
-  this.selectedDates.splice(indexToRemove, 1);
-}
-          this.updateStreak();
-        }).catch(error => {
-          console.error('Error removing document: ', error);
+            deleteDoc(doc.ref).then(() => {
+              console.log('Document successfully deleted from Firestore!');
+              const indexToRemove = this.selectedDates.indexOf(dateToRemove);
+              if (indexToRemove !== -1) {
+                this.selectedDates.splice(indexToRemove, 1);
+              }
+              this.updateStreak();
+            }).catch(error => {
+              console.error('Error removing document: ', error);
+            });
+          }
         });
-      }
-    });
-  }).catch(error => {
-    console.error('Error getting documents: ', error);
-  });
-},
-
+      }).catch(error => {
+        console.error('Error getting documents: ', error);
+      });
+    },
     saveDataLocally() {
       localStorage.setItem('selectedDates', JSON.stringify(this.selectedDates));
       localStorage.setItem('currentStreak', this.currentStreak);
@@ -276,9 +268,9 @@ if (indexToRemove !== -1) {
         this.medalCounter = parseInt(medalCounter);
       }
       const darkMode = localStorage.getItem('darkMode');
-  if (darkMode !== null) {
-    this.darkMode = JSON.parse(darkMode); 
-  }
+      if (darkMode !== null) {
+        this.darkMode = JSON.parse(darkMode);
+      }
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -293,15 +285,16 @@ if (indexToRemove !== -1) {
     next();
   },
   mounted() {
-  this.loadDataLocally();
-  this.toggleDarkMode();
-  this.isNewMedalAdded = false; 
-},
+    this.loadDataLocally();
+    this.toggleDarkMode();
+    this.isNewMedalAdded = false;
+  },
   updated() {
     this.saveDataLocally();
   }
 };
 </script>
+
 <style scoped>
 .workout-tracker {
   font-family: 'Arial', sans-serif;
