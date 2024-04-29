@@ -159,7 +159,7 @@ export default {
       this.$router.push({ path:'/streak' });
     },
     goToMusicPlayer() {
-      this.$router.push({ path:'/music-player' });
+      this.$router.push({ path:'/music' });
     },
     goBackHome() {
       this.$router.push({ path:'/' });
