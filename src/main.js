@@ -23,6 +23,7 @@ import UserBar from './components/UserBar.vue';
 import MusicPlayer from './components/MusicPlayer.vue';
 import ErrorPage from './components/ErrorPage.vue';
 import AdminLogin from './components/AdminLogin.vue';
+import LocalTime from './components/LocalTime.vue';
 
 import firebase from 'firebase/app';
 import { getAuth } from 'firebase/auth';
@@ -123,11 +124,12 @@ app.component('StreakCheck', StreakCheck);
 app.component('QrScanner', QrScanner);
 app.component('notificationMaker', notificationMaker);
 app.component('MusicPlayer', MusicPlayer);
-app.component('UserBar', UserBar)
-app.component('DefaultExercisesNotAdmin', DefaultExercisesNotAdmin)
+app.component('UserBar', UserBar);
+app.component('DefaultExercisesNotAdmin', DefaultExercisesNotAdmin);
 app.component('DefaultMealsNotAdmin', DefaultMealsNotAdmin);
-app.component('ErrorPage', ErrorPage)
-app.component('AdminLogin', AdminLogin)
+app.component('ErrorPage', ErrorPage);
+app.component('AdminLogin', AdminLogin);
+app.component('LocalTime', LocalTime)
 app.use(router);
 app.use(store);
 
