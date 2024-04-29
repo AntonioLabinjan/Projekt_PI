@@ -11,6 +11,9 @@
 #### TEST CREDENTIALS: 
 #### mail: alabinjan6@gmail.com
 #### password: Ovo_je_Lozinka?!1234
+
+#### admin: admin@trainingapp.com
+#### password: 123456789
 Aplikacija za praćenje raznih aktivnosti važnih za zdrav život i treniranje.
 
 Te su aktivnosti: 
