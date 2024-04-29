@@ -46,7 +46,7 @@ export default {
     goBack(){
       this.$router.push('/about');
     },
-    editAsAdmin(fromPage){
+    editAsAdmin(){
       this.$router.push({path:'/admin-login', query: { redirect: '/default-meals'}});
     },
     async fetchMeals() {
