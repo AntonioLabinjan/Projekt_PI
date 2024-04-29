@@ -39,6 +39,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  background: linear-gradient(to right, #ed810e, #17e810); /* Lijep plavi gradijent */
+  min-height: 100vh; /* Osigurava da gradijent pokriva cijelu visinu */
 }
 
 .loading-pulse {
