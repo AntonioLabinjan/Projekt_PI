@@ -238,7 +238,7 @@ h1 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(to bottom right, #4CAF50, #2196F3);
+  background: linear-gradient(to right, #aeed0e, #03cb1b);
   opacity: 0.3; 
   pointer-events: none; 
 }
