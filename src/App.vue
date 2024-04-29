@@ -3,6 +3,7 @@
     <div class="loading-pulse" v-if="isLoading">
       <div class="pulse"></div>
     </div>
+    <local-time></local-time>
     <router-view></router-view>
   </div>
 </template>
