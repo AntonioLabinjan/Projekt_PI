@@ -24,6 +24,7 @@ import MusicPlayer from './components/MusicPlayer.vue';
 import ErrorPage from './components/ErrorPage.vue';
 import AdminLogin from './components/AdminLogin.vue';
 import LocalTime from './components/LocalTime.vue';
+import MotivationalQuote from './components/MotivationalQuote.vue';
 
 import firebase from 'firebase/app';
 import { getAuth } from 'firebase/auth';
@@ -129,7 +130,8 @@ app.component('DefaultExercisesNotAdmin', DefaultExercisesNotAdmin);
 app.component('DefaultMealsNotAdmin', DefaultMealsNotAdmin);
 app.component('ErrorPage', ErrorPage);
 app.component('AdminLogin', AdminLogin);
-app.component('LocalTime', LocalTime)
+app.component('LocalTime', LocalTime);
+app.component('MotivationalQuote', MotivationalQuote);
 app.use(router);
 app.use(store);
 
