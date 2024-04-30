@@ -2,6 +2,23 @@
 <ol>* popravak CSS-a</ol>
 <ol>* sklepat filtriranje "postova" prema current useru (vidi samo ono ča je on stavija</ol>
 
+// dodamo si user id ili mail ili username da se po njemu filtrira (primary key u kolekciju usera, pa se po njemu filtrira. Podkolekcija za svega korisnika)
+// Assume 'users' is your main collection and 'orders' is the subcollection
+// 'userId' is the ID of the document in the 'users' collection
+const userId = "some_user_id";
+
+db.collection("users").doc(userId).collection("orders").get()
+  .then(snapshot => {
+    snapshot.forEach(doc => {
+      console.log(doc.id, " => ", doc.data());
+    });
+  })
+  .catch(error => {
+    console.error("Error getting documents: ", error);
+  });
+
+
+
 #### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
 #### Trainingapp (nije definitivni naziv)
 #### Koncept aplikacije (ideja...moguće da će se modificirat u hodu)
