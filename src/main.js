@@ -25,6 +25,8 @@ import ErrorPage from './components/ErrorPage.vue';
 import AdminLogin from './components/AdminLogin.vue';
 import LocalTime from './components/LocalTime.vue';
 import MotivationalQuote from './components/MotivationalQuote.vue';
+import QrCodesDefault from './components/QRCodesDefault.vue';
+import QrCodesAdmin from './components/QRCodesAdmin.vue';
 
 import firebase from 'firebase/app';
 import { getAuth } from 'firebase/auth';
@@ -83,7 +85,9 @@ const routes = [
   { path: '/notification-maker', component: notificationMaker },
   { path: '/music', component: MusicPlayer, meta: { requiresAuth: true } },
   { path: '/error', component: ErrorPage},
-  { path: '/admin-login', component: AdminLogin}
+  { path: '/admin-login', component: AdminLogin},
+  { path: '/qr-codes-default', component: QrCodesDefault},
+  { path: '/qr-codes-admin', component: QrCodesAdmin }
 ];
 
 const router = createRouter({
@@ -132,6 +136,8 @@ app.component('ErrorPage', ErrorPage);
 app.component('AdminLogin', AdminLogin);
 app.component('LocalTime', LocalTime);
 app.component('MotivationalQuote', MotivationalQuote);
+app.component('QrCodesDefault', QrCodesDefault);
+app.component('QrCodesAdmin', QrCodesAdmin);
 app.use(router);
 app.use(store);
 
