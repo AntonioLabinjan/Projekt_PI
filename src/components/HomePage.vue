@@ -26,6 +26,7 @@
     <div class="about-button">
       <button @click="goToAbout">About</button>
     </div>
+    <div><button @click = "goToQR"> Go to QR codes</button></div>
     <div><button @click="goToScanner">Go to Scanner</button></div>
     <div>
     <motivationalQuote></motivationalQuote>
@@ -132,6 +133,9 @@ export default {
     },
     goToStreak() {
       this.$router.push({ path: '/streak' });
+    },
+    goToQR(){
+      this.$router.push({path: '/qr-codes-default' });
     },
     goToScanner() {
       this.$router.push({ path: '/qr-scanner'});
