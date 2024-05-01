@@ -1,6 +1,7 @@
 ### TODO:
 <ol>* popravak CSS-a</ol>
 <ol>* sklepat filtriranje "postova" prema current useru (vidi samo ono ča je on stavija</ol>
+      * napravili smo na exercise komponenti filtriranje. Sam moramo malo pisat isti kod i modificirat ga. Bit će dosadno, ali brzo je gotovo
 
 // dodamo si user id ili mail ili username da se po njemu filtrira (primary key u kolekciju usera, pa se po njemu filtrira. Podkolekcija za svega korisnika)
 // Assume 'users' is your main collection and 'orders' is the subcollection
