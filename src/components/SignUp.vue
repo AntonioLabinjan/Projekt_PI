@@ -11,12 +11,8 @@
         <input type="text" class="form-control" id="lastName" v-model="lastName" required>
       </div>
       <div class="form-group">
-        <label for="dob">Date of Birth</label>
-        <input type="date" class="form-control" id="dob" v-model="dob" required>
-      </div>
-      <div class="form-group">
         <label for="signupEmail">E-mail</label>
-        <input type="text" class="form-control" id="signupEmail" v-model="signupEmail" required>
+        <input type="email" class="form-control" id="signupEmail" v-model="signupEmail" required>
       </div>
       <div class="form-group">
         <label for="signupPassword">Password</label>
@@ -39,7 +35,10 @@
 
 <script>
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { doc, setDoc, getFirestore } from 'firebase/firestore';
 import { auth } from '@/firebase';
+
+const db = getFirestore();
 
 export default {
   data() {
@@ -47,11 +46,10 @@ export default {
       darkMode: false,
       firstName: '',
       lastName: '',
-      dob: '',
       signupEmail: '',
       signupPassword: '',
       confirmPassword: ''
-    }
+    };
   },
   methods: {
     toggleDarkMode() {
@@ -85,14 +83,16 @@ export default {
       }
 
       try {
-        await createUserWithEmailAndPassword(auth, this.signupEmail, this.signupPassword);
+        const userCredential = await createUserWithEmailAndPassword(auth, this.signupEmail, this.signupPassword);
         await sendEmailVerification(auth.currentUser);
-        
-         // const date = new Date();
-         // const registrationDate = date.toLocaleDateString();
-         // const registrationTime = date.toLocaleTimeString();
-        
-        alert('Registration successful. You can now login.');
+
+        const userRef = doc(db, "users", userCredential.user.uid);
+        await setDoc(userRef, {
+          username: `${this.firstName} ${this.lastName}`,
+          email: this.signupEmail
+        });
+
+        alert('Registration successful. Please verify your email. You can now login.');
         this.$router.push({ path: '/login' });
       } catch (error) {
         switch (error.code) {
@@ -127,7 +127,7 @@ export default {
 </script>
 
 <style scoped>
-.signup-container {
+.container {
   max-width: 400px;
   margin: 0 auto;
   padding: 20px;
@@ -146,11 +146,11 @@ h2 {
 }
 
 label {
-  display: block;
+  display:block;
   margin-bottom: 5px;
 }
 
-.input {
+.form-control {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -179,19 +179,7 @@ label {
   color: #fff;
 }
 
-.btn-dark {
-  margin-top: 10px;
-  display: block;
-  width: 100%;
-  background-color: #333;
-  color: #fff;
-}
-
-.btn-dark:hover {
-  background-color: #555;
-}
-
-.signup-container.dark-mode {
+.dark-mode {
   background-color: #333;
   color: #fff;
 }
