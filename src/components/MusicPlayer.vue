@@ -37,104 +37,56 @@
       <input type="text" v-model="newSong.author" placeholder="Autor">
       <input type="text" v-model="newSong.genre" placeholder="Žanr">
       <input type="text" v-model="newSong.youtubeLink" placeholder="YouTube link">
-      <button @click="addNewSong">Dodaj pjesmu</button> 
+      <button @click="addSong">Dodaj pjesmu</button> 
     </div>
     <div v-if="showEditForm" class="edit-form">
       <input type="text" v-model="editedSong.title" placeholder="Naslov">
       <input type="text" v-model="editedSong.author" placeholder="Autor">
       <input type="text" v-model="editedSong.genre" placeholder="Žanr">
       <input type="text" v-model="editedSong.youtubeLink" placeholder="YouTube link">
-      <button @click="saveEditedSong">Spremi promjene</button>
+      <button @click="saveEdit">Spremi promjene</button>
     </div>
     <button @click="goBackHome" class="back-button">Povratak na početnu</button>
 
     <div class="genre-counter">
-      <h2>Genre Counter</h2>
-      <div v-for="(count, genre) in genreCounter" :key="genre">
-        {{ genre }}: {{ count }}
-      </div>
-    </div>
+  <h2>Genre Counter</h2>
+  <div v-for="(count, genre) in genreCount" :key="genre">
+    {{ genre }}: {{ count }}
+  </div>
+</div>
+
   </div>
   <user-bar></user-bar>
 </template>
 
 <script>
-import { collection, addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 
 export default {
   data() {
     return {
-      searchQuery: '', 
-      showAddForm: false, 
-      showEditForm: false, 
-      newSong: { title: '', author: '', genre: '', youtubeLink: '' }, 
+      searchQuery: '',
+      showAddForm: false,
+      showEditForm: false,
+      newSong: { title: '', author: '', genre: '', youtubeLink: '' },
       editedSong: { id: null, title: '', author: '', genre: '', youtubeLink: '' },
       isDarkMode: false,
+      songs: [], // Ovo prazno polje će držati sve pjesme koje se dohvate za korisnika
+      genreCount: {},
     };
   },
   computed: {
     filteredSongs() {
-      return this.$store.state.songs.filter(song =>
+      return this.songs.filter(song =>
         song.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         song.author.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         song.genre.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
-    },
-    genreCounter() {
-      return this.$store.state.genreCounter;
     }
   },
   methods: {
-    search() {
-      // Ova metoda trenutno nije potrebna jer filter radi istu stvar
-    },
-    play(song) {
-      window.open(song.youtubeLink);
-    },
-    edit(song) {
-      this.editedSong = { ...song };
-      this.showEditForm = true;
-    },
-    async saveEditedSong() {
-      const index = this.$store.state.songs.findIndex(song => song.id === this.editedSong.id);
-      if (index !== -1) {
-        try {
-          await updateDoc(doc(db, 'songs', this.editedSong.id), this.editedSong);
-          this.$store.dispatch('editSong', { index, song: { ...this.editedSong } });
-          this.showEditForm = false;
-          this.editedSong = { id: null, title: '', author: '', genre: '', youtubeLink: '' };
-        } catch (error) {
-          console.error('Error saving edited song:', error);
-        }
-      }
-    },
-    async deleteSong(id) {
-      console.log('Deleting song with ID:', id);
-      try {
-        await deleteDoc(doc(db, 'songs', id));
-        this.$store.commit('deleteSong', id);
-        const song = this.$store.state.songs.find(song => song.id === id);
-        if (song) {
-          this.$store.commit('decrementGenreCounter', song.genre);
-        }
-      } catch (error) {
-        console.error('Error deleting song:', error);
-      }
-    },
-    async addNewSong() { 
-      try {
-        console.log('Adding new song:', this.newSong);
-        const docRef = await addDoc(collection(db, 'songs'), this.newSong);
-        console.log('Song added successfully with ID:', docRef.id);
-        this.$store.commit('addSong', { ...this.newSong, id: docRef.id });
-        this.$store.commit('incrementGenreCounter', this.newSong.genre);
-        this.showAddForm = false;
-        this.newSong = { title: '', author: '', genre: '', youtubeLink: '' };
-      } catch (error) {
-        console.error('Error adding song:', error);
-      }
-    },
     goBackHome() {
       this.$router.push('/');
     },
@@ -161,7 +113,99 @@ export default {
     },
     goToStreak() {
       this.$router.push({ path: '/streak' });
+    },
+    play(song) {
+      window.open(song.youtubeLink);
+    },
+    toggleDarkMode() {
+      this.isDarkMode = !this.isDarkMode;
+    },
+    edit(song) {
+      this.editedSong = { ...song };
+      this.showEditForm = true;
+    },
+    async addSong() {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        const songData = { ...this.newSong, userId: user.uid };
+        const docRef = await addDoc(collection(db, 'users', user.uid, 'songs'), songData);
+        this.songs.push({ ...songData, id: docRef.id });
+        this.showAddForm = false;
+        this.newSong = { title: '', author: '', genre: '', youtubeLink: '' };
+        if (this.genreCount[songData.genre]) {
+        this.genreCount[songData.genre]++;
+      } else {
+        this.genreCount[songData.genre] = 1;
+      }
     }
+      },
+    async deleteSong(id) {
+    console.log('Deleting song with ID:', id);
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        await deleteDoc(doc(db, 'users', user.uid, 'songs', id));
+        // Nakon uspješnog brisanja, filtrirajte songs array kako biste uklonili obrisani song
+        this.songs = this.songs.filter(song => song.id !== id);
+        if (this.genreCount[song.genre] && this.genreCount[song.genre] > 1) {
+          this.genreCount[song.genre]--;
+        } else {
+          delete this.genreCount[song.genre];
+        }
+      } catch (error) {
+        console.error('Error deleting song:', error);
+      }
+    }
+  },
+    async confirmDeleteSong(id) {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        await deleteDoc(doc(db, 'users', user.uid, 'songs', id));
+        this.songs = this.songs.filter(song => song.id !== id);
+      }
+    },
+    openEditDialog(song) {
+      this.editedSong = { ...song };
+      this.showEditForm = true;
+    },
+    async saveEdit() {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        await updateDoc(doc(db, 'users', user.uid, 'songs', this.editedSong.id), this.editedSong);
+        const index = this.songs.findIndex(song => song.id === this.editedSong.id);
+        if (index !== -1) {
+          this.songs[index] = this.editedSong;
+        }
+        this.showEditForm = false;
+        this.editedSong = { id: null, title: '', author: '', genre: '', youtubeLink: '' };
+      }
+    },
+    async fetchSongs() {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        const querySnapshot = await getDocs(collection(db, 'users', user.uid, 'songs'));
+        this.songs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        this.updateGenreCount();
+      }
+    },
+    updateGenreCount() {
+  this.genreCount = {}; // Resetiranje objekta
+  this.songs.forEach(song => {
+    if (this.genreCount[song.genre]) {
+      this.genreCount[song.genre]++;
+    } else {
+      this.genreCount[song.genre] = 1;
+    }
+  });
+},
+  },
+  mounted() {
+    this.fetchSongs();
   }
 };
 </script>
