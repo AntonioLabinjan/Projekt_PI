@@ -1,6 +1,7 @@
 <template>
   <div class="container" :class="{ 'dark-mode': darkMode }">
     <h2>Sign Up</h2>
+    <hr>
     <form @submit.prevent="signUp" class="signup-form">
       <div class="form-group">
         <label for="firstName">First Name</label>
@@ -128,7 +129,7 @@ export default {
 
 <style scoped>
 .container {
-  max-width: 400px;
+  max-width: 450px;
   margin: 0 auto;
   padding: 20px;
   border: 1px solid #ccc;
@@ -151,7 +152,7 @@ label {
 }
 
 .form-control {
-  width: 100%;
+  width: 80%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
