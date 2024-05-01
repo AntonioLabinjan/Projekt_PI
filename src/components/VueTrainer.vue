@@ -73,7 +73,6 @@
       <button @click="filterByIntensity" class="btn btn-primary">Apply Filter</button>
     </div>
 
-
     <div class="pie-chart-section">
       <h3>Exercise Duration Pie Chart</h3>
       <canvas ref="pieChartCanvas"></canvas>
@@ -84,6 +83,7 @@
 </template>
 
 <script>
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 
@@ -99,9 +99,10 @@ export default {
       },
       editIndex: null,
       editedExercise: {
+        id: "",
         name: "",
-        duration: "",
-        intensity: 0,
+        duration: 0,
+        intensity: "",
         calories: 0
       },
       intensityFilter: "",
@@ -125,10 +126,7 @@ export default {
       return this.totalCalories / this.totalExercises || 0;
     },
     filteredExercises() {
-      if (!this.intensityFilter) {
-        return this.exercises;
-      }
-      return this.exercises.filter(exercise => exercise.intensity.toLowerCase().includes(this.intensityFilter.toLowerCase()));
+      return this.intensityFilter ? this.exercises.filter(exercise => exercise.intensity.toLowerCase().includes(this.intensityFilter.toLowerCase())) : this.exercises;
     },
   },
   methods: {
@@ -139,6 +137,63 @@ export default {
       } else {
         document.body.classList.remove('dark-mode');
       }
+    },
+    async addExercise() {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      const userExercisesRef = collection(db, 'users', user.uid, 'exercises');
+      await addDoc(userExercisesRef, this.newExercise);
+      this.newExercise = { name: "", duration: 0, intensity: "", calories: 0 };
+    },
+    async confirmDeleteExercise(id) {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      await deleteDoc(doc(db, 'users', user.uid, 'exercises', id));
+    },
+    openEditDialog(index) {
+      this.editIndex = index;
+      this.editedExercise = { ...this.filteredExercises[index], id: this.filteredExercises[index].id };
+    },
+    async saveEdit() {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      await updateDoc(doc(db, 'users', user.uid, 'exercises', this.editedExercise.id), this.editedExercise);
+      this.editIndex = null;
+    },
+    cancelEdit() {
+      this.editIndex = null;
+    },
+    filterByIntensity() {
+      this.updatePieChart();
+    },
+    updatePieChart() {
+  const canvas = this.$refs.pieChartCanvas; 
+  if (canvas && canvas.getContext) {
+
+    canvas.width = 400;
+    canvas.height = 400;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height); 
+
+    const totalDuration = this.totalExerciseDuration;
+    if (totalDuration === 0) return; 
+
+    let startAngle = 0;
+    this.filteredExercises.forEach((exercise, index) => {
+      const sliceAngle = (exercise.duration / totalDuration) * 2 * Math.PI;
+      ctx.fillStyle = this.pieChartColors[index % this.pieChartColors.length];
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2, canvas.height / 2); 
+      ctx.arc(canvas.width / 2, canvas.height / 2, 100, startAngle, startAngle + sliceAngle);
+      ctx.closePath();
+      ctx.fill();
+      startAngle += sliceAngle;
+    });
+  }
+},
+
+    goBackHome(){
+      this.$router.push('/')
     },
     goToMealTracker() {
       this.$router.push({ path:'/meal-tracker' });
@@ -161,84 +216,22 @@ export default {
     goToMusicPlayer() {
       this.$router.push({ path:'/music' });
     },
-    goBackHome() {
-      this.$router.push({ path:'/' });
-    },
-    addExercise() {
-      addDoc(collection(db, 'exercises'), this.newExercise);
-      this.newExercise = {
-        name: "",
-        duration: 0,
-        intensity: "",
-        calories: 0
-      };
-    },
-    confirmDeleteExercise(id) {
-      const isConfirmed = window.confirm('Are you sure you want to delete this exercise?');
-      if (isConfirmed) {
-        deleteDoc(doc(db, 'exercises', id));
-      }
-    },
-    openEditDialog(index) {
-      this.editIndex = index;
-      this.editedExercise = { ...this.filteredExercises[index] };
-    },
-    saveEdit() {
-      updateDoc(doc(db, 'exercises', this.editedExercise.id), this.editedExercise);
-      this.editIndex = null;
-    },
-    cancelEdit() {
-      this.editIndex = null;
-    },
-    filterByIntensity() {
-      this.updatePieChart();
-    },
-    updatePieChart() {
-      const canvas = this.$refs.pieChartCanvas;
-      canvas.width = 300;
-      canvas.height = 300;
-      this.pieChartContext = canvas.getContext('2d');
 
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const radius = Math.min(centerX, centerY);
-
-      this.pieChartData = this.filteredExercises.map(exercise => {
-        return {
-          name: exercise.name,
-          percentage: (exercise.duration / this.totalExerciseDuration) * 100
-        };
-      });
-
-      let startAngle = 0;
-      this.pieChartData.forEach((data, index) => {
-        const sliceAngle = (data.percentage / 100) * Math.PI * 2;
-
-        this.pieChartContext.fillStyle = this.pieChartColors[index];
-        this.pieChartContext.beginPath();
-        this.pieChartContext.moveTo(centerX, centerY);
-        this.pieChartContext.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
-        this.pieChartContext.closePath();
-        this.pieChartContext.fill();
-
-        startAngle += sliceAngle;
-      });
-    }
   },
   mounted() {
-    const exercisesRef = collection(db, 'exercises');
-    onSnapshot(exercisesRef, (querySnapshot) => {
-      const exerciseData = [];
-      querySnapshot.forEach((doc) => {
-        exerciseData.push({ id: doc.id, ...doc.data() });
-      });
-      this.exercises = exerciseData;
-      this.updatePieChart();
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const exercisesRef = collection(db, 'users', user.uid, 'exercises');
+        onSnapshot(exercisesRef, (snapshot) => {
+          this.exercises = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          this.updatePieChart();
+        });
+      }
     });
   }
 };
 </script>
-
 <style scoped>
 .dark-mode {
   background-color: #222;
@@ -287,4 +280,10 @@ canvas {
   display: block;
   margin: 0 auto;
 }
+.pie-chart-section canvas {
+  width: 400px;  
+  height: 400px; 
+}
+
+
 </style>
