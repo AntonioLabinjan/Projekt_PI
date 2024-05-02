@@ -34,11 +34,12 @@
       <hr>
     </div>
     <img src="@/assets/OIP.jpg" alt="Motivational Image" class="motivational-image"  @click="playLionRoar">
-    <div class="caloric-balance">
-      <p>Total calories consumed: {{ totalCaloriesConsumed }}</p>
-      <p>Total calories burned: {{ totalCaloriesBurned }}</p>
-      <p>Caloric balance: {{ caloricBalance }}</p>
-    </div>
+    <div class="caloric-balance" v-if="currentUser">
+  <p>Total calories consumed: {{ totalCaloriesConsumed }}</p>
+  <p>Total calories burned: {{ totalCaloriesBurned }}</p>
+  <p>Caloric balance: {{ caloricBalance }}</p>
+</div>
+
     <hr>
     <notification-maker></notification-maker>
     <user-bar></user-bar>
@@ -46,7 +47,7 @@
 
 <script>
 import { collection, getDocs } from 'firebase/firestore';
-import {onAuthStateChanged, signOut} from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { db, auth } from '@/firebase';
 
 export default {
@@ -79,25 +80,37 @@ export default {
       document.body.classList.toggle('dark-mode', this.darkMode);
     },
     async fetchMeals() {
-      try {
-        const mealsSnapshot = await getDocs(collection(db, 'meals'));
-        mealsSnapshot.forEach((doc) => {
-          this.totalCaloriesConsumed += doc.data().calories;
-        });
-      } catch (error) {
-        console.error('Error fetching meals:', error);
-      }
-    },
-    async fetchExercises() {
-      try {
-        const exercisesSnapshot = await getDocs(collection(db, 'exercises'));
-        exercisesSnapshot.forEach((doc) => {
-          this.totalCaloriesBurned += doc.data().calories;
-        });
-      } catch (error) {
-        console.error('Error fetching exercises:', error);
-      }
-    },
+  if (!this.currentUser) return;
+  const mealsRef = collection(db, `users/${this.currentUser.uid}/meals`);
+  try {
+    const mealsSnapshot = await getDocs(mealsRef);
+    this.totalCaloriesConsumed = 0;
+    mealsSnapshot.forEach((doc) => {
+      console.log(doc.id, " => ", doc.data());
+      this.totalCaloriesConsumed += doc.data().calories;
+    });
+    console.log('Total Calories Consumed:', this.totalCaloriesConsumed);
+  } catch (error) {
+    console.error('Error fetching meals:', error);
+  }
+},
+
+async fetchExercises() {
+  if (!this.currentUser) return;
+  const exercisesRef = collection(db, `users/${this.currentUser.uid}/exercises`);
+  try {
+    const exercisesSnapshot = await getDocs(exercisesRef);
+    this.totalCaloriesBurned = 0;
+    exercisesSnapshot.forEach((doc) => {
+      console.log(doc.id, " => ", doc.data());
+      this.totalCaloriesBurned += doc.data().calories;
+    });
+    console.log('Total Calories Burned:', this.totalCaloriesBurned);
+  } catch (error) {
+    console.error('Error fetching exercises:', error);
+  }
+},
+
     playLionRoar() {
       const roarSound = new Audio(require('@/assets/roar.mp3')); 
       roarSound.play().catch((error) => {
@@ -144,6 +157,7 @@ export default {
       this.$router.push({path: '/music'});
     },
   },
+  /*
   mounted() {
     this.fetchExercises();
     this.fetchMeals();
@@ -153,6 +167,19 @@ export default {
         this.currentUser = user;
       } else {
         this.currentUser = null;
+      }
+    });
+  },*/
+  mounted() {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.currentUser = user;
+        this.fetchExercises();
+        this.fetchMeals();
+      } else {
+        this.currentUser = null;
+        this.totalCaloriesConsumed = 0;
+        this.totalCaloriesBurned = 0;
       }
     });
   },
