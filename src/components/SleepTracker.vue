@@ -144,7 +144,7 @@ export default {
     const userSleepRef = collection(db, 'users', user.uid, 'sleepEntries');
     await addDoc(userSleepRef, this.newSleepEntry)
     this.newSleepEntry = {date: "", quality: 0, startTime: "", wakeTime: ""}
-    console.log('Document written with ID: ', docRef.id);
+    // console.log('Document written with ID: ', docRef.id);
     
     this.previousEntryDate = this.newSleepEntry.date; 
 
