@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 
@@ -73,7 +73,7 @@ export default {
       newSong: { title: '', author: '', genre: '', youtubeLink: '' },
       editedSong: { id: null, title: '', author: '', genre: '', youtubeLink: '' },
       isDarkMode: false,
-      songs: [], // Ovo prazno polje će držati sve pjesme koje se dohvate za korisnika
+      songs: [], 
       genreCount: {},
     };
   },
@@ -89,9 +89,6 @@ export default {
   methods: {
     goBackHome() {
       this.$router.push('/');
-    },
-    toggleDarkMode() {
-      this.isDarkMode = !this.isDarkMode;
     },
     goToImageGallery() {
       this.$router.push({ path: '/image-gallery' });
@@ -140,25 +137,32 @@ export default {
       }
     }
       },
-    async deleteSong(id) {
-    console.log('Deleting song with ID:', id);
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (user) {
-      try {
-        await deleteDoc(doc(db, 'users', user.uid, 'songs', id));
-        // Nakon uspješnog brisanja, filtrirajte songs array kako biste uklonili obrisani song
-        this.songs = this.songs.filter(song => song.id !== id);
-        if (this.genreCount[song.genre] && this.genreCount[song.genre] > 1) {
-          this.genreCount[song.genre]--;
-        } else {
-          delete this.genreCount[song.genre];
-        }
-      } catch (error) {
-        console.error('Error deleting song:', error);
+      async deleteSong(id) {
+  console.log('Deleting song with ID:', id);
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (user) {
+    try {
+      const song = this.songs.find(song => song.id === id);
+      if (!song) {
+        console.error('Song not found!');
+        return;
       }
+
+      await deleteDoc(doc(db, 'users', user.uid, 'songs', id));
+
+      this.songs = this.songs.filter(song => song.id !== id);
+      if (this.genreCount[song.genre] && this.genreCount[song.genre] > 1) {
+        this.genreCount[song.genre]--;
+      } else {
+        delete this.genreCount[song.genre];
+      }
+    } catch (error) {
+      console.error('Error deleting song:', error);
     }
-  },
+  }
+},
+
     async confirmDeleteSong(id) {
       const auth = getAuth();
       const user = auth.currentUser;
@@ -194,7 +198,7 @@ export default {
       }
     },
     updateGenreCount() {
-  this.genreCount = {}; // Resetiranje objekta
+  this.genreCount = {}; 
   this.songs.forEach(song => {
     if (this.genreCount[song.genre]) {
       this.genreCount[song.genre]++;
