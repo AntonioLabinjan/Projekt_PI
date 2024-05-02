@@ -7,10 +7,10 @@ Riješeno:
 * songs 
 * waterIntake
 * sleepEntries
+* mealTracker
 
 TODO:
 *image gallery
-*mealTracker
 *streak
 *Homepage da dohvaća samo od current usera balance
 
