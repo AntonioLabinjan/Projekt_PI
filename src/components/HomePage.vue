@@ -38,6 +38,7 @@
   <p>Total calories consumed: {{ totalCaloriesConsumed }}</p>
   <p>Total calories burned: {{ totalCaloriesBurned }}</p>
   <p>Caloric balance: {{ caloricBalance }}</p>
+  <p>Status: {{ balanceStatus }}</p>
 </div>
 
     <hr>
@@ -63,6 +64,15 @@ export default {
     caloricBalance() {
       return this.totalCaloriesConsumed - this.totalCaloriesBurned;
     },
+    balanceStatus() {
+    if (this.caloricBalance > 0) {
+      return "Surplus";
+    } else if (this.caloricBalance < 0) {
+      return "Deficit";
+    } else {
+      return "Balanced";
+    }
+  },
   },
   methods: {
     async logout() {
