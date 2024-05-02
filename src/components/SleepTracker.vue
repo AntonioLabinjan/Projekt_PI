@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { collection, onSnapshot, addDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore'
 import { db } from '@/firebase'
 
@@ -138,7 +139,11 @@ export default {
     },
     async addSleepEntry() {
   try {
-    const docRef = await addDoc(collection(db, 'sleepEntries'), this.newSleepEntry);
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const userSleepRef = collection(db, 'users', user.uid, 'sleepEntries');
+    await addDoc(userSleepRef, this.newSleepEntry)
+    this.newSleepEntry = {date: "", quality: 0, startTime: "", wakeTime: ""}
     console.log('Document written with ID: ', docRef.id);
     
     this.previousEntryDate = this.newSleepEntry.date; 
@@ -149,7 +154,6 @@ export default {
     console.error('Error adding document: ', error);
   }
 },
-
 
 checkDateDifference() {
   if (this.previousEntryDate) {
@@ -170,25 +174,30 @@ editSleepEntry(index) {
   this.newSleepEntry = { ...this.sleepEntries[index] };
   this.editEntry = true;
 },
-    async saveEditedSleepEntry() {
-      try {
-        await updateDoc(doc(db, 'sleepEntries', this.sleepEntries[this.editIndex].id), this.newSleepEntry);
-        console.log('Document successfully updated');
-        this.resetForm();
-        this.editEntry = false;
-        this.editIndex = null;
-      } catch (error) {
-        console.error('Error updating document: ', error);
-      }
-    },
+async saveEditedSleepEntry() {
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user) {
+      console.error("No user logged in");
+      return;
+    }
+    const docRef = doc(db, 'users', user.uid, 'sleepEntries', this.sleepEntries[this.editIndex].id);
+    await updateDoc(docRef, this.newSleepEntry);
+    console.log('Document successfully updated');
+    this.resetForm();
+    this.editEntry = false;
+    this.editIndex = null;
+  } catch (error) {
+    console.error('Error updating document: ', error);
+  }
+},
     async deleteSleepEntry(id) {
-      try {
-        await deleteDoc(doc(db, 'sleepEntries', id));
-        console.log('Document successfully deleted');
-      } catch (error) {
-        console.error('Error removing document: ', error);
-      }
+      const auth =  getAuth();
+      const user = auth.currentUser;
+      await deleteDoc(doc(db, 'users', user.uid, 'sleepEntries', id))  
     },
+
     cancelEdit() {
       this.editEntry = false;
       this.editIndex = null;
@@ -225,21 +234,34 @@ editSleepEntry(index) {
   },
   },
   mounted() {
-    try {
-      onSnapshot(collection(db, 'sleepEntries'), (querySnapshot) => {
-        const updatedSleepEntries = [];
-        querySnapshot.forEach((doc) => {
-          const sleepEntryData = doc.data();
-          sleepEntryData.id = doc.id;
-          updatedSleepEntries.push(sleepEntryData);
-        });
-        this.sleepEntries = updatedSleepEntries;
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const sleepRef = collection(db, 'users', user.uid, 'sleepEntries');
+      onSnapshot(sleepRef, (snapshot) => {
+        this.sleepEntries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       });
-    } catch (error) {
-      console.error('Error fetching sleep entries:', error);
     }
+  });
+
+  // Stara verzija koja ne dela dobro
+  /*
+  try {
+    onSnapshot(collection(db, 'sleepEntries'), (querySnapshot) => {
+      const updatedSleepEntries = [];
+      querySnapshot.forEach((doc) => {
+        const sleepEntryData = doc.data();
+        sleepEntryData.id = doc.id;
+        updatedSleepEntries.push(sleepEntryData);
+      });
+      this.sleepEntries = updatedSleepEntries;
+    });
+  } catch (error) {
+    console.error('Error fetching sleep entries:', error);
   }
-};
+  */
+}, }
+
 </script>
 
 <style scoped>
