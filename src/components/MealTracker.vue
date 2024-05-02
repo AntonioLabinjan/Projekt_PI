@@ -67,16 +67,17 @@
     
     <div class="pie-chart-section">
       <h3>Pie Chart - Calories per Meal</h3>
-      <canvas ref="pieChartCanvas"></canvas>
+<canvas ref="pieChartCanvas" width="400" height="400"></canvas>
+
     </div>
   </div>
   <user-bar></user-bar>
 </template>
 
 <script>
-// import { ref, onMounted } from 'vue'
-import { collection, onSnapshot, addDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore'
-import { db } from '@/firebase'
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { collection, onSnapshot, addDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { db } from '@/firebase';
 
 export default {
   data() {
@@ -96,7 +97,6 @@ export default {
       },
       ingredientFilter: "",
       pieChartContext: null,
-      pieChartData: [],
       pieChartColors: ['#ff6d38', '#ffc107', '#28a745', '#007bff', '#dc3545', '#6c757d', '#17a2b8', '#343a40', '#6f42c1', '#fd7e14'],
     };
   },
@@ -130,13 +130,21 @@ export default {
       }
     },
     async addMeal() {
-      try {
-        const mealRef = await addDoc(collection(db, 'meals'), this.newMeal);
-        console.log('Meal added successfully:', mealRef.id);
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        const userMealsRef = collection(db, 'users', user.uid, 'meals');
+        await addDoc(userMealsRef, this.newMeal);
         this.resetForm();
         this.updatePieChart();
-      } catch (error) {
-        console.error('Error adding meal:', error);
+      }
+    },
+    async deleteMeal(id) {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        await deleteDoc(doc(db, 'users', user.uid, 'meals', id));
+        this.updatePieChart();
       }
     },
     openEditDialog(index) {
@@ -144,42 +152,19 @@ export default {
       this.editedMeal = { ...this.meals[index] };
     },
     async saveEdit() {
-      try {
-        await updateDoc(doc(db, 'meals', this.meals[this.editIndex].id), this.editedMeal);
-        console.log('Meal updated successfully:', this.meals[this.editIndex].id);
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user && this.editIndex !== null) {
+        const mealRef = doc(db, 'users', user.uid, 'meals', this.meals[this.editIndex].id);
+        await updateDoc(mealRef, this.editedMeal);
         this.editIndex = null;
-        this.editedMeal = {
-          name: "",
-          ingredients: "",
-          calories: 0,
-        };
+        this.resetForm();
         this.updatePieChart();
-      } catch (error) {
-        console.error('Error updating meal:', error);
-      }
-    },
-    confirmDeleteMeal(index) {
-      const isConfirmed = window.confirm("Do you really want to delete this meal?");
-      if (isConfirmed) {
-        this.deleteMeal(index);
-      }
-    },
-    async deleteMeal(id) {
-      try {
-        await deleteDoc(doc(db, 'meals', id));
-        console.log('Meal deleted successfully:', id);
-        this.updatePieChart();
-      } catch (error) {
-        console.error('Error deleting meal:', error);
       }
     },
     cancelEdit() {
       this.editIndex = null;
-      this.editedMeal = {
-        name: "",
-        ingredients: "",
-        calories: 0,
-      };
+      this.resetForm();
     },
     resetForm() {
       this.newMeal = {
@@ -187,89 +172,104 @@ export default {
         ingredients: "",
         calories: 0,
       };
+      this.editedMeal = {
+        name: "",
+        ingredients: "",
+        calories: 0,
+      };
     },
     updatePieChart() {
-      const canvas = this.$refs.pieChartCanvas;
-      canvas.width = 300;
-      canvas.height = 300;
-      this.pieChartContext = canvas.getContext('2d');
-      
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const radius = Math.min(centerX, centerY);
+  const canvas = this.$refs.pieChartCanvas;
+  if (canvas) {
+    this.pieChartContext = canvas.getContext('2d');
+    const ctx = this.pieChartContext;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const totalCalories = this.meals.reduce((total, meal) => total + meal.calories, 0);
+    const data = this.meals.map(meal => ({
+      name: meal.name,
+      value: meal.calories
+    }));
 
-      this.pieChartData = this.meals.map(meal => {
-        return {
-          name: meal.name,
-          percentage: (meal.calories / totalCalories) * 100
-        };
-      });
+    if (!data.length) {
+      return;
+    }
 
-      let startAngle = 0;
-      this.pieChartData.forEach((data, index) => {
-        const sliceAngle = (data.percentage / 100) * Math.PI * 2;
+    const total = data.reduce((acc, cur) => acc + cur.value, 0);
+    let startAngle = -Math.PI / 2;
 
-        this.pieChartContext.fillStyle = this.pieChartColors[index];
-        this.pieChartContext.beginPath();
-        this.pieChartContext.moveTo(centerX, centerY);
-        this.pieChartContext.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
-        this.pieChartContext.closePath();
-        this.pieChartContext.fill();
+    data.forEach((item, index) => {
+      const sliceAngle = (item.value / total) * 2 * Math.PI;
+      const endAngle = startAngle + sliceAngle;
+      const color = this.pieChartColors[index % this.pieChartColors.length];
 
-        startAngle += sliceAngle;
-      });
-    },
-    goBackHome() {
-      this.$router.push({ path: '/' });
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(200, 200); 
+      ctx.arc(200, 200, 150, startAngle, endAngle); 
+      ctx.closePath();
+      ctx.fill();
+
+      startAngle = endAngle;
+    });
+  }
+},
+
+    goBackHome(){
+      this.$router.push('/')
     },
     goToVueTrainer() {
-      this.$router.push({ path: '/vue-trainer' });
+      this.$router.push({ path:'/vue-trainer' });
     },
     goToImageGallery() {
-      this.$router.push({ path: '/image-gallery' });
+      this.$router.push({ path:'/image-gallery' });
     },
     goToSleepTracker() {
-      this.$router.push({ path: '/sleep-tracker' });
+      this.$router.push({ path:'/sleep-tracker' });
     },
-    goToWaterIntakeTracker() {
-      this.$router.push({ path: '/water-intake' });
+    goToWaterIntake() {
+      this.$router.push({ path:'/water-intake' });
     },
     goToBMI() {
-      this.$router.push({ path: '/BMI-calculator' });
+      this.$router.push({ path:'/bmi' });
     },
     goToStreak() {
-      this.$router.push({path: '/streak'});
+      this.$router.push({ path:'/streak' });
     },
+    goToMusicPlayer() {
+      this.$router.push({ path:'/music' });
+    },
+
   },
-  async mounted() {
-    try {
-      onSnapshot(collection(db, 'meals'), (querySnapshot) => {
-        const updatedMeals = [];
-        querySnapshot.forEach((doc) => {
-          const mealData = doc.data();
-          mealData.id = doc.id;
-          updatedMeals.push(mealData);
+  mounted() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const mealsRef = collection(db, 'users', user.uid, 'meals');
+        onSnapshot(mealsRef, (snapshot) => {
+          this.meals = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          this.updatePieChart();
         });
-        this.meals = updatedMeals;
-      });
-    } catch (error) {
-      console.error('Error fetching meals:', error);
-    }
+      }
+    });
   }
 };
+
 </script>
 <style scoped>
-/* CSS styles for meal tracker component */
 .container.dark-mode {
   background-color: #000;
   color: #fff;
 }
-
-
-
 .pie-chart-section {
-  text-align: center;
+  margin-bottom: 20px;
 }
+canvas {
+  display: block;
+  margin: 0 auto;
+}
+.pie-chart-section canvas {
+  width: 400px;  
+  height: 400px; 
+}
+
 </style>
