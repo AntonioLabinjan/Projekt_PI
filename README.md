@@ -1,11 +1,37 @@
 ### TODO:
 <ol>* popravak CSS-a</ol>
 <ol>* sklepat filtriranje "postova" prema current useru (vidi samo ono ča je on stavija)</ol>
-      USER FILTER IMAMO NA: 
-      * exercises
-      * songs
-      * waterIntake
-      * sleepEntries
+USER FILTER
+Riješeno:
+* exercises
+* songs 
+* waterIntake
+* sleepEntries
+
+TODO:
+*image gallery
+*mealTracker
+*streak
+*Homepage da dohvaća samo od current usera balance
+
+NE TRIBA:
+About
+AdminLogin
+BMICalculator
+DefaultExercises
+DefaultExercisesNA
+DefaultMeals
+DefaultMealsNA
+ErrorPage
+LocalTime
+LogIn
+MotivationalQuote
+QRCodesAdmin
+QRCodesDefault
+Signup
+UserBar
+Notification
+
 
 // dodamo si user id ili mail ili username da se po njemu filtrira (primary key u kolekciju usera, pa se po njemu filtrira. Podkolekcija za svega korisnika)
 // Assume 'users' is your main collection and 'orders' is the subcollection
