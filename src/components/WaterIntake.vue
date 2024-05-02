@@ -68,8 +68,10 @@
 </template>
 
 <script>
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { collection, onSnapshot, addDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
+
 
 export default {
   data() {
@@ -129,46 +131,56 @@ barWidth() {
         document.body.classList.remove('dark-mode');
       }
     },
+    async addExercise() {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      const userExercisesRef = collection(db, 'users', user.uid, 'exercises');
+      await addDoc(userExercisesRef, this.newExercise);
+      this.newExercise = { name: "", duration: 0, intensity: "", calories: 0 };
+    },
     async addIntake() {
-      try {
-        const intakeRef = await addDoc(collection(db, 'waterIntake'), this.newIntake);
-        console.log('Intake added successfully:', intakeRef.id);
-        this.resetForm();
-      } catch (error) {
-        console.error('Error adding intake:', error);
-      }
-    },
-    openEditDialog(index) {
-      this.editIndex = index;
-      this.editedIntake = { ...this.waterIntake[index] };
-    },
+        const auth = getAuth();
+        const user = auth.currentUser;
+        const userIntakeRef = collection(db, 'users', user.uid, 'waterIntake');
+        await addDoc(userIntakeRef, this.newIntake);
+        this.newIntake = {amount: "", type: "", time: ""};
+      },
+
+      openEditDialog(index) {
+  this.editIndex = index;
+  this.editedIntake = { ...this.waterIntake[index] };
+},
+
+
+
     async saveEdit() {
-      try {
-        await updateDoc(doc(db, 'waterIntake', this.waterIntake[this.editIndex].id), this.editedIntake);
-        console.log('Intake updated successfully:', this.waterIntake[this.editIndex].id);
-        this.editIndex = null;
-        this.editedIntake = {
-          type: "",
-          amount: 0,
-          time: ""
-        };
-      } catch (error) {
-        console.error('Error updating intake:', error);
-      }
-    },
-    confirmDeleteIntake(index) {
-      const isConfirmed = window.confirm("Do you really want to delete this intake?");
-      if (isConfirmed) {
-        this.deleteIntake(index);
-      }
-    },
-    async deleteIntake(index) {
-      try {
-        await deleteDoc(doc(db, 'waterIntake', this.waterIntake[index].id));
-        console.log('Intake deleted successfully:', this.waterIntake[index].id);
-      } catch (error) {
-        console.error('Error deleting intake:', error);
-      }
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (user && this.editedIntake.id) { 
+    try {
+      await updateDoc(doc(db, 'users', user.uid, 'waterIntake', this.editedIntake.id), {
+        type: this.editedIntake.type,
+        amount: this.editedIntake.amount,
+        time: this.editedIntake.time
+      });
+      
+      this.waterIntake[this.editIndex] = {...this.editedIntake};
+      this.editIndex = null;
+      this.editedIntake = { type: "", amount: 0, time: "" };
+    } catch (error) {
+      console.error('Failed to save edits:', error);
+    }
+  } else {
+    console.error('No user logged in or missing intake ID');
+  }
+},
+
+
+
+    async confirmDeleteIntake(id) {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      await deleteDoc(doc(db, 'users', user.uid, 'waterIntake', id));
     },
     cancelEdit() {
       this.editIndex = null;
@@ -211,26 +223,23 @@ barWidth() {
     },
   },
   async mounted() {
-    try {
-      onSnapshot(collection(db, 'waterIntake'), (querySnapshot) => {
-        const updatedIntake = [];
-        querySnapshot.forEach((doc) => {
-          const intakeData = doc.data();
-          intakeData.id = doc.id;
-          updatedIntake.push(intakeData);
-        });
-        this.waterIntake = updatedIntake;
+    const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const WaterRef = collection(db, 'users', user.uid, 'waterIntake')
+      onSnapshot(WaterRef, (snapshot) => {
+        this.waterIntake = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       });
-    } catch (error) {
-      console.error('Error fetching water intake:', error);
     }
+  });
+
   }
 
 };
 </script>
 
 <style scoped>
-/* CSS styles for water intake tracker component */
+
 .container.dark-mode {
   background-color: #000;
   color: #fff;
