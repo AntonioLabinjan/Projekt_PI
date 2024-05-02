@@ -8,11 +8,12 @@ Riješeno:
 * waterIntake
 * sleepEntries
 * mealTracker
+*Homepage da dohvaća samo od current usera balance
 
 TODO:
 *image gallery
 *streak
-*Homepage da dohvaća samo od current usera balance
+
 
 NE TRIBA:
 About
