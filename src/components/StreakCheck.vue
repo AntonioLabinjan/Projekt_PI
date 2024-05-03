@@ -1,62 +1,61 @@
 <template>
   <keep-alive>
-    <div>
-      <div class="container" :class="{ 'dark-mode': darkMode }">
-        <nav class="navbar">
-          <ul>
-            <!-- Buttons for navigation -->
-            <li><button @click="goToImageGallery">Go to Image Gallery</button></li>
-            <li><button @click="goToVueTrainer">Go to Training App</button></li>
-            <li><button @click="goToMealTracker">Go to Meal Tracker</button></li>
-            <li><button @click="goToSleepTracker">Go to Sleep Tracker</button></li>
-            <li><button @click="goToWaterIntake">Go to Water Intake Tracker</button></li>
-            <li><button @click="goToBMI">Go to BMI Calculator</button></li>
-            <li><button @click="goToMusicPlayer">Music Player</button></li>
-            <li><button @click="goBackHome">Go Back Home</button></li>
-          </ul>
-        </nav>
-        <hr>
+    <div class="container" :class="{ 'dark-mode': darkMode }">
+      <nav class="navbar">
+        <ul>
+          <li><button @click="goToImageGallery">Go to Image Gallery</button></li>
+          <li><button @click="goToVueTrainer">Go to Training App</button></li>
+          <li><button @click="goToMealTracker">Go to Meal Tracker</button></li>
+          <li><button @click="goToSleepTracker">Go to Sleep Tracker</button></li>
+          <li><button @click="goToWaterIntake">Go to Water Intake Tracker</button></li>
+          <li><button @click="goToBMI">Go to BMI Calculator</button></li>
+          <li><button @click="goToMusicPlayer">Music Player</button></li>
+          <li><button @click="goBackHome">Go Back Home</button></li>
+        </ul>
+      </nav>
+      <hr>
 
-        <h1>Training Streak Tracker</h1>
-        <form @submit.prevent="addCustomDate">
-          <label for="customDate">Add your date:</label>
-          <input type="date" id="customDate" v-model="customDate">
-          <button type="submit">Add</button>
-        </form>
+      <h1>Training Streak Tracker</h1>
+      <form @submit.prevent="addCustomDate">
+        <label for="customDate">Add your date:</label>
+        <input type="date" id="customDate" v-model="customDate">
+        <button type="submit">Add</button>
+      </form>
 
-        <div class="selected-dates">
-          <div v-for="(date, index) in selectedDates" :key="index">
-            <span>{{ formatDate(date) }}</span>
-            <button @click="removeDate(index)">Remove</button>
-          </div>
+      <div class="selected-dates">
+        <div v-for="(date, index) in selectedDates" :key="index">
+          <span>{{ formatDate(date) }}</span>
+          <button @click="removeDate(index)">Remove</button>
         </div>
-
-        <div class="streak">
-          <p>Current streak: {{ currentStreak }}</p>
-          <p>Record streak: {{ recordStreak }}</p>
-          <div v-if="currentStreak >= 3 && currentStreak % 3 === 0" class="reward bounce-animation">
-            <p>Congratulations! You've earned 3-day streak award!</p>
-            <img src="@/assets/silver_medal.jpg" alt="Streak Master Badge" @click="playCheer">
-          </div>
-          <div v-if="currentStreak >= 7 && currentStreak % 7 === 0" class="reward bounce-animation">
-            <p>Congratulations! You've earned 7-day streak award!</p>
-            <img src="@/assets/medal.jpg" alt="Streak Master Badge" @click="playGoldenCheer">
-          </div>
-        </div>
-
-        <div class="medal-counter">
-          <p>Medal Counter: {{ medalCounter }}</p>
-        </div>
-        <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
       </div>
-      <user-bar></user-bar>
+
+      <div class="streak">
+        <p>Current streak: {{ currentStreak }}</p>
+        <p>Record streak: {{ recordStreak }}</p>
+        <div v-if="currentStreak >= 3 && currentStreak % 3 === 0" class="reward bounce-animation">
+          <p>Congratulations! You've earned 3-day streak award!</p>
+          <img src="@/assets/silver_medal.jpg" alt="Streak Master Badge" @click="playCheer">
+        </div>
+        <div v-if="currentStreak >= 7 && currentStreak % 7 === 0" class="reward bounce-animation">
+          <p>Congratulations! You've earned 7-day streak award!</p>
+          <img src="@/assets/medal.jpg" alt="Streak Master Badge" @click="playGoldenCheer">
+        </div>
+      </div>
+
+      <div class="medal-counter">
+        <p>Medal Counter: {{ medalCounter }}</p>
+      </div>
+      <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     </div>
+    <user-bar></user-bar>
   </keep-alive>
 </template>
 
 <script>
 import { db } from '@/firebase';
-import { collection, addDoc, getDoc, updateDoc, doc, getDocs, deleteDoc } from 'firebase/firestore';
+import { collection, addDoc, getDoc, updateDoc, doc, getDocs, deleteDoc, query, where, orderBy } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/firebase'; 
 
 export default {
   data() {
@@ -67,101 +66,94 @@ export default {
       recordStreak: 0,
       customDate: null,
       medalCounter: 0,
-      prevStreak: 0,
-      isNewMedalAdded: false
+      userId: null,
     };
   },
+  created() {
+    this.initAuthWatcher();
+  },
   methods: {
-    toggleDarkMode() {
-      var element = document.body;
-      this.darkMode = !this.darkMode;
-      element.classList.toggle('dark-mode', this.darkMode);
-    },
-    playCheer() {
-      const cheerSound = new Audio(require('@/assets/cheer.mp3'));
-      cheerSound.play().catch((error) => {
-        console.error("Failed to play the audio:", error);
+    initAuthWatcher() {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          this.userId = user.uid;
+          this.fetchData();
+        } else {
+          this.userId = null;
+          this.resetData();
+        }
       });
     },
-    playGoldenCheer() {
-      const goldenCheer = new Audio(require('@/assets/golden_medal.mp3'));
-      goldenCheer.play().catch((error) => {
-        console.error("Failed to play the audio:", error);
+    resetData() {
+      this.selectedDates = [];
+      this.currentStreak = 0;
+      this.recordStreak = 0;
+      this.medalCounter = 0;
+    },
+    fetchData() {
+      if (!this.userId) return;
+      this.fetchStreakData();
+      this.fetchDates();
+    },
+    fetchStreakData() {
+      const streaksRef = doc(db, 'users', this.userId, 'streaks', 'userStreaks');
+      getDoc(streaksRef).then(docSnap => {
+        if (docSnap.exists()) {
+          const { currentStreak, recordStreak, medalCounter } = docSnap.data();
+          this.currentStreak = currentStreak;
+          this.recordStreak = recordStreak;
+          this.medalCounter = medalCounter;
+        }
+      }).catch(error => {
+        console.error("Error fetching streak data:", error);
       });
     },
-    playAnimation() {
-      const rewardElements = document.querySelectorAll('.reward.bounce-animation');
-      rewardElements.forEach(element => {
-        element.classList.add('playing-animation');
-        element.addEventListener('animationend', () => {
-          element.classList.remove('bounce-animation', 'playing-animation');
-        }, { once: true });
-      });
-    },
-    goToImageGallery() {
-      this.$router.push({ path: '/image-gallery' });
-    },
-    goToVueTrainer() {
-      this.$router.push({ path: '/vue-trainer' });
-    },
-    goToMealTracker() {
-      this.$router.push({ path: '/meal-tracker' });
-    },
-    goToSleepTracker() {
-      this.$router.push({ path: '/sleep-tracker' });
-    },
-    goToWaterIntake() {
-      this.$router.push({ path: '/water-intake' });
-    },
-    goToBMI() {
-      this.$router.push({ path: '/BMI-calculator' });
-    },
-    goToMusicPlayer() {
-      this.$router.push({ path: '/music' });
-    },
-    goBackHome() {
-      this.$router.push({ path: '/' });
-    },
+    fetchDates() {
+  if (!this.userId) return;
+  const datesRef = collection(db, 'users', this.userId, 'trainingDates');
+  
+  const queryRef = query(datesRef, orderBy('trainingDate', 'asc'));
+  
+  getDocs(queryRef).then(querySnapshot => {
+    this.selectedDates = querySnapshot.docs.map(doc => doc.data().trainingDate.toDate());
+  }).catch(error => {
+    console.error("Error fetching training dates:", error);
+  });
+},
     formatDate(dateString) {
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
       return new Date(dateString).toLocaleDateString(undefined, options);
     },
     addCustomDate() {
-      if (this.customDate) {
-        const selectedDateExists = this.selectedDates.some(selectedDate => {
-          return new Date(selectedDate).toISOString().slice(0, 10) === this.customDate;
+      if (!this.userId || !this.customDate) return;
+      const datesRef = collection(db, 'users', this.userId, 'trainingDates');
+      const newDate = new Date(this.customDate);
+      addDoc(datesRef, { trainingDate: new Date(newDate.setHours(0, 0, 0, 0)) })
+        .then(() => {
+          this.selectedDates.push(newDate);
+          this.updateStreak();
+          this.customDate = '';
+        })
+        .catch(error => {
+          console.error('Error adding training date:', error);
         });
-        if (!selectedDateExists) {
-          addDoc(collection(db, 'trainingDates'), { trainingDate: new Date(this.customDate) })
-            .then(() => {
-              this.selectedDates.push(new Date(this.customDate));
-              this.updateStreak();
-              this.customDate = ''; // Reset the input after adding
-            })
-            .catch(error => {
-              console.error('Error adding document: ', error);
-            });
-        } else {
-          alert('This date already exists. Please choose a different date.');
-        }
-      }
     },
-    async fetchData() {
-      try {
-        const docRef = doc(db, 'streaks', 'userStreaks');
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const { currentStreak, recordStreak } = docSnap.data();
-          this.currentStreak = currentStreak;
-          this.recordStreak = recordStreak;
-        } else {
-          this.currentStreak = 0;
-          this.recordStreak = 0;
-          this.medalCounter = 0;
-        }
-      } catch (error) {
-        console.error('Error getting streaks document: ', error);
-      }
+    removeDate(index) {
+      if (!this.userId) return;
+      const dateToRemove = this.selectedDates[index];
+      const dateToRemoveISO = dateToRemove.toISOString().slice(0, 10);
+      const datesRef = collection(db, 'users', this.userId, 'trainingDates');
+      const q = query(datesRef, where('trainingDate', '==', dateToRemove));
+      getDocs(q).then(snapshot => {
+        snapshot.forEach(doc => {
+          deleteDoc(doc.ref).then(() => {
+            this.selectedDates.splice(index, 1);
+            this.updateStreak();
+          }).catch(error => {
+            console.error('Error removing training date:', error);
+          });
+        });
+      });
     },
     async updateStreak() {
       this.isNewMedalAdded = false;
@@ -211,87 +203,57 @@ export default {
         console.error('Error updating streaks document: ', error);
       }
     },
-    addDate(date) {
-      this.selectedDates.push(date);
-      this.updateStreak();
+    toggleDarkMode() {
+      var element = document.body;
+      this.darkMode = !this.darkMode;
+      element.classList.toggle('dark-mode', this.darkMode);
     },
-    removeDate(index) {
-      console.log('Removing date at index:', index);
-      const dateToRemove = this.selectedDates[index];
-      console.log('Date to remove:', dateToRemove);
-      const dateToRemoveISO = new Date(dateToRemove).toISOString().slice(0, 10);
-
-      getDocs(collection(db, 'trainingDates')).then(snapshot => {
-        snapshot.forEach(doc => {
-          const trainingDate = new Date(doc.data().trainingDate.seconds * 1000);
-
-          if (trainingDate.toISOString().slice(0, 10) === dateToRemoveISO) {
-
-            deleteDoc(doc.ref).then(() => {
-              console.log('Document successfully deleted from Firestore!');
-              const indexToRemove = this.selectedDates.indexOf(dateToRemove);
-              if (indexToRemove !== -1) {
-                this.selectedDates.splice(indexToRemove, 1);
-              }
-              this.updateStreak();
-            }).catch(error => {
-              console.error('Error removing document: ', error);
-            });
-          }
-        });
-      }).catch(error => {
-        console.error('Error getting documents: ', error);
+    playCheer() {
+      const cheerSound = new Audio(require('@/assets/cheer.mp3'));
+      cheerSound.play().catch((error) => {
+        console.error("Failed to play the audio:", error);
       });
     },
-    saveDataLocally() {
-      localStorage.setItem('selectedDates', JSON.stringify(this.selectedDates));
-      localStorage.setItem('currentStreak', this.currentStreak);
-      localStorage.setItem('recordStreak', this.recordStreak);
-      localStorage.setItem('medalCounter', this.medalCounter);
-      localStorage.setItem('darkMode', this.darkMode);
+    playGoldenCheer() {
+      const goldenCheer = new Audio(require('@/assets/golden_medal.mp3'));
+      goldenCheer.play().catch((error) => {
+        console.error("Failed to play the audio:", error);
+      });
     },
-    loadDataLocally() {
-      const selectedDates = JSON.parse(localStorage.getItem('selectedDates'));
-      if (selectedDates) {
-        this.selectedDates = selectedDates;
-      }
-      const currentStreak = localStorage.getItem('currentStreak');
-      if (currentStreak) {
-        this.currentStreak = parseInt(currentStreak);
-      }
-      const recordStreak = localStorage.getItem('recordStreak');
-      if (recordStreak) {
-        this.recordStreak = parseInt(recordStreak);
-      }
-      const medalCounter = localStorage.getItem('medalCounter');
-      if (medalCounter) {
-        this.medalCounter = parseInt(medalCounter);
-      }
-      const darkMode = localStorage.getItem('darkMode');
-      if (darkMode !== null) {
-        this.darkMode = JSON.parse(darkMode);
-      }
+    goToImageGallery() {
+      this.$router.push({ path: '/image-gallery' });
+    },
+    goToVueTrainer() {
+      this.$router.push({ path: '/vue-trainer' });
+    },
+    goToMealTracker() {
+      this.$router.push({ path: '/meal-tracker' });
+    },
+    goToSleepTracker() {
+      this.$router.push({ path: '/sleep-tracker' });
+    },
+    goToWaterIntake() {
+      this.$router.push({ path: '/water-intake' });
+    },
+    goToBMI() {
+      this.$router.push({ path: '/BMI-calculator' });
+    },
+    goToMusicPlayer() {
+      this.$router.push({ path: '/music' });
+    },
+    goBackHome() {
+      this.$router.push({ path: '/' });
+    },
+  },
+  watch: {
+  userId(newUserId, oldUserId) {
+    if (newUserId && newUserId !== oldUserId) {
+      this.fetchData();  
+    } else if (!newUserId) {
+      this.resetData();
     }
-  },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      vm.fetchData().then(() => {
-        vm.updateStreak();
-      });
-    });
-  },
-  async beforeRouteUpdate(to, from, next) {
-    await this.fetchData();
-    next();
-  },
-  mounted() {
-    this.loadDataLocally();
-    this.toggleDarkMode();
-    this.isNewMedalAdded = false;
-  },
-  updated() {
-    this.saveDataLocally();
   }
+}
 };
 </script>
 
