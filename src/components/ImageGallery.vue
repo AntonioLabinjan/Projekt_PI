@@ -63,8 +63,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import { getFirestore, collection, addDoc, deleteDoc, query, where, getDocs, doc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, collection, addDoc, deleteDoc, doc, getDocs } from 'firebase/firestore';
 
 export default {
   data() {
@@ -78,11 +78,10 @@ export default {
       },
       weightFilter: null,
       selectedImage: null,
+      images: [] // Local images state to store fetched images
     };
   },
   computed: {
-    ...mapState(['images']),
-
     filteredImages() {
       if (this.weightFilter) {
         const filteredWeight = parseInt(this.weightFilter);
@@ -95,16 +94,14 @@ export default {
   },
   methods: {
     async loadImages() {
-  const imageCollection = collection(this.$db, 'images');
-  const snapshot = await getDocs(imageCollection);
-  return snapshot.docs.map(doc => {
-    const data = doc.data();
-    data.id = doc.id;
-    return data;
-  });
-},
-
-
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        const imageCollection = collection(getFirestore(), 'users', user.uid, 'images');
+        const snapshot = await getDocs(imageCollection);
+        this.images = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      }
+    },
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
       if (this.darkMode) {
@@ -125,40 +122,43 @@ export default {
       }
     },
     async addImage() {
-  if (this.newImage.url) {
-    const { description, weight, url, date } = this.newImage;
-    const docRef = await addDoc(collection(this.$db, 'images'), {
-      description,
-      weight,
-      url,
-      date,
-    });
-    
-    this.newImage.id = docRef.id;
-
-    this.images.push(this.newImage);
-
-    this.newImage = {
-      description: '',
-      weight: 0,
-      url: '',
-      date: '',
-    };
-  }
-},
-async deleteImage(index) {
-  const imageToDelete = this.images[index];
-  const imageRef = collection(this.$db, 'images');
-
-  await deleteDoc(doc(imageRef, imageToDelete.id));
-  this.images.splice(index, 1);
-},
-
-    filterByWeight() {
-      // ovo već iman u computed
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user && this.newImage.url) {
+        const { description, weight, url, date } = this.newImage;
+        const docRef = await addDoc(collection(getFirestore(), 'users', user.uid, 'images'), {
+          description,
+          weight,
+          url,
+          date,
+        });
+        this.newImage.id = docRef.id;
+        this.images.push({ ...this.newImage, id: docRef.id });
+        this.resetForm();
+      }
+    },
+    async deleteImage(index) {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        const imageToDelete = this.images[index];
+        await deleteDoc(doc(getFirestore(), 'users', user.uid, 'images', imageToDelete.id));
+        this.images.splice(index, 1);
+      }
+    },
+    resetForm() {
+      this.newImage = {
+        description: '',
+        weight: 0,
+        url: '',
+        date: ''
+      };
+    },
+    showImageModal(image) {
+      this.selectedImage = image;
     },
     goToVueTrainer() {
-      this.$router.push({ path:'/vue-trainer' }); 
+      this.$router.push({ path:'/vue-trainer' });
     },
     goToMealTracker() {
       this.$router.push({ path: '/meal-tracker' });
@@ -178,25 +178,21 @@ async deleteImage(index) {
     goBackHome() {
       this.$router.push({ path: '/' });
     },
-    goToMusicPlayer(){
-      this.$router.push({path: '/music'});
-    },
-    showImageModal(image) {
-      this.selectedImage = image;
-    },
+    goToMusicPlayer() {
+      this.$router.push({ path: '/music' });
+    }
   },
-  async mounted() {
-  const db = getFirestore();
-  this.$db = db;
-
-  try {
-    const images = await this.loadImages();
-    this.$store.commit('setImages', images);
-  } catch (error) {
-    console.error('Error loading images:', error);
+  mounted() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.loadImages();
+      } else {
+        // Handle unauthenticated / log out state
+        this.images = [];
+      }
+    });
   }
-},
-
 };
 </script>
 
