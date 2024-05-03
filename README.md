@@ -3,16 +3,16 @@
 <ol>* sklepat filtriranje "postova" prema current useru (vidi samo ono ča je on stavija)</ol>
 USER FILTER
 Riješeno:
-* exercises
-* songs 
-* waterIntake
-* sleepEntries
-* mealTracker
-*Homepage da dohvaća samo od current usera balance
-
+<ul>* exercises</ul>
+<ul>* songs </ul>
+<ul>* waterIntake</ul>
+<ul>* sleepEntries</ul>
+<ul>* mealTracker</ul>
+<ul>*Homepage da dohvaća samo od current usera balance</ul>
+<ul>*image gallery</ul>
 TODO:
-*image gallery
-*streak
+
+*streak (već mi se plače radi ovega vraga :), ali nema plakanja, riješit ćemo to)
 
 
 NE TRIBA:
