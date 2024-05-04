@@ -141,30 +141,43 @@ export default {
   try {
     const auth = getAuth();
     const user = auth.currentUser;
-    const userSleepRef = collection(db, 'users', user.uid, 'sleepEntries');
-    await addDoc(userSleepRef, this.newSleepEntry)
-    this.newSleepEntry = {date: "", quality: 0, startTime: "", wakeTime: ""}
-    // console.log('Document written with ID: ', docRef.id);
-    
-    this.previousEntryDate = this.newSleepEntry.date; 
+    if (!user) {
+      throw new Error("No user logged in");
+    }
 
+    const userSleepRef = collection(db, 'users', user.uid, 'sleepEntries');
+    
+    if (this.newSleepEntry.date) {
+      this.checkDateDifference();
+    }
+
+    const docRef = await addDoc(userSleepRef, this.newSleepEntry);
+    console.log('Document written with ID: ', docRef.id);
+
+    this.previousEntryDate = this.newSleepEntry.date;
+
+    this.newSleepEntry = {date: "", quality: 0, startTime: "", wakeTime: ""};
     this.resetForm();
-    this.checkDateDifference();
+    
   } catch (error) {
     console.error('Error adding document: ', error);
   }
 },
 
 checkDateDifference() {
-  if (this.previousEntryDate) {
+  let differenceInDays = 0;  
+
+  if (this.previousEntryDate && this.newSleepEntry.date) {
     const currentDate = new Date(this.newSleepEntry.date);
     const previousDate = new Date(this.previousEntryDate);
-    const differenceInDays = Math.abs((currentDate - previousDate) / (1000 * 60 * 60 * 24));
-    
-    if(differenceInDays > 2) {
-      this.showAlert = true;
-    } 
+    differenceInDays = Math.abs((currentDate - previousDate) / (1000 * 60 * 60 * 24));
+  }
+
+  if (differenceInDays > 2) {
+    console.log("Fix sleep schedule");
+    this.showAlert = true;
   } else {
+    console.log("OK");
     this.showAlert = false;
   }
 },
@@ -259,9 +272,8 @@ async saveEditedSleepEntry() {
   } catch (error) {
     console.error('Error fetching sleep entries:', error);
   }
-  */
 }, }
-
+*/
 </script>
 
 <style scoped>
