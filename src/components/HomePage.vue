@@ -4,6 +4,7 @@
       <button @click="goToLogIn">Log In</button>
       <button @click="goToSignUp">Sign Up</button>
       <button @click="toggleDarkMode">{{ darkMode ? 'Light Mode' : 'Dark Mode' }}</button>
+      <button @click="viewUsers">View users</button>
     </div>
     <div class="header">
       <h1>Welcome to <span class="highlight">TrainingApp</span></h1>
@@ -166,6 +167,9 @@ async fetchExercises() {
     goToMusicPlayer(){
       this.$router.push({path: '/music'});
     },
+    viewUsers(){
+      this.$router.push({path: '/admin-login', query: { redirect:'/user-panel'}});
+    }
   },
   /*
   mounted() {
