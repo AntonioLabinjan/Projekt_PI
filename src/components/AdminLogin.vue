@@ -18,22 +18,30 @@
         isLoggedIn: false
       };
     },
-    methods: {login() {
+    methods: {
+  login() {
+    console.log("Entered email:", this.email);
+    console.log("Entered password:", this.password);
+    console.log("Expected email:", this.trueEmail);
+    console.log("Expected password:", this.truePassword);
+
     console.log("Current route path:", this.$route.path);
-    if (this.email === this.trueEmail && this.password === this.truePassword) {
+    if(this.email.trim().toLowerCase() === this.trueEmail.toLowerCase() && this.password.trim() === this.truePassword){
         this.isLoggedIn = true;
         const redirectPath = this.$route.query.redirect || '/';
         console.log(`Redirecting to ${redirectPath}`);
         this.$router.push(redirectPath);
     } else {
+        console.log("Login failed, redirecting to /error");
         this.$router.push('/error');
     }
+  }
 }
 
 
 
+
     }
-  }
-  // sve dela ako se mičen kroz searchbar preko /-a
+  
   </script>
   
