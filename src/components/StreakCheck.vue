@@ -1,5 +1,6 @@
 <template>
   <keep-alive>
+    <div>
     <div class="container" :class="{ 'dark-mode': darkMode }">
       <nav class="navbar">
         <ul>
@@ -48,6 +49,7 @@
       <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     </div>
     <user-bar></user-bar>
+    </div>
   </keep-alive>
 </template>
 
@@ -141,7 +143,7 @@ export default {
     removeDate(index) {
       if (!this.userId) return;
       const dateToRemove = this.selectedDates[index];
-      const dateToRemoveISO = dateToRemove.toISOString().slice(0, 10);
+      //const dateToRemoveISO = dateToRemove.toISOString().slice(0, 10);
       const datesRef = collection(db, 'users', this.userId, 'trainingDates');
       const q = query(datesRef, where('trainingDate', '==', dateToRemove));
       getDocs(q).then(snapshot => {
