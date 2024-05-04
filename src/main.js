@@ -27,6 +27,7 @@ import LocalTime from './components/LocalTime.vue';
 import MotivationalQuote from './components/MotivationalQuote.vue';
 import QrCodesDefault from './components/QRCodesDefault.vue';
 import QrCodesAdmin from './components/QRCodesAdmin.vue';
+import UserPanel from './components/UserPanel.vue';
 
 import firebase from 'firebase/app';
 import { getAuth } from 'firebase/auth';
@@ -52,7 +53,7 @@ function requiresAdmin(to, from, next) {
         if (doc.exists && doc.data().isAdmin) {
           next();
         } else {
-          next({ path: '/error' }); // tu bin moga napravit custom not admin error komponentu
+          next({ path: '/error' }); 
         }
       })
       .catch(error => {
@@ -77,8 +78,8 @@ const routes = [
   { path: '/BMI-calculator', component: BMICalculator, meta: { requiresAuth: true } },
   { path: '/about', component: AboutPage },
   { path: '/streak', component: StreakCheck, meta: { requiresAuth: true } },
-  { path: '/default-exercises', component: DefaultExercises  }, //tu još nadodat ovu liniju kad složin admina u FB => meta: {requiresAdmin: true}
-  { path: '/default-meals', component: DefaultMeals }, // tu još nadodat ovu liniju kad složin admina u FB => meta: {requiresAdmin: true}
+  { path: '/default-exercises', component: DefaultExercises  }, 
+  { path: '/default-meals', component: DefaultMeals }, 
   { path: '/NA-exercises', component: DefaultExercisesNotAdmin},
   { path: '/NA-meals', component: DefaultMealsNotAdmin},
   { path: '/qr-scanner', component: QrScanner, meta: { requiresAuth: true } },
@@ -87,7 +88,8 @@ const routes = [
   { path: '/error', component: ErrorPage},
   { path: '/admin-login', component: AdminLogin},
   { path: '/qr-codes-default', component: QrCodesDefault},
-  { path: '/qr-codes-admin', component: QrCodesAdmin }
+  { path: '/qr-codes-admin', component: QrCodesAdmin },
+  { path: '/user-panel', component: UserPanel }
 ];
 
 const router = createRouter({
@@ -138,6 +140,7 @@ app.component('LocalTime', LocalTime);
 app.component('MotivationalQuote', MotivationalQuote);
 app.component('QrCodesDefault', QrCodesDefault);
 app.component('QrCodesAdmin', QrCodesAdmin);
+app.component('UserPanel', UserPanel);
 app.use(router);
 app.use(store);
 
