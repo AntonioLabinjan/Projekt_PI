@@ -4,6 +4,7 @@
       <div class="pulse"></div>
     </div>
     <local-time></local-time>
+    <vue-header></vue-header>
     <router-view></router-view>
   </div>
 </template>
