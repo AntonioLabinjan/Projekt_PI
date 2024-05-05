@@ -160,6 +160,20 @@ export default {
       await updateDoc(doc(db, 'users', user.uid, 'exercises', this.editedExercise.id), this.editedExercise);
       this.editIndex = null;
     },
+    async saveEdit() {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user && this.editIndex !== null) {
+        const exerciseRef = doc(db, 'users', user.uid, 'exercises', this.exercises[this.editIndex].id);
+        await updateDoc(exerciseRef, this.editedExercise);
+        this.editIndex = null;
+        this.updatePieChart();
+      }
+    },
+    
+    
+
+
     cancelEdit() {
       this.editIndex = null;
     },
