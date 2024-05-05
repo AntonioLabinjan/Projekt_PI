@@ -28,6 +28,7 @@ import MotivationalQuote from './components/MotivationalQuote.vue';
 import QrCodesDefault from './components/QRCodesDefault.vue';
 import QrCodesAdmin from './components/QRCodesAdmin.vue';
 import UserPanel from './components/UserPanel.vue';
+import VueHeader from './components/VueHeader.vue'
 
 import firebase from 'firebase/app';
 import { getAuth } from 'firebase/auth';
@@ -53,7 +54,7 @@ function requiresAdmin(to, from, next) {
         if (doc.exists && doc.data().isAdmin) {
           next();
         } else {
-          next({ path: '/error' }); 
+          next({ path: '/error' }); // tu bin moga napravit custom not admin error komponentu
         }
       })
       .catch(error => {
@@ -78,8 +79,8 @@ const routes = [
   { path: '/BMI-calculator', component: BMICalculator, meta: { requiresAuth: true } },
   { path: '/about', component: AboutPage },
   { path: '/streak', component: StreakCheck, meta: { requiresAuth: true } },
-  { path: '/default-exercises', component: DefaultExercises  }, 
-  { path: '/default-meals', component: DefaultMeals }, 
+  { path: '/default-exercises', component: DefaultExercises  }, //tu još nadodat ovu liniju kad složin admina u FB => meta: {requiresAdmin: true}
+  { path: '/default-meals', component: DefaultMeals }, // tu još nadodat ovu liniju kad složin admina u FB => meta: {requiresAdmin: true}
   { path: '/NA-exercises', component: DefaultExercisesNotAdmin},
   { path: '/NA-meals', component: DefaultMealsNotAdmin},
   { path: '/qr-scanner', component: QrScanner, meta: { requiresAuth: true } },
@@ -141,6 +142,7 @@ app.component('MotivationalQuote', MotivationalQuote);
 app.component('QrCodesDefault', QrCodesDefault);
 app.component('QrCodesAdmin', QrCodesAdmin);
 app.component('UserPanel', UserPanel);
+app.component('VueHeader', VueHeader);
 app.use(router);
 app.use(store);
 
