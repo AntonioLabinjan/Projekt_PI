@@ -17,8 +17,8 @@
       <button @click="toggleDarkMode" class="dark-mode-button">{{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}</button>
     </div>
     <div class="search-bar">
-      <input type="text" v-model="searchQuery" placeholder="Pretraži...">
-      <button @click="search">Pretraži</button>
+      <input type="text" v-model="searchQuery" placeholder="Search...">
+      <button @click="search">Search</button>
     </div>
     <div v-if="filteredSongs.length === 0" class="no-results">No reuslts.</div>
     <ul v-else class="song-list">
