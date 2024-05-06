@@ -238,6 +238,9 @@ export default {
     goToMusicPlayer() {
       this.$router.push({ path:'/music' });
     },
+    goToWaterIntakeTracker(){
+      this.$router.push({path: '/water-intake'})
+    }
 
   },
   mounted() {
