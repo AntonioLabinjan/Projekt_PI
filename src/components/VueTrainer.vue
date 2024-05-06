@@ -154,12 +154,7 @@ export default {
       this.editIndex = index;
       this.editedExercise = { ...this.filteredExercises[index], id: this.filteredExercises[index].id };
     },
-    async saveEdit() {
-      const auth = getAuth();
-      const user = auth.currentUser;
-      await updateDoc(doc(db, 'users', user.uid, 'exercises', this.editedExercise.id), this.editedExercise);
-      this.editIndex = null;
-    },
+    
     async saveEdit() {
       const auth = getAuth();
       const user = auth.currentUser;
