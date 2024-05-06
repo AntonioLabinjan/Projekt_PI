@@ -20,7 +20,7 @@
       <input type="text" v-model="searchQuery" placeholder="Pretraži...">
       <button @click="search">Pretraži</button>
     </div>
-    <div v-if="filteredSongs.length === 0" class="no-results">Nema rezultata.</div>
+    <div v-if="filteredSongs.length === 0" class="no-results">No reuslts.</div>
     <ul v-else class="song-list">
       <li v-for="song in filteredSongs" :key="song.id" class="song-item">
         <span>{{ song.title }} by {{ song.author }} ({{ song.genre }})</span>
@@ -31,22 +31,22 @@
         </div>
       </li>
     </ul>
-    <button @click="showAddForm = true" class="add-button">Dodaj novu pjesmu</button>
+    <button @click="showAddForm = true" class="add-button">Add new song</button>
     <div v-if="showAddForm" class="add-form">
-      <input type="text" v-model="newSong.title" placeholder="Naslov">
-      <input type="text" v-model="newSong.author" placeholder="Autor">
-      <input type="text" v-model="newSong.genre" placeholder="Žanr">
+      <input type="text" v-model="newSong.title" placeholder="Title">
+      <input type="text" v-model="newSong.author" placeholder="Author">
+      <input type="text" v-model="newSong.genre" placeholder="Genre">
       <input type="text" v-model="newSong.youtubeLink" placeholder="YouTube link">
-      <button @click="addSong">Dodaj pjesmu</button> 
+      <button @click="addSong">Add song</button> 
     </div>
     <div v-if="showEditForm" class="edit-form">
-      <input type="text" v-model="editedSong.title" placeholder="Naslov">
-      <input type="text" v-model="editedSong.author" placeholder="Autor">
-      <input type="text" v-model="editedSong.genre" placeholder="Žanr">
+      <input type="text" v-model="editedSong.title" placeholder="Title">
+      <input type="text" v-model="editedSong.author" placeholder="Author">
+      <input type="text" v-model="editedSong.genre" placeholder="Genre">
       <input type="text" v-model="editedSong.youtubeLink" placeholder="YouTube link">
-      <button @click="saveEdit">Spremi promjene</button>
+      <button @click="saveEdit">Save changes</button>
     </div>
-    <button @click="goBackHome" class="back-button">Povratak na početnu</button>
+    <button @click="goBackHome" class="back-button">Go back home</button>
 
     <div class="genre-counter">
   <h2>Genre Counter</h2>
