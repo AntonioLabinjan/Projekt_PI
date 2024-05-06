@@ -1,7 +1,7 @@
 <template>
   <div class="user-info" v-if="currentUser">
-    <p><b>Trenutno ulogirani korisnik:</b> {{ currentUser.email }}</p>
-    <li><button @click="logout">Odlogiraj se</button></li>
+    <p><b>Current user:</b> {{ currentUser.email }}</p>
+    <li><button @click="logout">Logout</button></li>
   </div>
 </template>
 
@@ -19,11 +19,11 @@ export default {
     async logout() {
       try {
         await signOut(auth);
-        window.alert("Uspješno ste se odlogirali.");
+        window.alert("Successfull logout.");
         this.$router.push('/');
       } catch (error) {
-        console.error('Greška prilikom odlogiranja:', error);
-        window.alert("Došlo je do pogreške prilikom odlogiranja.");
+        console.error('Logout error:', error);
+        window.alert("There has been an error while logging out.");
       }
     },
   },
