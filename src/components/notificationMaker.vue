@@ -1,15 +1,15 @@
 <template>
   <div>
-    <label for="training-date">Datum i vrijeme treninga:</label>
+    <label for="training-date">Training date and time:</label>
     <input type="datetime-local" id="training-date" v-model="trainingDateTime">
     
-    <label for="notification-time">Vrijeme za notifikaciju (u minutama):</label>
+    <label for="notification-time">Notification time (in minutes):</label>
     <input type="number" id="notification-time" v-model.number="notificationTime">  
     
-    <button @click="scheduleNotification">Zabilježi trening i postavi notifikaciju</button>
+    <button @click="scheduleNotification">Schedule a training and set notification</button>
 
     <div v-if="countdown > 0">
-      <p>Ostalo vremena do notifikacije: {{ countdown }} sekundi</p>
+      <p>Time left until notification : {{ countdown }} seconds</p>
     </div>
 
     <div v-for="(notification, index) in notifications" :key="index">
@@ -62,8 +62,8 @@ export default {
       if (user) {
         const notificationsRef = collection(db, 'notifications');
         await setDoc(doc(notificationsRef, user.uid), {
-          title: 'Vrijeme za trening',
-          message: `Vrijeme je za trening koji je zakazan za: ${new Date(this.trainingDateTime).toLocaleString()}`
+          title: 'Time for training',
+          message: `It is time for your training scheduled at: ${new Date(this.trainingDateTime).toLocaleString()}`
         });
       }
     },
@@ -78,12 +78,12 @@ export default {
     sendNotification() {
       if (Notification.permission === 'granted') {
         const notificationDateTime = new Date(this.trainingDateTime).toLocaleString();
-        this.createNotification('Vrijeme za trening', `Vrijeme je za trening koji je zakazan za: ${notificationDateTime}`);
+        this.createNotification('Time for training', `It is time for your training scheduled at: ${notificationDateTime}`);
       } else if (Notification.permission !== 'denied') {
         Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
             const notificationDateTime = new Date(this.trainingDateTime).toLocaleString();
-            this.createNotification('Vrijeme za trening', `Vrijeme je za trening koji je zakazan za: ${notificationDateTime}`);
+            this.createNotification('Time for training', `It is time for your training scheduled at:: ${notificationDateTime}`);
           }
         });
       }
