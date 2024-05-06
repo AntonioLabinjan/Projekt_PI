@@ -1,8 +1,8 @@
 <template>
   <div class="about container" :class="{ 'dark-mode': darkMode }">
-    <h2>About Vue Trainer</h2>
+    <h2>About TrainingMate 2.0</h2>
     <hr>
-    <p>Welcome to <b>Vue Trainer</b>, your ultimate fitness companion!</p>
+    <p>Welcome to <b>TrainingMate 2.0</b>, your ultimate fitness companion!</p>
     <p>With Vue Trainer, you can easily track your progress in various aspects of your health and fitness journey:</p>
     <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
 
@@ -51,13 +51,17 @@
         <h3 class="feature-title">Enable yourself to train persistently</h3>
         <p>Set notifications to remind you of regular training</p>
       </div> 
+      <div class="feature">
+        <h3 class="feature-title">Scan QR codes for cool trainings</h3>
+        <p>Use our premium QR codes to find various fitness videos</p>
+      </div>
     </div>
 
-    <p>For all these features, Vue Trainer provides CRUD operations, along with user authentication through login and sign-up functionalities.</p>
+    <p>For all these features, TrainingMate 2.0 provides CRUD operations, along with user authentication through login and sign-up functionalities.</p>
 
-    <p>Join Vue Trainer today and embark on your journey towards a healthier lifestyle!</p>
+    <p>Join TraingMate 2.0 today and embark on your journey towards a healthier lifestyle!</p>
 
-    <!-- New section about the author -->
+
     <div class="author-info">
       <h3 class="feature-title" style="color: blue;">About the Author</h3>
       <p><b>Name:</b> Antonio Labinjan</p>
@@ -72,7 +76,6 @@
       <p>   <b> Phone:</b> 0919135146</p>
     </div>
 
-    <!-- Button to go back home -->
     <button @click="goToExerciseSuggestions">Go to Exercise suggestions</button>
     <button @click="goToMealSuggestions">Go to Meal suggestions</button>
     <hr>
