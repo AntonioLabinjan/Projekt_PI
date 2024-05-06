@@ -7,7 +7,7 @@
       <button @click="viewUsers">View users</button>
     </div>
     <div class="header">
-      <h1>Welcome to <span class="highlight">TrainingApp</span></h1>
+      <h1>Welcome to <span class="highlight">TrainingMate 2.0</span></h1>
       <hr>
       <h4>Your personal training application</h4>
       <p>Add your exercises, meals, sleep, water intake, calculate your BMI, and track your progress!</p>
