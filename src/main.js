@@ -31,6 +31,7 @@ import UserPanel from './components/UserPanel.vue';
 import VueHeader from './components/VueHeader.vue';
 import TesterComponent from './components/TesterComponent.vue';
 import DarkModeButton from './components/DarkModeButton.vue';
+import MapFrame from './components/MapFrame.vue';
 
 import firebase from 'firebase/app';
 import { getAuth } from 'firebase/auth';
@@ -93,7 +94,8 @@ const routes = [
   { path: '/qr-codes-default', component: QrCodesDefault},
   { path: '/qr-codes-admin', component: QrCodesAdmin },
   { path: '/user-panel', component: UserPanel },
-  { path: '/test-test', component: TesterComponent}
+  { path: '/test-test', component: TesterComponent},
+  { path: '/map', component: MapFrame}
 ];
 
 const router = createRouter({
@@ -148,6 +150,7 @@ app.component('UserPanel', UserPanel);
 app.component('VueHeader', VueHeader);
 app.component('TesterComponent', TesterComponent);
 app.component('DarkModeButton', DarkModeButton);
+app.component('MapFrame', MapFrame);
 app.use(router);
 app.use(store);
 
