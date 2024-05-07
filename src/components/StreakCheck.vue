@@ -58,21 +58,22 @@ import { db } from '@/firebase';
 import { collection, addDoc, getDoc, updateDoc, doc, getDocs, deleteDoc, query, where, orderBy } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase'; 
+import { mapState, mapActions } from 'vuex';
 
 export default {
+  computed: {
+    ...mapState(['currentStreak', 'recordStreak', 'medalCounter', 'selectedDates'])
+  },
   data() {
     return {
       darkMode: false,
-      selectedDates: [],
-      currentStreak: 0,
-      recordStreak: 0,
-      customDate: null,
-      medalCounter: 0,
-      userId: null,
+    customDate: null,
+    userId: null,
     };
   },
   created() {
     this.initAuthWatcher();
+    this.fetchData();
   },
   methods: {
     initAuthWatcher() {
@@ -86,17 +87,34 @@ export default {
         }
       });
     },
+    ...mapActions(['updateStreak', 'updateMedals', 'updateSelectedDates']),
     resetData() {
       this.selectedDates = [];
       this.currentStreak = 0;
       this.recordStreak = 0;
       this.medalCounter = 0;
     },
-    fetchData() {
-      if (!this.userId) return;
-      this.fetchStreakData();
-      this.fetchDates();
-    },
+    async fetchData() {
+  if (!this.userId) return;
+  
+  const streaksRef = doc(db, 'users', this.userId, 'streaks', 'userStreaks');
+  const streakData = await getDoc(streaksRef);
+  if (streakData.exists()) {
+    const data = streakData.data();
+    this.$store.dispatch('setInitialData', {
+      currentStreak: data.currentStreak || 0,
+      recordStreak: data.recordStreak || 0,
+      medalCounter: data.medalCounter || 0,
+      selectedDates: data.selectedDates || []
+    });
+  }
+
+  const datesRef = collection(db, 'users', this.userId, 'trainingDates');
+  const queryRef = query(datesRef, orderBy('trainingDate', 'asc'));
+  const dateDocs = await getDocs(queryRef);
+  this.$store.dispatch('updateSelectedDates', dateDocs.docs.map(doc => doc.data().trainingDate.toDate()));
+},
+
     fetchStreakData() {
       const streaksRef = doc(db, 'users', this.userId, 'streaks', 'userStreaks');
       getDoc(streaksRef).then(docSnap => {
@@ -158,53 +176,46 @@ export default {
       });
     },
     async updateStreak() {
-      this.isNewMedalAdded = false;
+    if (this.selectedDates.length === 0) {
+      this.$store.dispatch('updateCurrentStreak', 0);
+      this.$store.dispatch('updateRecordStreak', this.recordStreak);
+      return;
+    }
 
-      if (this.selectedDates.length === 0) {
-        this.currentStreak = 0;
-        this.recordStreak = 0;
-        this.medalCounter = 0;
-        this.prevStreak = 0;
-        return;
+    const sortedDates = [...this.selectedDates].sort((a, b) => a - b);
+    let currentStreak = 1;
+    let maxStreak = 0;
+    let lastDate = sortedDates[0];
+
+    sortedDates.forEach((date, index) => {
+      if (index === 0) return; 
+
+      const currentDate = new Date(date);
+      const previousDate = new Date(lastDate);
+      const diffTime = Math.abs(currentDate - previousDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 1) {
+        currentStreak++;
+      } else {
+        currentStreak = 1; 
       }
 
-      let streak = 1;
-      for (let i = 1; i < this.selectedDates.length; i++) {
-        const prevDate = new Date(this.selectedDates[i - 1]);
-        const currentDate = new Date(this.selectedDates[i]);
-        const prevTime = prevDate.getTime();
-        const currentTime = currentDate.getTime();
-        const oneDay = 1000 * 60 * 60 * 24;
-
-        if ((currentTime - prevTime) / oneDay === 1) {
-          streak++;
-        } else {
-          streak = 1;
-        }
+      if (currentStreak > maxStreak) {
+        maxStreak = currentStreak;
       }
 
-      this.recordStreak = Math.max(this.recordStreak, streak);
+      lastDate = date; 
+    });
 
-      if ((streak % 3 === 0 || streak % 7 === 0) && streak !== 0) {
-        if (!this.isNewMedalAdded) {
-          this.medalCounter++;
-          this.isNewMedalAdded = true;
-        }
-      }
+    const newRecordStreak = Math.max(this.recordStreak, maxStreak);
+    this.$store.dispatch('updateCurrentStreak', currentStreak);
+    this.$store.dispatch('updateRecordStreak', newRecordStreak);
 
-      this.currentStreak = streak;
-
-      try {
-        const docRef = doc(db, 'streaks', 'userStreaks');
-        await updateDoc(docRef, {
-          currentStreak: this.currentStreak,
-          recordStreak: this.recordStreak,
-          medalCounter: this.medalCounter
-        });
-      } catch (error) {
-        console.error('Error updating streaks document: ', error);
-      }
-    },
+    if (currentStreak % 3 === 0 || currentStreak % 7 === 0) {
+      this.$store.dispatch('updateMedalCounter', this.medalCounter + 1);
+    }
+  },
     toggleDarkMode() {
       var element = document.body;
       this.darkMode = !this.darkMode;
