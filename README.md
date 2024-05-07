@@ -1,4 +1,7 @@
 ### TODO:
+<ol>* implementirat neku mapu za nešto</ol>
+<ol>* implementirat neku foru da korisnik more komunicirat s ChatGPT-jen</ol>
+<ol>* napravit da se nekamo vidi streak od svih korisnika (svakega posebno), pa se kao moru natjecat</ol>
 <ol>* popravak CSS-a</ol>
 Još css
 
