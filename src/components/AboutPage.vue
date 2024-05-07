@@ -3,7 +3,7 @@
     <h2>About TrainingMate 2.0</h2>
     <hr>
     <p>Welcome to <b>TrainingMate 2.0</b>, your ultimate fitness companion!</p>
-    <p>With Vue Trainer, you can easily track your progress in various aspects of your health and fitness journey:</p>
+    <p>With this app, you can easily track your progress in various aspects of your health and fitness journey:</p>
     <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
 
     <div class="feature-list">
