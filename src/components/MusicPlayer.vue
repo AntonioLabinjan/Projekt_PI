@@ -39,6 +39,10 @@
       <input type="text" v-model="newSong.youtubeLink" placeholder="YouTube link">
       <button @click="addSong">Add song</button> 
     </div>
+    <div v-if="currentSongUrl" class="video-player">
+  <iframe width="560" height="315" :src="currentSongUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <button @click="closeVideo" class="close-video-button">Close</button>
+</div>
     <div v-if="showEditForm" class="edit-form">
       <input type="text" v-model="editedSong.title" placeholder="Title">
       <input type="text" v-model="editedSong.author" placeholder="Author">
@@ -67,6 +71,7 @@ import { db } from '@/firebase';
 export default {
   data() {
     return {
+      currentSongUrl: '',
       searchQuery: '',
       showAddForm: false,
       showEditForm: false,
@@ -111,9 +116,13 @@ export default {
     goToStreak() {
       this.$router.push({ path: '/streak' });
     },
+    closeVideo() {
+    this.currentSongUrl = '';
+  },
     play(song) {
-      window.open(song.youtubeLink);
-    },
+  let embedLink = song.youtubeLink.replace("watch?v=", "embed/");
+  this.currentSongUrl = embedLink;
+},
     toggleDarkMode() {
       this.isDarkMode = !this.isDarkMode;
     },
@@ -322,5 +331,26 @@ export default {
   background-color: #ccc;
   color: #000;
 }
+
+.video-player {
+  margin: 20px auto;
+  max-width: 560px;
+}
+
+.close-video-button {
+  display: block;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background-color: #ff4444; 
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.dark-mode .close-video-button {
+  background-color: #e63946; 
+}
+
 
 </style>
