@@ -28,7 +28,9 @@ import MotivationalQuote from './components/MotivationalQuote.vue';
 import QrCodesDefault from './components/QRCodesDefault.vue';
 import QrCodesAdmin from './components/QRCodesAdmin.vue';
 import UserPanel from './components/UserPanel.vue';
-import VueHeader from './components/VueHeader.vue'
+import VueHeader from './components/VueHeader.vue';
+import TesterComponent from './components/TesterComponent.vue';
+import DarkModeButton from './components/DarkModeButton.vue';
 
 import firebase from 'firebase/app';
 import { getAuth } from 'firebase/auth';
@@ -79,8 +81,8 @@ const routes = [
   { path: '/BMI-calculator', component: BMICalculator, meta: { requiresAuth: true } },
   { path: '/about', component: AboutPage },
   { path: '/streak', component: StreakCheck, meta: { requiresAuth: true } },
-  { path: '/default-exercises', component: DefaultExercises  }, //tu još nadodat ovu liniju kad složin admina u FB => meta: {requiresAdmin: true}
-  { path: '/default-meals', component: DefaultMeals }, // tu još nadodat ovu liniju kad složin admina u FB => meta: {requiresAdmin: true}
+  { path: '/default-exercises', component: DefaultExercises  }, 
+  { path: '/default-meals', component: DefaultMeals }, 
   { path: '/NA-exercises', component: DefaultExercisesNotAdmin},
   { path: '/NA-meals', component: DefaultMealsNotAdmin},
   { path: '/qr-scanner', component: QrScanner, meta: { requiresAuth: true } },
@@ -90,7 +92,8 @@ const routes = [
   { path: '/admin-login', component: AdminLogin},
   { path: '/qr-codes-default', component: QrCodesDefault},
   { path: '/qr-codes-admin', component: QrCodesAdmin },
-  { path: '/user-panel', component: UserPanel }
+  { path: '/user-panel', component: UserPanel },
+  { path: '/test-test', component: TesterComponent}
 ];
 
 const router = createRouter({
@@ -143,6 +146,8 @@ app.component('QrCodesDefault', QrCodesDefault);
 app.component('QrCodesAdmin', QrCodesAdmin);
 app.component('UserPanel', UserPanel);
 app.component('VueHeader', VueHeader);
+app.component('TesterComponent', TesterComponent);
+app.component('DarkModeButton', DarkModeButton);
 app.use(router);
 app.use(store);
 
