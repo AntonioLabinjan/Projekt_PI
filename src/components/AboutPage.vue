@@ -79,6 +79,14 @@
     <button @click="goToExerciseSuggestions">Go to Exercise suggestions</button>
     <button @click="goToMealSuggestions">Go to Meal suggestions</button>
     <hr>
+    <div>
+    <map-frame></map-frame>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <button @click="goBackHome">Go Back Home</button>
   </div>
 </template>
@@ -255,7 +263,7 @@ button:hover {
   margin: 5px;
   cursor: pointer;
   border-radius: 5px;
-  transition: background-color 0.3s ease, transform 0.3s ease; /* Added transition for background color change and scaling */
+  transition: background-color 0.3s ease, transform 0.3s ease; 
 }
 
 .login-signup-buttons button:hover,
@@ -264,27 +272,27 @@ button:hover {
 .caloric-balance button:hover,
 .motivational-quote button:hover {
   background-color: #45a049;
-  transform: scale(1.05); /* Increased button size on hover */
+  transform: scale(1.05); 
 }
 
 .header {
-  position: relative; /* Ensure stacking context for z-index */
-  z-index: 1; /* Place header above overlay */
+  position: relative; 
+  z-index: 1; 
 }
 
 .header h1 {
   margin-top: 0;
-  font-size: 2.5em; /* Increase font size for emphasis */
-  text-transform: uppercase; /* Make heading uppercase for boldness */
+  font-size: 2.5em; 
+  text-transform: uppercase; 
 }
 
 .header h4 {
-  font-size: 1.2em; /* Increase font size for emphasis */
+  font-size: 1.2em; 
 }
 
 .motivational-quote {
-  position: relative; /* Ensure stacking context for z-index */
-  z-index: 1; /* Place quote above overlay */
+  position: relative; 
+  z-index: 1; 
 }
 
 .motivational-quote p {
@@ -293,15 +301,37 @@ button:hover {
 }
 
 .motivational-quote button {
-  font-weight: bold; /* Make button text bold for emphasis */
-  border: 2px solid #4CAF50; /* Add border for extra definition */
+  font-weight: bold; 
+  border: 2px solid #4CAF50; 
 }
 
 .motivational-quote button:hover {
-  background-color: #4CAF50; /* Adjust hover background color to match border color */
+  background-color: #4CAF50; 
 }
 
 .caloric-balance p {
   font-weight: bold;
 }   
+
+.map-frame {
+  margin-top: 20px; 
+  position: relative; 
+  z-index: 0; 
+}
+
+.button-container {
+  position: relative;
+  z-index: 1; 
+}
+
+.about {
+  position: relative;
+  padding-bottom: 20px; 
+}
+
+button {
+  margin-top: 20px; 
+}
+
+
 </style>
