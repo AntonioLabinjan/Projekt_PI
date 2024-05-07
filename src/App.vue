@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div :class="{'dark-mode': isDark}" class="dark-mode-toggle-container">
+      <ToggleSwitch v-model="isDark" />
+    </div>
     <div class="loading-pulse" v-if="isLoading">
       <div class="pulse"></div>
     </div>
@@ -10,11 +13,16 @@
 </template>
 
 <script>
+import ToggleSwitch from 'C:/Users/Korisnik/Desktop/TrainingAPP-final-almost--master/src/components/DarkModeButton.vue';
 export default {
   name: 'App',
+  components: {
+    ToggleSwitch
+  },
   data() {
     return {
       isLoading: false,
+      isDark: false
     };
   },
   created() {
@@ -42,6 +50,11 @@ export default {
   margin-top: 60px;
   background: linear-gradient(to right, #0facaf, #0d9561);
   min-height: 100vh; 
+}
+
+.dark-mode-toggle-container {
+  text-align: left; 
+  padding-left: 10px; 
 }
 
 .loading-pulse {
@@ -72,5 +85,10 @@ export default {
     transform: scale(0.8);
     opacity: 1;
   }
+}
+
+.dark-mode {
+  background-color: black;
+  color: white; 
 }
 </style>
