@@ -78,6 +78,7 @@
 
     <button @click="goToExerciseSuggestions">Go to Exercise suggestions</button>
     <button @click="goToMealSuggestions">Go to Meal suggestions</button>
+    <button @click="goToEvents">Go to Sport events</button>
     <hr>
     <div>
     <map-frame></map-frame>
@@ -108,6 +109,9 @@ export default {
     },
     goToMealSuggestions() {
       this.$router.push({ path: '/NA-meals' });
+    },
+    goToEvents(){
+      this.$router.push({ path: '/sport-events'});
     },
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
