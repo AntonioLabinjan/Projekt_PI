@@ -1,5 +1,9 @@
 <template>
     <div :class="{ 'dark-mode': darkMode }">
+        
+      <button @click="toggleDarkMode" class="btn btn-dark">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
+      <button @click="editAsAdmin">Edit as admin</button>
+      <button @click="goBack">Go Back</button>
       <h1 class="h1" :class="{'dark-mode': darkMode}">Sports Event Gallery</h1>
       <hr>
       <div v-for="(event, index) in events" :key="index" class="event">
@@ -7,29 +11,9 @@
         <p><strong>Location:</strong> {{ event.location }}</p>
         <p><strong>Start Time:</strong> {{ event.startTime }}</p>
         <p><strong>Participation Fee:</strong> {{ event.fee }}</p>
-        <button @click="editEvent(index)" class="edit">Edit</button>
-        <button @click="deleteEvent(index)" class="delete">Delete</button>
         <hr>
       </div>
-  
-      <h2 v-if="editMode">Edit Event</h2>
-      <h2 v-else>Add New Event</h2>
-      <form @submit.prevent="submitEvent">
-        <label>Event Name:</label>
-        <input type="text" v-model="newEvent.name" required><br>
-        <label>Location:</label>
-        <input type="text" v-model="newEvent.location" required><br>
-        <label>Start Time:</label>
-        <input type="datetime-local" v-model="newEvent.startTime" required><br>
-        <label>Participation Fee:</label>
-        <input type="number" v-model="newEvent.fee" required><br>
-        <button type="submit" v-if="editMode">Save Changes</button>
-        <button type="submit" v-else>Add Event</button>
-        <button type="button" @click="cancelEdit" v-if="editMode">Cancel</button>
-      </form>
       <event-map></event-map>
-      <button @click="toggleDarkMode" class="btn btn-dark">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
-      <button @click="goBack">Go Back</button>
     </div>
   </template>
     <script>
@@ -105,7 +89,10 @@
         },
         goBack(){
           this.$router.push('/about');
-        }
+        },
+        editAsAdmin(){
+      this.$router.push({ path: '/admin-login', query: { redirect: '/admin-events'} });
+    },
       }
     };
     </script>
