@@ -33,6 +33,7 @@ import TesterComponent from './components/TesterComponent.vue';
 import DarkModeButton from './components/DarkModeButton.vue';
 import MapFrame from './components/MapFrame.vue';
 import SportEvents from './components/SportEvents.vue';
+import SportEventsAdmin from './components/SportEventsAdmin.vue'
 import EventMap from './components/EventMap.vue';
 
 
@@ -99,7 +100,8 @@ const routes = [
   { path: '/user-panel', component: UserPanel },
   { path: '/test-test', component: TesterComponent},
   { path: '/map', component: MapFrame},
-  { path: '/sport-events', component: SportEvents}
+  { path: '/sport-events', component: SportEvents},
+  { path: '/admin-events', component: SportEventsAdmin}
 
 ];
 
@@ -158,6 +160,7 @@ app.component('DarkModeButton', DarkModeButton);
 app.component('MapFrame', MapFrame);
 app.component('SportEvents', SportEvents);
 app.component('EventMap', EventMap);
+app.component('SportEventsAdmin', SportEventsAdmin);
 app.use(router);
 app.use(store);
 
