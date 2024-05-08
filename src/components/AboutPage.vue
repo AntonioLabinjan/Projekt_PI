@@ -63,18 +63,24 @@
 
 
     <div class="author-info">
-      <h3 class="feature-title" style="color: blue;">About the Author</h3>
-      <p><b>Name:</b> Antonio Labinjan</p>
-      <p><b>Occupation:</b> 2nd-year student of Computer Science at the Faculty of Informatics in Pula</p>
-      <p><b>Mentor:</b> Nikola Tanković</p>
-      <p><b>Course:</b> Software Engineering</p>
-      <p><b>Academic Year:</b> 2023/24</p>
-      <p><b>GitHub:</b> <a href="https://github.com/AntonioLabinjan" target="_blank">github.com/AntonioLabinjan</a></p>
-      <p><b>Contact:</b></p>
-      <p>   <b> Personal email:</b> alabinjan6@gmail.com</p>
-      <p>   <b> Official email:</b> alabinjan@unipu.hr</p>
-      <p>   <b> Phone:</b> 0919135146</p>
-    </div>
+    <h3 class="feature-title" style="color: blue;">About the Author</h3>
+    <p><b>Name:</b> Antonio Labinjan</p>
+    <p><b>Occupation:</b> 2nd-year student of Computer Science at the Faculty of Informatics in Pula</p>
+    <p><b>Mentor:</b> Nikola Tanković</p>
+    <p><b>Course:</b> Software Engineering</p>
+    <p><b>Academic Year:</b> 2023/24</p>
+    <p><b>GitHub:</b> <a href="https://github.com/AntonioLabinjan" target="_blank">github.com/AntonioLabinjan</a></p>
+    <p><b>Contact:</b></p>
+    <p>
+        <b> Personal email:</b> alabinjan6@gmail.com 
+        <button @click="openGmail('alabinjan6@gmail.com')">Email</button>
+    </p>
+    <p>
+        <b> Official email:</b> alabinjan@unipu.hr 
+        <button @click="openGmail('alabinjan@unipu.hr')">Email</button>
+    </p>
+    <p><b> Phone:</b> 0919135146</p>
+</div>
 
     <button @click="goToExerciseSuggestions">Go to Exercise suggestions</button>
     <button @click="goToMealSuggestions">Go to Meal suggestions</button>
@@ -98,6 +104,8 @@ export default {
   data() {
     return {
       darkMode: false,
+      email1: 'alabinjan6@gmail.com',
+      email2: 'alabinjan@unipu.hr'
     };
   },
   methods: {
@@ -116,7 +124,10 @@ export default {
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
     },
-  }
+    openGmail(email) {
+  window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email}`, '_blank')
+  },
+}
 };
 </script>
 
