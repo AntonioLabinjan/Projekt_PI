@@ -35,11 +35,11 @@
         <p>Record streak: {{ recordStreak }}</p>
         <div v-if="currentStreak >= 3 && currentStreak % 3 === 0" class="reward bounce-animation">
           <p>Congratulations! You've earned 3-day streak award!</p>
-          <img src="@/assets/silver_medal.jpg" alt="Streak Master Badge" @click="playCheer">
+          <img src="@/assets/silver_medal.jpg" alt="Streak Master Badge" @click="handleAwardClick">
         </div>
         <div v-if="currentStreak >= 7 && currentStreak % 7 === 0" class="reward bounce-animation">
           <p>Congratulations! You've earned 7-day streak award!</p>
-          <img src="@/assets/medal.jpg" alt="Streak Master Badge" @click="playGoldenCheer">
+          <img src="@/assets/medal.jpg" alt="Streak Master Badge" @click="handleAwardClick2">
         </div>
       </div>
 
@@ -55,13 +55,14 @@
 
 <script>
 import { db } from '@/firebase';
-import { collection, addDoc, getDoc, updateDoc, doc, getDocs, deleteDoc, query, where, orderBy } from 'firebase/firestore';
+import { collection, addDoc, getDoc, /*updateDoc,*/ doc, getDocs, deleteDoc, query, where, orderBy } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase'; 
 import { mapState, mapActions } from 'vuex';
 
 export default {
   computed: {
+    ...mapActions(['incrementMedalCounter', 'otherActions']),
     ...mapState(['currentStreak', 'recordStreak', 'medalCounter', 'selectedDates'])
   },
   data() {
@@ -76,6 +77,17 @@ export default {
     this.fetchData();
   },
   methods: {
+    handleAwardClick() {
+    this.playCheer();
+    this.incrementCounter();
+  },
+    handleAwardClick2(){
+      this.playGoldenCheer();
+      this.incrementCounter();
+    },
+    incrementCounter() {
+    this.$store.dispatch('incrementMedalCounter');
+  },
     initAuthWatcher() {
       onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -176,46 +188,48 @@ export default {
       });
     },
     async updateStreak() {
-    if (this.selectedDates.length === 0) {
-      this.$store.dispatch('updateCurrentStreak', 0);
-      this.$store.dispatch('updateRecordStreak', this.recordStreak);
-      return;
+  if (this.selectedDates.length === 0) {
+    this.$store.dispatch('updateCurrentStreak', 0);
+    this.$store.dispatch('updateRecordStreak', this.recordStreak);
+    return;
+  }
+
+  const sortedDates = [...this.selectedDates].sort((a, b) => a - b);
+  let currentStreak = 1;
+  let maxStreak = 0;
+  let lastDate = sortedDates[0];
+
+  sortedDates.forEach((date, index) => {
+    if (index === 0) return; 
+
+    const currentDate = new Date(date);
+    const previousDate = new Date(lastDate);
+    const diffTime = Math.abs(currentDate - previousDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) {
+      currentStreak++;
+    } else {
+      currentStreak = 1; 
     }
 
-    const sortedDates = [...this.selectedDates].sort((a, b) => a - b);
-    let currentStreak = 1;
-    let maxStreak = 0;
-    let lastDate = sortedDates[0];
-
-    sortedDates.forEach((date, index) => {
-      if (index === 0) return; 
-
-      const currentDate = new Date(date);
-      const previousDate = new Date(lastDate);
-      const diffTime = Math.abs(currentDate - previousDate);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-      if (diffDays === 1) {
-        currentStreak++;
-      } else {
-        currentStreak = 1; 
-      }
-
-      if (currentStreak > maxStreak) {
-        maxStreak = currentStreak;
-      }
-
-      lastDate = date; 
-    });
-
-    const newRecordStreak = Math.max(this.recordStreak, maxStreak);
-    this.$store.dispatch('updateCurrentStreak', currentStreak);
-    this.$store.dispatch('updateRecordStreak', newRecordStreak);
-
-    if (currentStreak % 3 === 0 || currentStreak % 7 === 0) {
-      this.$store.dispatch('updateMedalCounter', this.medalCounter + 1);
+    if (currentStreak > maxStreak) {
+      maxStreak = currentStreak;
     }
-  },
+
+    lastDate = date; // Update lastDate for the next iteration
+  });
+
+  const newRecordStreak = Math.max(this.recordStreak, maxStreak);
+  this.$store.dispatch('updateCurrentStreak', currentStreak);
+  this.$store.dispatch('updateRecordStreak', newRecordStreak);
+
+  // Check and update medal counter if streak criteria are met
+  if ((currentStreak % 3 === 0 || currentStreak % 7 === 0) && currentStreak !== this.currentStreak) {
+    this.$store.dispatch('updateMedalCounter', this.medalCounter + 1);
+  }
+},
+
     toggleDarkMode() {
       var element = document.body;
       this.darkMode = !this.darkMode;
