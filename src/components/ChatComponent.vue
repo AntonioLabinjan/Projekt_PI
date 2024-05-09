@@ -87,19 +87,19 @@ export default {
 .message {
   background-color: #f9f9f9;
   padding: 10px 15px;
-  padding-right: 100px; /* Povećajte desni padding kako timestamp ne bi bio prekriven */
+  padding-right: 100px; 
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-bottom: 8px;
   max-width: 80%;
   word-wrap: break-word;
-  position: relative; /* Dodano za pozicioniranje timestamp-a */
-  align-self: flex-start; /* Default alignment */
+  position: relative;
+  align-self: flex-start; 
 }
 
 .message.mine {
-  background-color: #daf1da; /* Light green for user's own messages */
-  align-self: flex-end; /* Align own messages to the right */
+  background-color: #daf1da;
+  align-self: flex-end; 
 }
 
 .message strong {
@@ -110,9 +110,9 @@ export default {
 }
 
 .timestamp {
-  position: absolute; /* Absolute positioning inside the message */
-  top: 5px; /* Postavite vrh timestamp-a na 5px od gornjeg ruba */
-  right: 10px; /* Postavite desni rub timestamp-a na 10px od desnog ruba */
+  position: absolute; 
+  bottom: 5px; 
+  right: 10px; 
   font-size: 12px;
   color: #7f8c8d;
 }
@@ -148,7 +148,7 @@ button:hover {
 
 .user-bar {
   width: 100%;
-  background-color: #eeeeee; /* Light gray background for user bar */
+  background-color: #eeeeee;
   padding: 10px 0;
   text-align: center;
 }
@@ -156,10 +156,10 @@ button:hover {
   padding: 3px 6px;
   font-size: 12px;
   color: #fff;
-  background-color: #f44336; /* Red color for delete button */
+  background-color: #f44336; 
 }
 
 .edit-button {
-  background-color: #ff9800; /* Orange color for edit button */
+  background-color: #ff9800; 
 }
 </style>
