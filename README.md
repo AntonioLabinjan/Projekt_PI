@@ -1,8 +1,5 @@
 ### TODO:
-<ol>* implementirat neku mapu za nešto</ol>
-<ol>* implementirat neku foru da korisnik more komunicirat s ChatGPT-jen</ol>
 <ol>* popravak CSS-a</ol>
-Još css
 
 #### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
 #### Trainingapp (nije definitivni naziv)
@@ -36,5 +33,6 @@ Te su aktivnosti:
 - music player
 - praćenje kalorijskog balansa
 - qr kod skener
+- i još svaštanešto
 https://www.figma.com/file/f8u5rOvTMgHEVSlU6denFg/Untitled?type=design&node-id=0%3A1&mode=design&t=brZMxneQCVA9nUOM-1    FIGMA LINK
 
