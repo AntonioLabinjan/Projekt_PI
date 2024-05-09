@@ -55,6 +55,14 @@
         <h3 class="feature-title">Scan QR codes for cool trainings</h3>
         <p>Use our premium QR codes to find various fitness videos</p>
       </div>
+      <div class="feature">
+        <h3 class="feature-title"> Join competitions</h3>
+        <p>Find various sports competitions and conquer them</p>
+      </div>
+      <div class="feature">
+        <h3 class="feature-title"> Chat </h3>
+        <p>Chat with other users</p>
+      </div>
     </div>
 
     <p>For all these features, TrainingMate 2.0 provides CRUD operations, along with user authentication through login and sign-up functionalities.</p>
