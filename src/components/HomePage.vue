@@ -5,6 +5,7 @@
       <button @click="goToSignUp">Sign Up</button>
       <button @click="toggleDarkMode">{{ darkMode ? 'Light Mode' : 'Dark Mode' }}</button>
       <button @click="viewUsers">View users</button>
+      <button @click="openChat">Open chat</button>
     </div>
     <div class="header">
       <h1>Welcome to <span class="highlight">TrainingMate 2.0</span></h1>
@@ -127,6 +128,9 @@ async fetchExercises() {
       roarSound.play().catch((error) => {
         console.error("Failed to play the audio:", error);
       });
+    },
+    openChat(){
+      this.$router.push({ path: '/chat'});
     },
     goToImageGallery() {
       this.$router.push({ path: '/image-gallery' });
