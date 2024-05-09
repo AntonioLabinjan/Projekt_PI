@@ -35,6 +35,7 @@ import MapFrame from './components/MapFrame.vue';
 import SportEvents from './components/SportEvents.vue';
 import SportEventsAdmin from './components/SportEventsAdmin.vue'
 import EventMap from './components/EventMap.vue';
+import ChatComponent from './components/ChatComponent.vue';
 
 
 import firebase from 'firebase/app';
@@ -101,7 +102,8 @@ const routes = [
   { path: '/test-test', component: TesterComponent},
   { path: '/map', component: MapFrame},
   { path: '/sport-events', component: SportEvents},
-  { path: '/admin-events', component: SportEventsAdmin}
+  { path: '/admin-events', component: SportEventsAdmin},
+  { path: '/chat', component: ChatComponent}
 
 ];
 
@@ -161,6 +163,7 @@ app.component('MapFrame', MapFrame);
 app.component('SportEvents', SportEvents);
 app.component('EventMap', EventMap);
 app.component('SportEventsAdmin', SportEventsAdmin);
+app.component('ChatComponent', ChatComponent);
 app.use(router);
 app.use(store);
 
