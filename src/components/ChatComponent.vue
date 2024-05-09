@@ -34,10 +34,27 @@ export default {
     const currentUser = computed(() => auth.currentUser?.email);
 
     onMounted(() => {
+      requestNotificationPermission();
+      
       const messagesRef = collection(db, 'chatMessages');
       const q = query(messagesRef, orderBy('datetime'));
       onSnapshot(q, (snapshot) => {
-        messages.value = snapshot.docs.map(doc => ({ id: doc.id, text: doc.data().text, user: doc.data().user, datetime: doc.data().datetime.toDate(), editing: false, editText: doc.data().text }));
+        snapshot.docChanges().forEach(change => {
+          if (change.type === 'added') {
+            const message = change.doc.data();
+            if (message.user !== currentUser.value) {
+              showNotification('New message', message.text);
+            }
+          }
+        });
+        messages.value = snapshot.docs.map(doc => ({
+          id: doc.id,
+          text: doc.data().text,
+          user: doc.data().user,
+          datetime: doc.data().datetime.toDate(),
+          editing: false,
+          editText: doc.data().text
+        }));
       });
     });
 
@@ -49,6 +66,7 @@ export default {
           datetime: new Date()
         });
         newMessage.value = '';
+        showNotification('Message sent', newMessage.value);
       }
     };
 
@@ -78,11 +96,22 @@ export default {
       }).format(new Date(date));
     };
 
+    function requestNotificationPermission() {
+      Notification.requestPermission().then(permission => {
+        console.log('Notification permission:', permission);
+      });
+    }
+
+    function showNotification(title, message) {
+      if (Notification.permission === 'granted') {
+        new Notification(title, { body: message });
+      }
+    }
+
     return { messages, newMessage, send, editMessage, saveEdit, deleteMessage, goBackHome, formatDate, currentUser };
   }, 
 };
-</script>
-  
+</script>  
 <style scoped>
 .message {
   background-color: #f9f9f9;
