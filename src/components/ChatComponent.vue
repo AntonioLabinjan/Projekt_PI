@@ -3,7 +3,10 @@
         <h1>Group chat</h1>
         <div v-for="message in messages" :key="message.id" class="message" :class="{ 'mine': message.user === currentUser }">
             <strong>{{ message.user }}</strong>
-            <div v-if="!message.editing">{{ message.text }}</div>
+            <div v-if="!message.editing">
+                <span v-if="!message.imageUrl">{{ message.text }}</span>
+                <img v-else :src="message.imageUrl" alt="Sent image" class="sent-image">
+            </div>
             <input v-else v-model="message.editText" @keyup.enter="saveEdit(message)" />
             <span class="timestamp">{{ formatDate(message.datetime) }}</span>
             <button v-if="message.user === currentUser" @click="editMessage(message)">Edit</button>
@@ -11,6 +14,7 @@
         </div>
         <div class="input-container">
             <input v-model="newMessage" placeholder="Type a message" @keyup.enter="send"/>
+            <input type="file" @change="onFileSelected" accept="image/*" />
             <button @click="send">Send</button>
         </div>
         <button @click="goBackHome">Go back home</button>
@@ -19,7 +23,7 @@
         <user-bar></user-bar>
     </div>
 </template>
-  
+
 <script>
 import { db, auth } from '@/firebase';
 import { collection, query, orderBy, onSnapshot, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore';
@@ -30,43 +34,70 @@ export default {
   setup() {
     const messages = ref([]);
     const newMessage = ref('');
+    const selectedFile = ref(null);
     const router = useRouter();
     const currentUser = computed(() => auth.currentUser?.email);
 
     onMounted(() => {
       requestNotificationPermission();
-      
       const messagesRef = collection(db, 'chatMessages');
       const q = query(messagesRef, orderBy('datetime'));
-      onSnapshot(q, (snapshot) => {
+      const unsubscribe = onSnapshot(q, (snapshot) => {
         snapshot.docChanges().forEach(change => {
           if (change.type === 'added') {
             const message = change.doc.data();
             if (message.user !== currentUser.value) {
-              showNotification('New message', message.text);
+              showNotification('New message', message.text || 'Image received');
+              messages.value.push({
+                id: change.doc.id,
+                ...message,
+                datetime: message.datetime.toDate(),
+                editing: false,
+                editText: message.text || ''
+              });
+            } else {
+              messages.value.push({
+                id: change.doc.id,
+                ...message,
+                datetime: message.datetime.toDate(),
+                editing: false,
+                editText: message.text || ''
+              });
             }
           }
         });
-        messages.value = snapshot.docs.map(doc => ({
-          id: doc.id,
-          text: doc.data().text,
-          user: doc.data().user,
-          datetime: doc.data().datetime.toDate(),
-          editing: false,
-          editText: doc.data().text
-        }));
       });
+
+      return () => {
+        unsubscribe();
+      };
     });
 
+    const onFileSelected = (event) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        selectedFile.value = e.target.result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    };
+
     const send = async () => {
-      if (newMessage.value.trim() !== '') {
-        await addDoc(collection(db, 'chatMessages'), {
-          text: newMessage.value,
-          user: currentUser.value,
-          datetime: new Date()
-        });
+      let messageData = {
+        user: currentUser.value,
+        datetime: new Date()
+      };
+
+      if (selectedFile.value) {
+        messageData.imageUrl = selectedFile.value;
+        selectedFile.value = null;
+      } else {
+        messageData.text = newMessage.value.trim();
+      }
+
+      if (messageData.text || messageData.imageUrl) {
+        await addDoc(collection(db, 'chatMessages'), messageData);
         newMessage.value = '';
-        showNotification('Message sent', newMessage.value);
+        showNotification('Message sent', messageData.text || 'Image sent');
       }
     };
 
@@ -108,10 +139,13 @@ export default {
       }
     }
 
-    return { messages, newMessage, send, editMessage, saveEdit, deleteMessage, goBackHome, formatDate, currentUser };
+    return {
+      messages, newMessage, send, editMessage, saveEdit, deleteMessage, goBackHome, formatDate, currentUser, onFileSelected
+    };
   }, 
 };
-</script>  
+</script>
+
 <style scoped>
 .message {
   background-color: #f9f9f9;
@@ -146,18 +180,24 @@ export default {
   color: #7f8c8d;
 }
 
+.sent-image {
+  display: block;
+  max-width: 100px;
+  max-height: 100px;
+  margin-top: 5px;
+}
+
 .input-container {
   width: 100%;
   display: flex;
 }
 
-input {
+input[type="text"], input[type="file"] {
   flex-grow: 1;
   margin-right: 10px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: calc(100% - 22px);
 }
 
 button {
@@ -168,7 +208,7 @@ button {
   margin: 5px 0;
   cursor: pointer;
   border-radius: 5px;
-  transition: background-color 0.3s ease, transform 0.3s ease; 
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 button:hover {
@@ -180,15 +220,5 @@ button:hover {
   background-color: #eeeeee;
   padding: 10px 0;
   text-align: center;
-}
-.edit-button, .delete-button {
-  padding: 3px 6px;
-  font-size: 12px;
-  color: #fff;
-  background-color: #f44336; 
-}
-
-.edit-button {
-  background-color: #ff9800; 
 }
 </style>
