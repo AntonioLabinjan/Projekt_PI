@@ -5,7 +5,7 @@
             <strong>{{ message.user }}</strong>
             <div v-if="!message.editing">
                 <span v-if="!message.imageUrl">{{ message.text }}</span>
-                <img v-else :src="message.imageUrl" alt="Sent image" class="sent-image">
+                <img v-else :src="message.imageUrl" alt="Sent image" class="sent-image" @click="showEnlargedImage(message.imageUrl)">
             </div>
             <input v-else v-model="message.editText" @keyup.enter="saveEdit(message)" />
             <span class="timestamp">{{ formatDate(message.datetime) }}</span>
@@ -18,6 +18,10 @@
             <button @click="send">Send</button>
         </div>
         <button @click="goBackHome">Go back home</button>
+        <div v-if="enlargedImage" class="modal" @click="enlargedImage = null">
+            <img :src="enlargedImage" class="enlarged-image" @click.stop>
+            <span class="close" @click="enlargedImage = null">&times;</span>
+        </div>
     </div>
     <div class="user-bar">
         <user-bar></user-bar>
@@ -35,6 +39,7 @@ export default {
     const messages = ref([]);
     const newMessage = ref('');
     const selectedFile = ref(null);
+    const enlargedImage = ref(null);
     const router = useRouter();
     const currentUser = computed(() => auth.currentUser?.email);
 
@@ -42,35 +47,17 @@ export default {
       requestNotificationPermission();
       const messagesRef = collection(db, 'chatMessages');
       const q = query(messagesRef, orderBy('datetime'));
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        snapshot.docChanges().forEach(change => {
-          if (change.type === 'added') {
-            const message = change.doc.data();
-            if (message.user !== currentUser.value) {
-              showNotification('New message', message.text || 'Image received');
-              messages.value.push({
-                id: change.doc.id,
-                ...message,
-                datetime: message.datetime.toDate(),
-                editing: false,
-                editText: message.text || ''
-              });
-            } else {
-              messages.value.push({
-                id: change.doc.id,
-                ...message,
-                datetime: message.datetime.toDate(),
-                editing: false,
-                editText: message.text || ''
-              });
-            }
-          }
-        });
+      onSnapshot(q, (snapshot) => {
+        messages.value = snapshot.docs.map(doc => ({
+          id: doc.id,
+          text: doc.data().text,
+          imageUrl: doc.data().imageUrl,
+          user: doc.data().user,
+          datetime: doc.data().datetime.toDate(),
+          editing: false,
+          editText: doc.data().text || ''
+        }));
       });
-
-      return () => {
-        unsubscribe();
-      };
     });
 
     const onFileSelected = (event) => {
@@ -82,33 +69,35 @@ export default {
     };
 
     const send = async () => {
+      if (!newMessage.value.trim() && !selectedFile.value) return;
+
       let messageData = {
         user: currentUser.value,
-        datetime: new Date()
+        datetime: new Date(),
+        text: newMessage.value.trim(),
+        imageUrl: selectedFile.value || ''
       };
 
-      if (selectedFile.value) {
-        messageData.imageUrl = selectedFile.value;
-        selectedFile.value = null;
-      } else {
-        messageData.text = newMessage.value.trim();
-      }
-
-      if (messageData.text || messageData.imageUrl) {
-        await addDoc(collection(db, 'chatMessages'), messageData);
-        newMessage.value = '';
-        showNotification('Message sent', messageData.text || 'Image sent');
-      }
+      await addDoc(collection(db, 'chatMessages'), messageData);
+      newMessage.value = '';
+      selectedFile.value = null;
+      showNotification('Message sent', messageData.text || 'Image sent');
     };
 
     const editMessage = (message) => {
-      message.editing = true;
+      messages.value = messages.value.map(m => {
+        if (m.id === message.id) {
+          m.editing = true;
+        }
+        return m;
+      });
     };
 
     const saveEdit = async (message) => {
       const messageRef = doc(db, 'chatMessages', message.id);
       await updateDoc(messageRef, { text: message.editText });
       message.editing = false;
+      message.text = message.editText;  
     };
 
     const deleteMessage = async (id) => {
@@ -127,6 +116,10 @@ export default {
       }).format(new Date(date));
     };
 
+    const showEnlargedImage = (imageUrl) => {
+      enlargedImage.value = imageUrl;
+    };
+
     function requestNotificationPermission() {
       Notification.requestPermission().then(permission => {
         console.log('Notification permission:', permission);
@@ -140,7 +133,7 @@ export default {
     }
 
     return {
-      messages, newMessage, send, editMessage, saveEdit, deleteMessage, goBackHome, formatDate, currentUser, onFileSelected
+      messages, newMessage, send, editMessage, saveEdit, deleteMessage, goBackHome, formatDate, currentUser, onFileSelected, enlargedImage, showEnlargedImage
     };
   }, 
 };
@@ -168,7 +161,7 @@ export default {
 .message strong {
   font-size: 16px;
   color: #2c3e50;
-  display: block;
+  display:block;
   margin-bottom: 5px;
 }
 
@@ -185,6 +178,7 @@ export default {
   max-width: 100px;
   max-height: 100px;
   margin-top: 5px;
+  cursor: pointer; 
 }
 
 .input-container {
@@ -220,5 +214,32 @@ button:hover {
   background-color: #eeeeee;
   padding: 10px 0;
   text-align: center;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.enlarged-image {
+  max-width: 90%;
+  max-height: 80%;
+}
+
+.close {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
 }
 </style>
