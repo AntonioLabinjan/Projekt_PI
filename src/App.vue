@@ -91,4 +91,28 @@ export default {
   background-color: black;
   color: white; 
 }
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s, color 0.3s;
+  
+  background-color: #4CAF50; 
+  color: white;
+}
+
+button:hover {
+  background-color: #45a049; 
+}
+
+@media (max-width: 600px) {
+  button {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+}
 </style>
