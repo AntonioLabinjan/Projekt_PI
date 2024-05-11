@@ -2,40 +2,40 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import store from './store/store.js';
-import ImageGallery from './components/ImageGallery.vue';
-import VueTrainer from './components/VueTrainer.vue';
-import HomePage from './components/HomePage.vue';
-import LogIn from './components/LogIn.vue';
-import SignUp from './components/SignUp.vue';
-import MealTracker from './components/MealTracker.vue';
-import SleepTracker from './components/SleepTracker.vue';
-import WaterIntake from './components/WaterIntake.vue';
-import BMICalculator from './components/BMICalculator.vue';
-import AboutPage from './components/AboutPage.vue';
-import DefaultExercises from './components/DefaultExercises.vue';
-import DefaultExercisesNotAdmin from './components/DefaultExercisesNotAdmin.vue';
-import DefaultMealsNotAdmin from './components/DefaultMealsNotAdmin.vue';
-import DefaultMeals from './components/DefaultMeals.vue';
-import StreakCheck from './components/StreakCheck.vue';
-import QrScanner from './components/QrScanner.vue';
+import ImageGallery from './views/ImageGallery.vue';
+import VueTrainer from './views/VueTrainer.vue';
+import HomePage from './views/HomePage.vue';
+import LogIn from './views/LogIn.vue';
+import SignUp from './views/SignUp.vue';
+import MealTracker from './views/MealTracker.vue';
+import SleepTracker from './views/SleepTracker.vue';
+import WaterIntake from './views/WaterIntake.vue';
+import BMICalculator from './views/BMICalculator.vue';
+import AboutPage from './views/AboutPage.vue';
+import DefaultExercises from './views/DefaultExercises.vue';
+import DefaultExercisesNotAdmin from './views/DefaultExercisesNotAdmin.vue';
+import DefaultMealsNotAdmin from './views/DefaultMealsNotAdmin.vue';
+import DefaultMeals from './views/DefaultMeals.vue';
+import StreakCheck from './views/StreakCheck.vue';
+import QrScanner from './views/QrScanner.vue';
 import notificationMaker from './components/notificationMaker.vue';
 import UserBar from './components/UserBar.vue';
-import MusicPlayer from './components/MusicPlayer.vue';
-import ErrorPage from './components/ErrorPage.vue';
-import AdminLogin from './components/AdminLogin.vue';
+import MusicPlayer from './views/MusicPlayer.vue';
+import ErrorPage from './views/ErrorPage.vue';
+import AdminLogin from './views/AdminLogin.vue';
 import LocalTime from './components/LocalTime.vue';
 import MotivationalQuote from './components/MotivationalQuote.vue';
-import QrCodesDefault from './components/QRCodesDefault.vue';
-import QrCodesAdmin from './components/QRCodesAdmin.vue';
-import UserPanel from './components/UserPanel.vue';
+import QrCodesDefault from './views/QRCodesDefault.vue';
+import QrCodesAdmin from './views/QRCodesAdmin.vue';
+import UserPanel from './views/UserPanel.vue';
 import VueHeader from './components/VueHeader.vue';
-import TesterComponent from './components/TesterComponent.vue';
+import TesterComponent from './views/TesterComponent.vue';
 import DarkModeButton from './components/DarkModeButton.vue';
 import MapFrame from './components/MapFrame.vue';
-import SportEvents from './components/SportEvents.vue';
-import SportEventsAdmin from './components/SportEventsAdmin.vue'
+import SportEvents from './views/SportEvents.vue';
+import SportEventsAdmin from './views/SportEventsAdmin.vue'
 import EventMap from './components/EventMap.vue';
-import ChatComponent from './components/ChatComponent.vue';
+import ChatComponent from './views/ChatComponent.vue';
 
 
 import firebase from 'firebase/app';
@@ -103,7 +103,7 @@ const routes = [
   { path: '/map', component: MapFrame},
   { path: '/sport-events', component: SportEvents},
   { path: '/admin-events', component: SportEventsAdmin},
-  { path: '/chat', component: ChatComponent}
+  { path: '/chat', component: ChatComponent, meta: { requiresAuth: true }}
 
 ];
 
