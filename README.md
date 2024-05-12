@@ -1,5 +1,6 @@
 ### TODO:
-<ol>* popravak CSS-a</ol>
+
+##### OBRISAT IZ KOMPONENTI ONO ČA SAN PREHITIJA U VIEWOVE
 
 #### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
 #### Trainingapp (nije definitivni naziv)
