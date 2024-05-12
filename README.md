@@ -1,6 +1,6 @@
 ### TODO:
 
-##### OBRISAT IZ KOMPONENTI ONO ČA SAN PREHITIJA U VIEWOVE
+##### Riješili smo komponente i viewove...još ono ča najviše volin i čemu se neizmjerno veselin...CSS :(
 
 #### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
 #### Trainingapp (nije definitivni naziv)
