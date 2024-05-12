@@ -1,15 +1,16 @@
 <template>
   <div :class="{ 'dark-mode': darkMode }">
-    <h1 class="h1" :class="{'dark-mode': darkMode}">Galerija Vježbi</h1>
+    <h1 class="h1" :class="{'dark-mode': darkMode}">Exercise gallery</h1>
+    <input type="text" v-model="searchQuery" placeholder="Search exercises..." class="search-bar">
     <hr>
-    <!-- Prikaz hardkodiranih vježbi -->
-    <div v-for="(exercise, index) in exercises" :key="index" class="exercise">
+    <!-- Prikaz filtriranih vježbi -->
+    <div v-for="(exercise, index) in filteredExercises" :key="index" class="exercise">
       <h2>{{ exercise.name }}</h2>
-      <p><strong>Broj ponavljanja:</strong> {{ exercise.reps }}</p>
-      <p><strong>Broj setova:</strong> {{ exercise.sets }}</p>
-      <p><strong>Trajanje:</strong> {{ exercise.duration }}</p>
-      <p><strong>Dio tijela:</strong> {{ exercise.bodyPart }}</p>
-      <p><strong>Upute:</strong> {{ exercise.instructions }}</p>
+      <p><strong>Number of reps:</strong> {{ exercise.reps }}</p>
+      <p><strong>Number of sets:</strong> {{ exercise.sets }}</p>
+      <p><strong>Duration:</strong> {{ exercise.duration }}</p>
+      <p><strong>Body part:</strong> {{ exercise.bodyPart }}</p>
+      <p><strong>Instructions:</strong> {{ exercise.instructions }}</p>
       <img :src="exercise.url" alt="Demonstracija vježbe">
       <hr>
     </div>
@@ -40,10 +41,18 @@ export default {
       editIndex: null,
       editMode: false,
       darkMode: false,
+      searchQuery: ''
     };
   },
   created() {
     this.fetchExercises();
+  },
+  computed: {
+    filteredExercises() {
+      return this.exercises.filter(exercise =>
+        exercise.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    }
   },
   methods: {
     async fetchExercises() {
@@ -131,6 +140,7 @@ export default {
   }
 };
 </script>
+
 <style scoped>
 body {
   font-family: Arial, sans-serif;
@@ -164,7 +174,6 @@ h1 {
   object-fit: contain; 
   max-height: 200px; 
 }
-
 
 button {
   background-color: #007bff;
@@ -215,6 +224,15 @@ form button {
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 3px;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
 }
 
 .dark-mode {
