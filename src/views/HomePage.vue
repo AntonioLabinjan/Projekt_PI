@@ -45,6 +45,10 @@
 
     <hr>
     <notification-maker></notification-maker>
+    <div>
+      <b><u>Take a break from training, and play a little game.</u></b>
+      <button @click="playGame">Go to game</button>
+    </div>
     <user-bar></user-bar>
 </template>
 
@@ -173,6 +177,9 @@ async fetchExercises() {
     },
     viewUsers(){
       this.$router.push({path: '/admin-login', query: { redirect:'/user-panel'}});
+    },
+    playGame(){
+      this.$router.push({path: '/memory'});
     }
   },
   /*
