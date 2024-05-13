@@ -33,9 +33,10 @@ import TesterComponent from './views/TesterComponent.vue';
 import DarkModeButton from './components/DarkModeButton.vue';
 import MapFrame from './components/MapFrame.vue';
 import SportEvents from './views/SportEvents.vue';
-import SportEventsAdmin from './views/SportEventsAdmin.vue'
+import SportEventsAdmin from './views/SportEventsAdmin.vue';
 import EventMap from './components/EventMap.vue';
 import ChatComponent from './views/ChatComponent.vue';
+import IntervalTimer from './components/IntervalTimer.vue';
 
 
 import firebase from 'firebase/app';
@@ -103,7 +104,8 @@ const routes = [
   { path: '/map', component: MapFrame},
   { path: '/sport-events', component: SportEvents},
   { path: '/admin-events', component: SportEventsAdmin},
-  { path: '/chat', component: ChatComponent, meta: { requiresAuth: true }}
+  { path: '/chat', component: ChatComponent, meta: { requiresAuth: true }},
+  {path: '/interval', component: IntervalTimer}
 
 ];
 
@@ -164,6 +166,7 @@ app.component('SportEvents', SportEvents);
 app.component('EventMap', EventMap);
 app.component('SportEventsAdmin', SportEventsAdmin);
 app.component('ChatComponent', ChatComponent);
+app.component('IntervalTimer', IntervalTimer);
 app.use(router);
 app.use(store);
 
