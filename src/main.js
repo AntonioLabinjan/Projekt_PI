@@ -37,6 +37,7 @@ import SportEventsAdmin from './views/SportEventsAdmin.vue';
 import EventMap from './components/EventMap.vue';
 import ChatComponent from './views/ChatComponent.vue';
 import IntervalTimer from './components/IntervalTimer.vue';
+import MemoryGame from './components/MemoryGame.vue';
 
 
 import firebase from 'firebase/app';
@@ -105,7 +106,8 @@ const routes = [
   { path: '/sport-events', component: SportEvents},
   { path: '/admin-events', component: SportEventsAdmin},
   { path: '/chat', component: ChatComponent, meta: { requiresAuth: true }},
-  {path: '/interval', component: IntervalTimer}
+  {path: '/interval', component: IntervalTimer},
+  { path: '/memory', component: MemoryGame}
 
 ];
 
@@ -167,6 +169,7 @@ app.component('EventMap', EventMap);
 app.component('SportEventsAdmin', SportEventsAdmin);
 app.component('ChatComponent', ChatComponent);
 app.component('IntervalTimer', IntervalTimer);
+app.component('MemoryGame', MemoryGame);
 app.use(router);
 app.use(store);
 
