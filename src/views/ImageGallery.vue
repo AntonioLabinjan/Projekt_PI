@@ -57,6 +57,22 @@
 
       <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     </div>
+    <div>
+    <h2>Weight Progress</h2>
+    </div>
+    <div class="visualization-container">
+      <div class="progress-bars">
+        <div
+          v-for="(image, index) in filteredImages"
+          :key="index"
+          class="progress-bar"
+          :style="{ height: image.weight * 5 + 'px' }"
+          @click="showImageModal(image)"
+        >
+          {{ image.weight }} KG
+        </div>
+      </div>
+    </div>
     
     <user-bar></user-bar>
   </div>
@@ -78,7 +94,7 @@ export default {
       },
       weightFilter: null,
       selectedImage: null,
-      images: [] // Local images state to store fetched images
+      images: [] 
     };
   },
   computed: {
@@ -188,14 +204,12 @@ export default {
       if (user) {
         this.loadImages();
       } else {
-        // Handle unauthenticated / log out state
         this.images = [];
       }
     });
   }
 };
 </script>
-
 <style scoped>
 
 .container {
@@ -383,7 +397,25 @@ form button {
 .navbar .navbar-nav li button.active {
   background-color: #007bff;
 }
+.visualization-container {
+  margin-top: 80px;
+}
+.progress-bars {
+  display: flex;
+  align-items: flex-end;
+  height: 300px; /* Set an appropriate height */
+}
 
-
+.progress-bar {
+  flex: 1;
+  background-color: #4CAF50; /* Change color as needed */
+  margin: 0 5px;
+  text-align: center;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: height 0.3s ease; /* Add smooth transition */
+}
 
 </style>
