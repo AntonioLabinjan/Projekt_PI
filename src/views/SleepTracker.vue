@@ -62,7 +62,7 @@
     </div>
 
     <div v-if="showAlert" class="alert">
-      <p>Između nekih uzastopnih unosa za san ima i po više od 2 dana! Razmislite o tome da malo popravite sleep schedule. OVO NIKAKO NIJE ZDRAVO!!!</p>
+      <p>Schedules for sleep entries sometimes have intervals of more than 2 days between them! Consider adjusting your sleep schedule a bit. THIS IS DEFINITELY NOT HEALTHY!!!</p>
       <button @click="hideAlert" class="close-btn">x</button>
     </div>
   </div>
