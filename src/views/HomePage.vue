@@ -1,8 +1,10 @@
 <template>
   <div class="container" :class="{ 'dark-mode': darkMode }">
     <div class="login-signup-buttons">
+      <div class="login-signup-buttons" v-if="!currentUser">
       <button @click="goToLogIn">Log In</button>
       <button @click="goToSignUp">Sign Up</button>
+    </div>
       <button @click="toggleDarkMode">{{ darkMode ? 'Light Mode' : 'Dark Mode' }}</button>
       <button @click="viewUsers">View users</button>
       <button @click="openChat">Open chat</button>
