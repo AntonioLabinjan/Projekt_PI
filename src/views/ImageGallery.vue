@@ -403,19 +403,19 @@ form button {
 .progress-bars {
   display: flex;
   align-items: flex-end;
-  height: 300px; /* Set an appropriate height */
+  height: 300px; 
 }
 
 .progress-bar {
   flex: 1;
-  background-color: #4CAF50; /* Change color as needed */
+  background-color: #4CAF50; 
   margin: 0 5px;
   text-align: center;
   color: #fff;
   font-size: 12px;
   line-height: 1.5;
   cursor: pointer;
-  transition: height 0.3s ease; /* Add smooth transition */
+  transition: height 0.3s ease; 
 }
 
 </style>
