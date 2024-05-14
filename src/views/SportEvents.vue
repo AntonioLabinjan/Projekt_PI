@@ -18,7 +18,7 @@
     </div>
     <!-- Mapa -->
     <div class="map-container" style="width: 100%; height: 400px;">
-      <h4>Mapa događaja</h4>
+      <h4>Event map</h4>
       <iframe ref="mapFrame" width='100%' height='400px' :src="mapSrc" title="Mapa događaja" style="border:none;"></iframe>
     </div>
   </div>
