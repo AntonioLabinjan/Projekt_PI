@@ -89,7 +89,7 @@
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
-import IntervalTimer from '../components/IntervalTimer.vue';
+//import IntervalTimer from '../components/IntervalTimer.vue';
 
 export default {
   data() {
