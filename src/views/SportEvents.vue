@@ -4,7 +4,6 @@
     <button @click="editAsAdmin">Edit as admin</button>
     <button @click="goBack">Go Back</button>
     <h1 class="h1" :class="{'dark-mode': darkMode}">Sports Event Gallery</h1>
-    <!-- Search bar -->
     <div class="search-bar">
       <input type="text" v-model="searchQuery" placeholder="Search events..." class="search-input">
     </div>
@@ -14,9 +13,14 @@
       <p><strong>Location:</strong> {{ event.location }}</p>
       <p><strong>Start Time:</strong> {{ event.startTime }}</p>
       <p><strong>Participation Fee:</strong> {{ event.fee }}</p>
+      <button @click="showEventLocationOnMap(event)">Show Location on Map</button>
       <hr>
     </div>
-    <event-map></event-map>
+    <!-- Mapa -->
+    <div class="map-container" style="width: 100%; height: 400px;">
+      <h4>Mapa događaja</h4>
+      <iframe ref="mapFrame" width='100%' height='400px' :src="mapSrc" title="Mapa događaja" style="border:none;"></iframe>
+    </div>
   </div>
 </template>
 
@@ -46,11 +50,13 @@ export default {
   computed: {
     filteredEvents() {
       return this.events.filter(event =>
-      event.location.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
-event.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
-event.fee.toString() === this.searchQuery.toString()
-
+        event.location.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
+        event.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
+        event.fee.toString() === this.searchQuery.toString()
       );
+    },
+    mapSrc() {
+      return `https://api.mapbox.com/styles/v1/123456-a/clw6kg3ba02d001o0cxjrdlfm.html?title=false&access_token=pk.eyJ1IjoiMTIzNDU2LWEiLCJhIjoiY2x3NmtiaGNjMXB6MTJpbXVsNGUyZWd0OCJ9.7HlKhRuY3b8pQqRzXDvjtA&zoomwheel=false#5.25/43.454/12.261`;
     }
   },
   methods: {
@@ -107,13 +113,49 @@ event.fee.toString() === this.searchQuery.toString()
     },
     editAsAdmin(){
       this.$router.push({ path: '/admin-login', query: { redirect: '/admin-events'} });
-    },
+    },async fetchCoordinates(locationName) {
+  try {
+    const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(locationName)}.json?access_token=pk.eyJ1IjoiMTIzNDU2LWEiLCJhIjoiY2x3NmxocTIwMW1sczJrbXV5aWFha3l3aCJ9.B_bX_30NI0Wf6nISJMqlXA`);
+    const data = await response.json();
+    if (data && data.features && data.features.length > 0) {
+      const { center } = data.features[0];
+      return {
+        latitude: center[1],
+        longitude: center[0]
+      };
+    } else {
+      throw new Error('Location not found');
+    }
+  } catch (error) {
+    console.error('Error fetching coordinates:', error);
+    throw error;
+  }
+},
+async showEventLocationOnMap(event) {
+  try {
+    let latitude, longitude;
+    if (event.location && event.location.coordinates && event.location.coordinates.latitude && event.location.coordinates.longitude) {
+      latitude = event.location.coordinates.latitude;
+      longitude = event.location.coordinates.longitude;
+    } else if (event.location) {
+      const { latitude: newLatitude, longitude: newLongitude } = await this.fetchCoordinates(event.location);
+      latitude = newLatitude;
+      longitude = newLongitude;
+    } else {
+      throw new Error('Location not defined');
+    }
+
+    const mapURL = `https://api.mapbox.com/styles/v1/123456-a/clw6kg3ba02d001o0cxjrdlfm.html?title=false&access_token=pk.eyJ1IjoiMTIzNDU2LWEiLCJhIjoiY2x3NmtiaGNjMXB6MTJpbXVsNGUyZWd0OCJ9.7HlKhRuY3b8pQqRzXDvjtA&zoomwheel=false#5.25/${latitude}/${longitude}`;
+    this.$refs.mapFrame.src = mapURL;
+  } catch (error) {
+    console.error('Error showing event location on map:', error);
+  }
+}
+
   }
 };
 </script>
-
 <style scoped>
-/* Add your scoped styles here */
 .dark-mode {
   background-color: #333;
   color: #fff;
