@@ -2,9 +2,8 @@
 App link: https://trainingappvue.vercel.app
 App link2: https://frolicking-dragon-b7c509.netlify.app/
 
-#### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
-#### Trainingapp (nije definitivni naziv)
-#### Koncept aplikacije (ideja...moguće da će se modificirat u hodu)
+#### Ovo je projekt iz kolegija "Programsko inženjerstvo"
+#### TrainingMate 2.0
 
 
 #### TEST CREDENTIALS: 
