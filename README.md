@@ -1,6 +1,8 @@
 ### TODO:
 
-##### Riješili smo komponente i viewove...još ono ča najviše volin i čemu se neizmjerno veselin...CSS :(
+- neka komanda za deinstalirat eslint
+- u svakemu src fajlu dodat onaj komentar za ignore (chatGPT će pomoć) /* eslint-disable */
+- u package jsonu obrisat samo tamo di piše eslint
 
 #### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
 #### Trainingapp (nije definitivni naziv)
