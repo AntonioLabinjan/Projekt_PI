@@ -37,5 +37,6 @@ Te su aktivnosti:
 - i još svaštanešto
 https://www.figma.com/file/f8u5rOvTMgHEVSlU6denFg/Untitled?type=design&node-id=0%3A1&mode=design&t=brZMxneQCVA9nUOM-1    FIGMA LINK
 
-Neke stvari su u ruteru preregistrirane iz components u views
+## LINK NA DOKUMENTACIJU
+https://1drv.ms/w/c/144ded0df3b8fb69/EZVrFH7tPtdLpR_S74k7_1sB0Ug0cqxwwAwWpxj9Xla_tQ?e=X6Gigb
 
