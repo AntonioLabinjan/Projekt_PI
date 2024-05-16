@@ -3,7 +3,7 @@
 - neka komanda za deinstalirat eslint
 - u svakemu src fajlu dodat onaj komentar za ignore (chatGPT će pomoć) /* eslint-disable */
 - u package jsonu obrisat samo tamo di piše eslint
-
+https://trainingmate20-dtoah80y6-antonio-labinjans-projects.vercel.app/login
 #### Ovo će biti projekt iz kolegija "Programsko inženjerstvo"
 #### Trainingapp (nije definitivni naziv)
 #### Koncept aplikacije (ideja...moguće da će se modificirat u hodu)
