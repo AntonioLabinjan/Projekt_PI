@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <div class="container" :class="{ 'dark-mode': darkMode }">
     <div class="login-signup-buttons">
@@ -10,7 +11,7 @@
       <button @click="openChat">Open chat</button>
     </div>
     <div class="header">
-      <h1>Welcome to <span class="highlight">TrainingMate 2.0</span></h1>
+      <h1>Welcome to <span class="highlight">TrainingMate 2.0 </span></h1>
       <hr>
       <h4>Your personal training application</h4>
       <p>Add your exercises, meals, sleep, water intake, calculate your BMI, and track your progress!</p>
@@ -21,7 +22,7 @@
         <li><button @click="goToVueTrainer">Training App</button></li>
         <li><button @click="goToMealTracker">Meal Tracker</button></li>
         <li><button @click="goToSleepTracker">Sleep Tracker</button></li>
-        <li><button @click="goToWaterIntake">Water Intake Tracker</button></li>
+        <li><button @click="goToWaterIntake">Water Intake Tracker</button></li>  
         <li><button @click="goToBMI">BMI Calculator</button></li>
         <li><button @click="goToStreak">Streak Tracker</button></li>
         <li><button @click="goToMusicPlayer">Music Player</button></li>
@@ -252,7 +253,8 @@ h1 {
 .navbar button,
 .about-button button,
 .caloric-balance button,
-.motivational-quote button {
+.motivational-quote button,
+.button {
   background-color: #4CAF50;
   color: #fff;
   border: none;
@@ -267,7 +269,8 @@ h1 {
 .navbar button:hover,
 .about-button button:hover,
 .caloric-balance button:hover,
-.motivational-quote button:hover {
+.motivational-quote button:hover,
+.button {
   background-color: #45a049;
   transform: scale(1.05); 
 }
@@ -297,10 +300,7 @@ h1 {
   margin-top: 20px;
 }
 
-.motivational-quote button {
-  font-weight: bold; 
-  border: 2px solid #4CAF50; 
-}
+
 
 .motivational-quote button:hover {
   background-color: #4CAF50; 
@@ -329,4 +329,52 @@ h1 {
   margin-top: 20px;
   text-align: center;
 }
+.login-signup-buttons button,
+.navbar button,
+.about-button button,
+.caloric-balance button,
+.motivational-quote button{
+  background: linear-gradient(145deg, #a1a1a1, #808080);
+  color: #ffffff;
+  border: 1px solid #7e7e7e;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3), 
+              -2px -2px 5px rgba(255, 255, 255, 0.2);
+}
+
+.login-signup-buttons button:hover,
+.navbar button:hover,
+.about-button button:hover,
+.caloric-balance button:hover,
+.motivational-quote button:hover {
+  background: linear-gradient(145deg, #808080, #a1a1a1);
+  transform: scale(1.02);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5), 
+              -2px -2px 10px rgba(255, 255, 255, 0.4);
+}
+
+.login-signup-buttons button:active,
+.navbar button:active,
+.about-button button:active,
+.caloric-balance button:active,
+.motivational-quote button:active {
+  background: linear-gradient(145deg, #6b6b6b, #8e8e8e);
+  transform: scale(0.98);
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2), 
+              -1px -1px 5px rgba(255, 255, 255, 0.1);
+}
+
+.login-signup-buttons button:focus,
+.navbar button:focus,
+.about-button button:focus,
+.caloric-balance button:focus,
+.motivational-quote button:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
 </style>
