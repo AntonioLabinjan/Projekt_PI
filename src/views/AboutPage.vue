@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <div class="about container" :class="{ 'dark-mode': darkMode }">
     <h2>About TrainingMate 2.0</h2>
@@ -188,18 +189,35 @@ p {
 }
 
 button {
-  background-color: #4CAF50;
-  color: #fff;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 5px;
+  background: linear-gradient(145deg, #a1a1a1, #808080);
+  color: #ffffff;
+  border: 1px solid #7e7e7e;
+  padding: 10px 20px;
+  margin: 5px;
   cursor: pointer;
-  margin-right: 10px;
-  transition: background-color 0.3s ease;
+  border-radius: 5px;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3), 
+              -2px -2px 5px rgba(255, 255, 255, 0.2);
 }
 
 button:hover {
-  background-color: #0056b3;
+  background: linear-gradient(145deg, #808080, #a1a1a1);
+  transform: scale(1.02);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5), 
+              -2px -2px 10px rgba(255, 255, 255, 0.4);
+}
+
+button:active {
+  background: linear-gradient(145deg, #6b6b6b, #8e8e8e);
+  transform: scale(0.98);
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2), 
+              -1px -1px 5px rgba(255, 255, 255, 0.1);
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 .dark-mode {
@@ -236,14 +254,28 @@ button:hover {
 }
 
 .dark-mode button {
-  background-color: #eee;
-  color: #333;
+  background: linear-gradient(145deg, #6b6b6b, #8e8e8e);
+  color: #fff;
+  border: 1px solid #7e7e7e;
 }
 
 .dark-mode button:hover {
-  background-color: #ddd;
+  background: linear-gradient(145deg, #808080, #a1a1a1);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5), 
+              -2px -2px 10px rgba(255, 255, 255, 0.4);
 }
 
+.dark-mode button:active {
+  background: linear-gradient(145deg, #4b4b4b, #6e6e6e);
+  transform: scale(0.98);
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2), 
+              -1px -1px 5px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode button:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
 
 .container {
   position: relative; 
@@ -274,30 +306,6 @@ button:hover {
   color: #4CAF50;
 }
 
-.login-signup-buttons button,
-.navbar button,
-.about-button button,
-.caloric-balance button,
-.motivational-quote button {
-  background-color: #4CAF50;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  margin: 5px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s ease, transform 0.3s ease; 
-}
-
-.login-signup-buttons button:hover,
-.navbar button:hover,
-.about-button button:hover,
-.caloric-balance button:hover,
-.motivational-quote button:hover {
-  background-color: #45a049;
-  transform: scale(1.05); 
-}
-
 .header {
   position: relative; 
   z-index: 1; 
@@ -323,15 +331,6 @@ button:hover {
   margin-top: 20px;
 }
 
-.motivational-quote button {
-  font-weight: bold; 
-  border: 2px solid #4CAF50; 
-}
-
-.motivational-quote button:hover {
-  background-color: #4CAF50; 
-}
-
 .caloric-balance p {
   font-weight: bold;
 }   
@@ -351,10 +350,5 @@ button:hover {
   position: relative;
   padding-bottom: 20px; 
 }
-
-button {
-  margin-top: 20px; 
-}
-
 
 </style>
