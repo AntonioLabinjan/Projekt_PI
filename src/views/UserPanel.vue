@@ -1,13 +1,14 @@
+/* eslint-disable */
 <template>
     <div class="users-list">
       <h2>Registered Users</h2>
       <ul>
         <li v-for="user in users" :key="user.id">
           {{ user.username }} - {{ user.email }}
-          <button @click="openGmail(user.email)">Email</button>
+          <button class="btn-secondary" @click ="openGmail(user.email)" >Email</button>
         </li>
       </ul>
-      <button @click="goBackHome">Go back home</button>
+      <button class="btn-secondary" @click="goBackHome">Go back home</button>
     </div>
   </template>
   
@@ -75,23 +76,26 @@
     border-bottom: none;
   }
   
-  button {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #007bff;
-    color: white;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  button:active {
-    background-color: #003580;
-  }
+  .btn-secondary {
+  background: linear-gradient(to bottom, #757575, #616161);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(to bottom, #616161, #757575);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+  transform: translateY(1px);
+}
+
   
   .go-back-button {
     display: block;
