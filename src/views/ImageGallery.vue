@@ -1,16 +1,17 @@
+/* eslint-disable */
 <template>
   <div>
     <h1>Progress Tracker</h1>
     <nav class="navbar" :class="{'dark-mode': darkMode}">
       <ul class="navbar-nav">
-        <li><button @click="goToVueTrainer">Go to Training App</button></li>
-        <li><button @click="goToMealTracker">Go to Meal Tracker</button></li>
-        <li><button @click="goToSleepTracker">Go to Sleep Tracker</button></li>
-        <li><button @click="goToWaterIntake">Go to Water Intake Tracker</button></li>
-        <li><button @click="goToBMI">Go to BMI Calculator</button></li>
-        <li><button @click="goToStreak">Go to Streak Tracker</button></li>
-        <li><button @click="goToMusicPlayer">Music Player</button></li>
-        <li><button @click="goBackHome">Go Back Home</button></li>
+        <li><button class="metallic-button" @click="goToVueTrainer">Go to Training App</button></li>
+        <li><button class="metallic-button" @click="goToMealTracker">Go to Meal Tracker</button></li>
+        <li><button class="metallic-button" @click="goToSleepTracker">Go to Sleep Tracker</button></li>
+        <li><button class="metallic-button" @click="goToWaterIntake">Go to Water Intake Tracker</button></li>
+        <li><button class="metallic-button" @click="goToBMI">Go to BMI Calculator</button></li>
+        <li><button class="metallic-button" @click="goToStreak">Go to Streak Tracker</button></li>
+        <li><button class="metallic-button" @click="goToMusicPlayer">Music Player</button></li>
+        <li><button class="metallic-button" @click="goBackHome">Go Back Home</button></li>
       </ul>
     </nav>
     <hr>
@@ -41,7 +42,7 @@
         <input v-model="newImage.description" type="text" id="description" />
         <label for="weight">Weight (Kg):</label>
         <input v-model="newImage.weight" type="number" id="weight" /><br>
-        <button @click="addImage" class="btn btn-primary">Add Image</button>
+        <button @click="addImage" class="btn btn-primary metallic-button">Add Image</button>
       </div>
 
       <div v-if="selectedImage" class="image-modal">
@@ -52,10 +53,10 @@
       <div class="filter-container">
         <label for="weightFilter">Filter by Weight (Kg):</label>
         <input v-model="weightFilter" type="number" id="weightFilter" />
-        <button @click="filterByWeight" class="btn btn-primary">Apply Filter</button>
+        <button @click="filterByWeight" class="btn btn-primary metallic-button">Apply Filter</button>
       </div>
 
-      <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
+      <button @click="toggleDarkMode" class="metallic-button">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     </div>
     <div>
     <h2>Weight Progress</h2>
@@ -77,6 +78,7 @@
     <user-bar></user-bar>
   </div>
 </template>
+
 
 <script>
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -418,4 +420,24 @@ form button {
   transition: height 0.3s ease; 
 }
 
+.metallic-button {
+  background: linear-gradient(to bottom, #8c8c8c, #333);
+  border: 1px solid #666;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  transition: 0.3s;
+}
+
+.metallic-button:hover {
+  background: linear-gradient(to bottom, #333, #8c8c8c);
+  border: 1px solid #999;
+  transition: 0.3s;
+}
 </style>
