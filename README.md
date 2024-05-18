@@ -1,5 +1,5 @@
 ### Javni linkovi:
-App link: https://trainingappvue.vercel.app
+App link: https://trainingmate20-mv9vj6zj5-antonio-labinjans-projects.vercel.app/
 App link2: https://frolicking-dragon-b7c509.netlify.app/
 
 #### Ovo je projekt iz kolegija "Programsko inženjerstvo"
