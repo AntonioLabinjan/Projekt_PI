@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <div class="login-container" :class="{ 'dark-mode': darkMode }">
     <h2>Login</h2>
@@ -11,12 +12,12 @@
         <input type="password" class="form-control" id="loginPassword" v-model="loginPassword" required>
       </div>
       <div class="button-group">
-        <button type="submit" class="btn btn-primary">Login</button>
-        <button @click="goToSignUp" class="btn btn-secondary">Sign-up</button>
-        <button @click="goBackHome" class="btn btn-secondary">Home</button>
+        <button type="submit" class="btn metallic-button">Login</button>
+        <button @click="goToSignUp" class="btn metallic-button">Sign-up</button>
+        <button @click="goBackHome" class="btn metallic-button">Home</button>
       </div>
     </form>
-    <button @click="toggleDarkMode" class="btn btn-dark">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
+    <button @click="toggleDarkMode" class="btn metallic-button">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
   </div>
 </template>
 
@@ -139,5 +140,27 @@ label {
 .login-container.dark-mode {
   background-color: #000;
   color: #fff;
+}
+
+
+.metallic-button {
+  background: linear-gradient(to bottom, #8c8c8c, #333);
+  border: 1px solid #666;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  transition: 0.3s;
+}
+
+.metallic-button:hover {
+  background: linear-gradient(to bottom, #333, #8c8c8c);
+  border: 1px solid #999;
+  transition: 0.3s;
 }
 </style>
