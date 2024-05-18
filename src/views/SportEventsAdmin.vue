@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
     <div :class="{ 'dark-mode': darkMode }">
       <h1 class="h1" :class="{'dark-mode': darkMode}">Sports Event Gallery</h1>
@@ -7,8 +8,8 @@
         <p><strong>Location:</strong> {{ event.location }}</p>
         <p><strong>Start Time:</strong> {{ event.startTime }}</p>
         <p><strong>Participation Fee:</strong> {{ event.fee }}</p>
-        <button @click="editEvent(index)" class="edit">Edit</button>
-        <button @click="deleteEvent(index)" class="delete">Delete</button>
+        <button @click="editEvent(index)" class="btn-dark">Edit</button>
+        <button @click="deleteEvent(index)" class="btn-dark">Delete</button>
         <hr>
       </div>
   
@@ -23,9 +24,9 @@
         <input type="datetime-local" v-model="newEvent.startTime" required><br>
         <label>Participation Fee:</label>
         <input type="number" v-model="newEvent.fee" required><br>
-        <button type="submit" v-if="editMode">Save Changes</button>
-        <button type="submit" v-else>Add Event</button>
-        <button type="button" @click="cancelEdit" v-if="editMode">Cancel</button>
+        <button type="submit" v-if="editMode" class="btn-dark">Save Changes</button>
+        <button type="submit" v-else class="btn-dark">Add Event</button>
+        <button type="button" @click="cancelEdit" v-if="editMode" class="btn-dark">Cancel</button>
       </form>
       <event-map></event-map>
       <br>
@@ -34,7 +35,7 @@
       <br>
       <br>
       <button @click="toggleDarkMode" class="btn btn-dark">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
-      <button @click="goBack">Go Back</button>
+      <button @click="goBack" class="btn-dark">Go Back</button>
     </div>
   </template>
     <script>
@@ -114,4 +115,65 @@
       }
     };
     </script>
+    <style scoped>
+    .dark-mode {
+      background-color: #333;
+      color: #fff;
+    }
+    
+    .event {
+      background-color: #f9f9f9;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+    
+    .event h2 {
+      margin-top: 0;
+    }
+    
+    .event p {
+      margin-bottom: 5px;
+    }
+    
+    .btn-dark {
+      background: linear-gradient(to bottom, #757575, #616161);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-dark:hover {
+      background: linear-gradient(to bottom, #616161, #757575);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+    }
+    
+    .btn-dark:active {
+      transform: translateY(1px);
+    }
+    
+    .btn-delete {
+      background: linear-gradient(to bottom, #cc0000, #990000);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-delete:hover {
+      background: linear-gradient(to bottom, #990000, #cc0000);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+    }
+    
+    .btn-delete:active {
+      transform: translateY(1px);
+    }
+    </style>
     
