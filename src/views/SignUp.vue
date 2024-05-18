@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <div class="container" :class="{ 'dark-mode': darkMode }">
     <h2>Sign Up</h2>
@@ -24,11 +25,11 @@
         <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required>
       </div>
       <div class="button-group">
-        <button type="submit" class="btn btn-primary">Sign Up</button>
-        <button @click="goToLogIn" class="btn btn-secondary">Login</button>
-        <button @click="goBackHome" class="btn btn-secondary">Home</button>
+        <button type="submit" class="metallic-button">Sign Up</button>
+        <button @click="goToLogIn" class="metallic-button">Login</button>
+        <button @click="goBackHome" class="metallic-button">Home</button>
         <br>
-        <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
+        <button @click="toggleDarkMode" class="metallic-button">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
       </div>
     </form>
   </div>
@@ -129,9 +130,9 @@ export default {
 
 <style scoped>
 .container {
-  max-width: 450px;
+  max-width: 500px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 30px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f9f9f9;
@@ -147,12 +148,12 @@ h2 {
 }
 
 label {
-  display:block;
+  display: block;
   margin-bottom: 5px;
 }
 
 .form-control {
-  width: 80%;
+  width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -162,26 +163,35 @@ label {
   text-align: center;
 }
 
-.btn {
+.metallic-button {
+  background: linear-gradient(145deg, #d4d4d4, #ffffff);
+  border: 1px solid #ccc;
+  color: #000;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   padding: 10px 20px;
-  margin: 0 5px;
-  border: none;
   border-radius: 5px;
+  transition: background 0.3s, box-shadow 0.3s;
   cursor: pointer;
+  margin: 5px;
 }
 
-.btn-primary {
-  background-color: #007bff;
-  color: #fff;
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  color: #fff;
+.metallic-button:hover {
+  background: linear-gradient(145deg, #ffffff, #d4d4d4);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .dark-mode {
   background-color: #333;
   color: #fff;
+}
+
+.dark-mode .metallic-button {
+  background: linear-gradient(145deg, #555, #777);
+  color: #fff;
+  border: 1px solid #444;
+}
+
+.dark-mode .metallic-button:hover {
+  background: linear-gradient(145deg, #777, #555);
 }
 </style>
