@@ -1,8 +1,9 @@
+/* eslint-disable */
 <template>
   <div :class="{ 'dark-mode': darkMode }">
     <button @click="toggleDarkMode" class="btn btn-dark">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
-    <button @click="editAsAdmin">Edit as admin</button>
-    <button @click="goBack">Go Back</button>
+    <button @click="editAsAdmin" class="btn btn-dark">Edit as admin</button>
+    <button @click="goBack" class="btn btn-dark">Go Back</button>
     <h1 class="h1" :class="{'dark-mode': darkMode}">Sports Event Gallery</h1>
     <div class="search-bar">
       <input type="text" v-model="searchQuery" placeholder="Search events..." class="search-input">
@@ -13,11 +14,10 @@
       <p><strong>Location:</strong> {{ event.location }}</p>
       <p><strong>Start Time:</strong> {{ event.startTime }}</p>
       <p><strong>Participation Fee:</strong> {{ event.fee }}</p>
-      <button @click="showEventLocationOnMap(event)">Show Location on Map</button>
+      <button @click="showEventLocationOnMap(event)"class="btn btn-dark">Show Location on Map</button>
       <hr>
     </div>
-    <!-- Mapa -->
-    <div class="map-container" style="width: 100%; height: 400px;">
+        <div class="map-container" style="width: 100%; height: 400px;">
       <h4>Event map</h4>
       <iframe ref="mapFrame" width='100%' height='400px' :src="mapSrc" title="Mapa događaja" style="border:none;"></iframe>
     </div>
@@ -113,7 +113,8 @@ export default {
     },
     editAsAdmin(){
       this.$router.push({ path: '/admin-login', query: { redirect: '/admin-events'} });
-    },async fetchCoordinates(locationName) {
+    },
+    async fetchCoordinates(locationName) {
   try {
     const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(locationName)}.json?access_token=pk.eyJ1IjoiMTIzNDU2LWEiLCJhIjoiY2x3NmxocTIwMW1sczJrbXV5aWFha3l3aCJ9.B_bX_30NI0Wf6nISJMqlXA`);
     const data = await response.json();
@@ -156,6 +157,7 @@ async showEventLocationOnMap(event) {
 };
 </script>
 <style scoped>
+
 .dark-mode {
   background-color: #333;
   color: #fff;
@@ -189,4 +191,28 @@ async showEventLocationOnMap(event) {
 .event p {
   margin-bottom: 5px;
 }
+
+.btn-dark,
+.btn-admin {
+  background: linear-gradient(to bottom, #757575, #616161);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-dark:hover,
+.btn-admin:hover {
+  background: linear-gradient(to bottom, #616161, #757575);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-dark:active,
+.btn-admin:active {
+  transform: translateY(1px);
+}
+
 </style>
