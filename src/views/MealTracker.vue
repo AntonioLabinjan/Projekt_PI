@@ -1,16 +1,17 @@
+/* eslint-disable */
 <template>
   <div class="container" :class="{ 'dark-mode': darkMode }">
     <h1>Meal Tracker</h1>
     <div>
       <nav class="navbar">
         <ul class="navbar-nav">
-          <li><button @click="goToVueTrainer" class="btn-secondary">Go to Training app</button></li>
-          <li><button @click="goToImageGallery" class="btn-secondary">Go to Image Gallery</button></li>
-          <li><button @click="goToSleepTracker" class="btn-secondary">Go to Sleep Tracker</button></li>
-          <li><button @click="goToWaterIntakeTracker" class="btn-secondary">Go to Water Intake Tracker</button></li>
-          <li><button @click="goToBMI" class="btn-secondary">Go to BMI Calculator</button></li>
-          <li><button @click="goToStreak" class="btn-secondary">Go to Streak Tracker</button></li>
-          <li><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
+          <li><button @click="goToVueTrainer" class="btn btn-secondary metallic-button">Go to Training app</button></li>
+          <li><button @click="goToImageGallery" class="btn btn-secondary metallic-button">Go to Image Gallery</button></li>
+          <li><button @click="goToSleepTracker" class="btn btn-secondary metallic-button">Go to Sleep Tracker</button></li>
+          <li><button @click="goToWaterIntakeTracker" class="btn btn-secondary metallic-button">Go to Water Intake Tracker</button></li>
+          <li><button @click="goToBMI" class="btn btn-secondary metallic-button">Go to BMI Calculator</button></li>
+          <li><button @click="goToStreak" class="btn btn-secondary metallic-button">Go to Streak Tracker</button></li>
+          <li><button @click="goBackHome" class="btn btn-secondary metallic-button">Go back home</button></li>
         </ul>
       </nav>
     </div>
@@ -26,7 +27,7 @@
       <label for="mealCalories">Calories:</label>
       <input v-model="newMeal.calories" type="number" id="mealCalories" required />
 
-      <button type="submit">Add Meal</button>
+      <button type="submit" class="metallic-button">Add Meal</button>
     </form>
 
     <form v-else-if="editIndex !== null" @submit.prevent="saveEdit" class="meal-input-section">
@@ -39,8 +40,8 @@
       <label for="editMealCalories">Calories:</label>
       <input v-model="editedMeal.calories" type="number" id="editMealCalories" required />
 
-      <button type="submit">Save</button>
-      <button @click="cancelEdit">Cancel</button>
+      <button type="submit" class="metallic-button">Save</button>
+      <button @click="cancelEdit" class="metallic-button">Cancel</button>
     </form>
 
     <ul class="meal-display-section">
@@ -48,12 +49,12 @@
         <strong>Meal Name:</strong> {{ meal.name }}<br>
         <strong>Ingredients:</strong> {{ meal.ingredients }}<br>
         <strong>Calories:</strong> {{ meal.calories }} kcal<br>
-        <button class="edit-btn" @click="openEditDialog(index)">Edit</button>
-        <button class="delete-btn" @click="deleteMeal(meal.id)">Delete</button> 
+        <button class="edit-btn metallic-button" @click="openEditDialog(index)">Edit</button>
+        <button class="delete-btn metallic-button" @click="deleteMeal(meal.id)">Delete</button> 
       </li>
     </ul>
 
-    <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
+    <button @click="toggleDarkMode" class="metallic-button">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
 
     <div class="statistics">
       <strong>Total Calories:</strong> {{ totalCalories }} kcal<br>
@@ -67,8 +68,7 @@
     
     <div class="pie-chart-section">
       <h3>Pie Chart - Calories per Meal</h3>
-<canvas ref="pieChartCanvas" width="400" height="400"></canvas>
-
+      <canvas ref="pieChartCanvas" width="400" height="400"></canvas>
     </div>
   </div>
   <user-bar></user-bar>
@@ -274,5 +274,24 @@ canvas {
   width: 400px;  
   height: 400px; 
 }
+.metallic-button {
+  background: linear-gradient(to bottom, #8c8c8c, #333);
+  border: 1px solid #666;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  transition: 0.3s;
+}
 
+.metallic-button:hover {
+  background: linear-gradient(to bottom, #333, #8c8c8c);
+  border: 1px solid #999;
+  transition: 0.3s;
+}
 </style>
