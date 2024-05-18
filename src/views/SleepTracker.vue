@@ -7,9 +7,9 @@
         <li><button @click="goToImageGallery" class="btn btn-secondary">Go to Image Gallery</button></li>
         <li><button @click="goToMealTracker" class="btn btn-secondary">Go to Meal Tracker</button></li>
         <li><button @click="goToWaterIntake" class="btn btn-secondary">Go to Water Intake Tracker</button></li>
-        <li><button @click="goToBMI">Go to BMI Calculator</button></li>
-        <li><button @click="goToStreak">Go to Streak Tracker</button></li>
-        <li><button @click="goToMusicPlayer">Music Player</button></li>
+        <li><button @click="goToBMI" class="btn btn-secondary">Go to BMI Calculator</button></li>
+        <li><button @click="goToStreak" class="btn btn-secondary">Go to Streak Tracker</button></li>
+        <li><button @click="goToMusicPlayer" class="btn btn-secondary">Music Player</button></li>
         <li><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
       </ul> 
     </nav>
@@ -25,7 +25,7 @@
   <input v-model="newSleepEntry.wakeTime" type="time" id="wakeTime" required />
   <label for="quality">Quality (1-10):</label>
   <input v-model="newSleepEntry.quality" type="number" id="quality" min="1" max="10" required />
-  <button type="submit">Add Sleep Entry</button>
+  <button type="submit" class="btn btn-secondary">Add Sleep Entry</button>
 </form>
 
 <form v-else @submit.prevent="saveEditedSleepEntry" class="sleep-input-section">
@@ -39,7 +39,7 @@
   <label for="quality">Quality (1-10):</label>
   <input v-model="newSleepEntry.quality" type="number" id="quality" min="1" max="10" required />
   <button type="submit">Save Changes</button>
-  <button @click="cancelEdit">Cancel</button>
+  <button @click="cancelEdit" class="btn btn-secondary">Cancel</button>
 </form>
 
     <ul class="sleep-display-section">
@@ -49,8 +49,8 @@
         <strong>Wake Time:</strong> {{ entry.wakeTime }},
         <strong>Quality:</strong> {{ entry.quality }}
         <strong>Duration:</strong> {{ calculateDuration(entry) }}
-        <button class="edit-btn" @click="editSleepEntry(index)">Edit</button>
-        <button class="delete-btn" @click="deleteSleepEntry(entry.id)">Delete</button>
+        <button class="btn btn-secondary" @click="editSleepEntry(index)">Edit</button>
+        <button class="btn btn-secondary" @click="deleteSleepEntry(entry.id)">Delete</button>
       </li>
     </ul>
 
@@ -286,9 +286,29 @@ async saveEditedSleepEntry() {
 .alert {
   margin-top: 20px;
   padding: 10px;
-  background-color: #f8d7da; 
-  color: #721c24; 
-  border: 1px solid #f5c6cb; 
-  border-radius: 4px; 
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+}
+
+.btn-secondary {
+  background: linear-gradient(to bottom, #757575, #616161);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(to bottom, #616161, #757575);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+  transform: translateY(1px);
 }
 </style>
