@@ -1,17 +1,18 @@
+/* eslint-disable */
 <template>
   <keep-alive>
     <div>
     <div class="container" :class="{ 'dark-mode': darkMode }">
       <nav class="navbar">
         <ul>
-          <li><button @click="goToImageGallery">Go to Image Gallery</button></li>
-          <li><button @click="goToVueTrainer">Go to Training App</button></li>
-          <li><button @click="goToMealTracker">Go to Meal Tracker</button></li>
-          <li><button @click="goToSleepTracker">Go to Sleep Tracker</button></li>
-          <li><button @click="goToWaterIntake">Go to Water Intake Tracker</button></li>
-          <li><button @click="goToBMI">Go to BMI Calculator</button></li>
-          <li><button @click="goToMusicPlayer">Music Player</button></li>
-          <li><button @click="goBackHome">Go Back Home</button></li>
+          <li><button @click="goToImageGallery" class="btn-secondary">Go to Image Gallery</button></li>
+          <li><button @click="goToVueTrainer" class="btn-secondary">Go to Training App</button></li>
+          <li><button @click="goToMealTracker" class="btn-secondary">Go to Meal Tracker</button></li>
+          <li><button @click="goToSleepTracker" class="btn-secondary">Go to Sleep Tracker</button></li>
+          <li><button @click="goToWaterIntake " class="btn-secondary">Go to Water Intake Tracker</button></li>
+          <li><button @click="goToBMI" class="btn-secondary">Go to BMI Calculator</button></li>
+          <li><button @click="goToMusicPlayer" class="btn-secondary">Music Player</button></li>
+          <li><button @click="goBackHome" class="btn-secondary">Go Back Home</button></li>
         </ul>
       </nav>
       <hr>
@@ -20,7 +21,7 @@
       <form @submit.prevent="addCustomDate">
         <label for="customDate">Add your date:</label>
         <input type="date" id="customDate" v-model="customDate">
-        <button type="submit">Add</button>
+        <button type="submit" class="btn-secondary">Add</button>
       </form>
 
       <div class="selected-dates">
@@ -46,7 +47,7 @@
       <div class="medal-counter">
         <p>Medal Counter: {{ medalCounter }}</p>
       </div>
-      <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
+      <button @click="toggleDarkMode" class="btn-secondary">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     </div>
     <user-bar></user-bar>
     </div>
@@ -474,5 +475,26 @@ form button:hover {
 .reward.playing-animation {
   animation: none;
 }
+
+.btn-secondary {
+  background: linear-gradient(to bottom, #757575, #616161);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(to bottom, #616161, #757575);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+  transform: translateY(1px);
+}
+
 
 </style>
