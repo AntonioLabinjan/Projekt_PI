@@ -1,20 +1,22 @@
+
+/* eslint-disable */
 <template>
   <div class="container" :class="{ 'dark-mode': darkMode }">
     <h1>QR-code scanner</h1>
     <nav>
       <ul class="navbar">
-        <li><button @click="goToImageGallery">Image Gallery</button></li>
-        <li><button @click="goToVueTrainer">Training App</button></li>
-        <li><button @click="goToMealTracker">Meal Tracker</button></li>
-        <li><button @click="goToSleepTracker">Sleep Tracker</button></li>
-        <li><button @click="goToWaterIntake">Water Intake Tracker</button></li>
-        <li><button @click="goToBMI">BMI Calculator</button></li>
-        <li><button @click="goToStreak">Streak Tracker</button></li>
-        <li><button @click="goToMusicPlayer">Music Player</button></li>
-        <li><button @click="goBackHome">Go back home</button></li>
+        <li><button @click="goToImageGallery" class="metallic-button">Image Gallery</button></li>
+        <li><button @click="goToVueTrainer" class="metallic-button">Training App</button></li>
+        <li><button @click="goToMealTracker" class="metallic-button">Meal Tracker</button></li>
+        <li><button @click="goToSleepTracker" class="metallic-button">Sleep Tracker</button></li>
+        <li><button @click="goToWaterIntake" class="metallic-button">Water Intake Tracker</button></li>
+        <li><button @click="goToBMI" class="metallic-button">BMI Calculator</button></li>
+        <li><button @click="goToStreak" class="metallic-button">Streak Tracker</button></li>
+        <li><button @click="goToMusicPlayer" class="metallic-button">Music Player</button></li>
+        <li><button @click="goBackHome" class="metallic-button">Go back home</button></li>
       </ul>
     </nav>
-    <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
+    <button @click="toggleDarkMode" class="metallic-button">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
     <div v-if="!cameraAvailable">
       <p>Kamera nije dostupna na ovom uređaju.</p>
     </div>
@@ -24,7 +26,7 @@
       <div v-if="scannedData" class="result">
         <p>Skenirani sadržaj:</p>
         <p>{{ scannedData }}</p>
-        <button @click="openScannedLink">Otvori link</button>
+        <button @click="openScannedLink" class="metallic-button">Otvori link</button>
       </div>
     </div>
   </div>
@@ -153,22 +155,24 @@ video {
   display: inline;
 }
 
-.navbar button {
+.metallic-button {
+  background: linear-gradient(145deg, #d4d4d4, #ffffff);
+  border: 1px solid #ccc;
+  color: #000;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
   border-radius: 5px;
+  transition: background 0.3s, box-shadow 0.3s;
   cursor: pointer;
-  transition: background-color 0.3s;
   margin-right: 10px;
 }
 
-.navbar button:hover {
-  background-color: #0056b3;
+.metallic-button:hover {
+  background: linear-gradient(145deg, #ffffff, #d4d4d4);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.container.dark-mode {
+.dark-mode {
   background-color: #000;
   color: #fff;
 }
