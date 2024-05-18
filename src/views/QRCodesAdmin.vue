@@ -1,29 +1,30 @@
+/* eslint-disable */
 <template>
-    <div :class="{ 'dark-mode': darkMode }">
-      <h1 class="h1" :class="{'dark-mode': darkMode}">QR Code Gallery</h1>
+  <div :class="{ 'dark-mode': darkMode }">
+    <h1 class="h1" :class="{'dark-mode': darkMode}">QR Code Gallery</h1>
+    <hr>
+    <div v-for="(qrCode, index) in qrCodes" :key="index" class="qr-code">
+      <img :src="qrCode.url" alt="QR Code Image">
+      <button @click="editQRCode(index)" class="metallic-button edit">Edit</button>
+      <button @click="deleteQRCode(index)" class="metallic-button delete">Delete</button>
       <hr>
-      <!-- Prikaz QR kodova -->
-      <div v-for="(qrCode, index) in qrCodes" :key="index" class="qr-code">
-        <img :src="qrCode.url" alt="QR Code Image">
-        <button @click="editQRCode(index)" class="edit">Uredi</button>
-        <button @click="deleteQRCode(index)" class="delete">Obriši</button>
-        <hr>
-      </div>
-  
-      <h2 v-if="editMode">Uredi QR kod</h2>
-      <h2 v-else>Dodaj novi QR kod</h2>
-      <form @submit.prevent="submitQRCode">
-        <label>Naslov QR koda:</label>
-        <input type="text" v-model="newQRCode.title" required><br>
-        <label>Slika URL:</label>
-        <input type="url" v-model="newQRCode.url" required><br>
-        <button type="submit" v-if="editMode">Spremi promjene</button>
-        <button type="submit" v-else>Dodaj QR kod</button>
-        <button type="button" @click="cancelEdit" v-if="editMode">Odustani</button>
-        <button type="button" @click="goBack">Go back</button>
-      </form>
     </div>
-  </template>
+
+    <h2 v-if="editMode">Edit QR code</h2>
+    <h2 v-else>Add new QR code</h2>
+    <form @submit.prevent="submitQRCode">
+      <label>Title:</label>
+      <input type="text" v-model="newQRCode.title" required><br>
+      <label>Image URL:</label>
+      <input type="url" v-model="newQRCode.url" required><br>
+      <button type="submit" v-if="editMode" class="metallic-button">Save changes</button>
+      <button type="submit" v-else class="metallic-button">Add QR code</button>
+      <button type="button" @click="cancelEdit" v-if="editMode" class="metallic-button">Cancel</button>
+      <button type="button" @click="goBack" class="metallic-button">Go back</button>
+    </form>
+  </div>
+</template>
+
 <script>
 import { db } from '@/firebase';
 import { collection, getDocs, addDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore';
@@ -33,6 +34,7 @@ export default {
     return {
       qrCodes: [],
       newQRCode: {
+        title: '',
         url: ''
       },
       editIndex: null,
@@ -50,6 +52,7 @@ export default {
     },
     async addQRCode() {
       await addDoc(collection(db, "qrCodes"), {
+        title: this.newQRCode.title,
         url: this.newQRCode.url
       });
       this.fetchQRs();
@@ -88,6 +91,7 @@ export default {
     },
     resetForm() {
       this.newQRCode = {
+        title: '',
         url: ''
       };
       this.editIndex = null;
@@ -108,4 +112,52 @@ export default {
   }
 };
 </script>
-  
+
+<style>
+.qr-code {
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: bold;
+}
+
+input {
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.metallic-button {
+  background: linear-gradient(145deg, #d4d4d4a8, #ffffff);
+  border: 1px solid #ccc;
+  color: #000;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  padding: 10px;
+  border-radius: 5px;
+  transition: background 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.metallic-button:hover {
+  background: linear-gradient(145deg, #ffffff, #d4d4d4);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode {
+  background-color: #333;
+  color: #fff;
+}
+
+.dark-mode .h1 {
+  color: #fff;
+}
+
+.dark-mode input {
+  background-color: #555;
+  color: #fff;
+  border: 1px solid #777;
+}
+</style>
