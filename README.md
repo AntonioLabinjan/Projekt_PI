@@ -33,7 +33,8 @@ Te su aktivnosti:
 - music player
 - praćenje kalorijskog balansa
 - qr kod skener
-- i još svaštanešto
+- interaktivne mape
+- prijedlozi sportskih evenata
 https://www.figma.com/file/f8u5rOvTMgHEVSlU6denFg/Untitled?type=design&node-id=0%3A1&mode=design&t=brZMxneQCVA9nUOM-1    FIGMA LINK
 
 ## LINK NA DOKUMENTACIJU
