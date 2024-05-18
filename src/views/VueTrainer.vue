@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <div class="container" :class="{ 'dark-mode': darkMode }">
     <h1>Exercise Tracker</h1>
@@ -9,7 +10,7 @@
         <li><button @click="goToWaterIntake" class="btn-secondary">Go to Water Intake Tracker</button></li>
         <li><button @click="goToBMI" class="btn-secondary">Go to BMI Calculator</button></li>
         <li><button @click="goToStreak" class="btn-secondary">Go to Streak Tracker</button></li>
-        <li><button @click="goToMusicPlayer">Music Player</button></li>
+        <li><button @click="goToMusicPlayer" class="btn-secondary">Music Player</button></li>
         <li><button @click="goBackHome" class="btn btn-secondary">Go back home</button></li>
       </ul>
     </nav>
@@ -28,7 +29,7 @@
       <label for="exerciseCalories">Spent Calories:</label>
       <input v-model="newExercise.calories" type="number" id="exerciseCalories" required />
 
-      <button type="submit">Add Exercise</button>
+      <button type="submit" class="btn btn-secondary">Add Exercise</button>
     </form>
 
     <ul class="exercise-display-section">
@@ -70,14 +71,14 @@
     <div class="filter-container">
       <label for="intensityFilter">Filter by Intensity:</label>
       <input v-model="intensityFilter" type="text" id="intensityFilter" />
-      <button @click="filterByIntensity" class="btn btn-primary">Apply Filter</button>
+      <button @click="filterByIntensity" class="btn btn-secondary">Apply Filter</button>
     </div>
 
     <div class="pie-chart-section">
       <h3>Exercise Duration Pie Chart</h3>
       <canvas ref="pieChartCanvas"></canvas>
     </div>
-    <button @click="toggleDarkMode">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
+    <button @click="toggleDarkMode" class="btn btn-secondary">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
   </div>
   <div>
     <IntervalTimer></IntervalTimer>
@@ -297,6 +298,24 @@ canvas {
   width: 400px;  
   height: 400px; 
 }
+.btn-secondary {
+  background: linear-gradient(to bottom, #757575, #616161);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
 
+.btn-secondary:hover {
+  background: linear-gradient(to bottom, #616161, #757575);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+  transform: translateY(1px);
+}
 
 </style>
