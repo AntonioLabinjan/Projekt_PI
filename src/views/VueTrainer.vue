@@ -253,12 +253,14 @@ export default {
 }
 .navbar {
   margin-bottom: 20px;
+  justify-content: center;
 }
 .navbar-nav {
   list-style-type: none;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 .navbar-nav li {
   margin-right: 10px;
