@@ -311,7 +311,8 @@ h1 {
 }   
 
 .motivational-image {
-  max-width: 100%;
+  max-width: 40%;
+  width: 30%;
   height: auto;
   margin-top: 20px;
   border-radius: 5px;
