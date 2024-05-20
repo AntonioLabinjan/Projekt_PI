@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="container">
     <label for="training-date">Training date and time:</label>
     <input type="datetime-local" id="training-date" v-model="trainingDateTime">
-    
+
     <label for="notification-time">Notification time (in minutes):</label>
-    <input type="number" id="notification-time" v-model.number="notificationTime">  
-    
-    <button @click="scheduleNotification">Schedule a training and set notification</button>
+    <input type="number" id="notification-time" v-model.number="notificationTime">
+
+    <button @click="scheduleNotification">Schedule training and set notification</button>
 
     <div v-if="countdown > 0">
       <p>Time left until notification : {{ countdown }} seconds</p>
@@ -34,7 +34,7 @@ export default {
       notificationTime: 0,
       countdown: 0,
       timer: null,
-      notifications: []  
+      notifications: []
     };
   },
   methods: {
@@ -101,7 +101,7 @@ export default {
     }
   },
   created() {
-    this.fetchNotifications();  
+    this.fetchNotifications();
 
     const user = auth.currentUser;
     if (user) {
@@ -115,18 +115,19 @@ export default {
 </script>
 
 <style scoped>
-div {
+.container {
   font-family: 'Arial', sans-serif;
-  max-width: 1500px;
+  max-width: 500px; 
   margin: 20px auto;
   padding: 20px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   border-radius: 8px;
   background-color: #fff;
+  display: flex; 
+  flex-direction: column;
 }
 
 label {
-  display: block;
   margin-bottom: 8px;
   color: #333;
   font-size: 14px;
@@ -134,11 +135,12 @@ label {
 
 input[type="datetime-local"],
 input[type="number"] {
-  width: 100%;
+  width: 100%; 
   padding: 10px;
   margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box; 
 }
 
 button {
@@ -165,5 +167,4 @@ p {
 audio {
   display: none;
 }
-
 </style>
