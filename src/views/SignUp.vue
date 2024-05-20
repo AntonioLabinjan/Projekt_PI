@@ -1,4 +1,3 @@
-/* eslint-disable */
 <template>
   <div class="container" :class="{ 'dark-mode': darkMode }">
     <h2>Sign Up</h2>
@@ -36,7 +35,7 @@
 </template>
 
 <script>
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification, signOut } from 'firebase/auth';
 import { doc, setDoc, getFirestore } from 'firebase/firestore';
 import { auth } from '@/firebase';
 
@@ -94,8 +93,10 @@ export default {
           email: this.signupEmail
         });
 
+        await signOut(auth); 
+
         alert('Registration successful. Please verify your email. You can now login.');
-        this.$router.push({ path: '/login' });
+        this.goToLogIn(); 
       } catch (error) {
         switch (error.code) {
           case 'auth/invalid-email':
@@ -180,6 +181,7 @@ label {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Dark mode styles */
 .dark-mode {
   background-color: #333;
   color: #fff;
