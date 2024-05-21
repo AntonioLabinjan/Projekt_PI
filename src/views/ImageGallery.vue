@@ -1,4 +1,3 @@
-/* eslint-disable */
 <template>
   <div>
     <h1>Progress Tracker</h1>
@@ -15,10 +14,10 @@
       </ul>
     </nav>
     <hr>
-    
+
     <div class="container" :class="{ 'dark-mode': darkMode }">
       <input type="file" @change="handleFileChange" accept="image/*" />
-      
+
       <div v-if="filteredImages.length > 0" class="image-grid">
         <div v-for="(image, index) in filteredImages" :key="index" class="col-md-6">
           <div class="image-container">
@@ -57,28 +56,39 @@
       </div>
 
       <button @click="toggleDarkMode" class="metallic-button">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
-    </div>
-    <div>
-    <h2>Weight Progress</h2>
-    </div>
-    <div class="visualization-container">
-      <div class="progress-bars">
-        <div
-          v-for="(image, index) in filteredImages"
-          :key="index"
-          class="progress-bar"
-          :style="{ height: image.weight * 5 + 'px' }"
-          @click="showImageModal(image)"
-        >
-          {{ image.weight }} KG
+
+      <div class="weight-progress">
+        <h2>Weight Progress</h2>
+        <p>Initial Weight: {{ stats.initialWeight }} KG</p>
+        <p>Current Weight: {{ stats.currentWeight }} KG</p>
+        <p>Total Gained: {{ stats.totalGained }} KG</p>
+        <p>Total Lost: {{ stats.totalLost }} KG</p>
+        <p>Net Change: {{ stats.netChange }} KG</p>
+        <p>Percentage Gained: {{ stats.percentageGained.toFixed(2) }}%</p>
+        <p>Percentage Lost: {{ stats.percentageLost.toFixed(2) }}%</p>
+      </div>
+      <br>
+      <br>
+      <br>
+      <div class="visualization-container">
+        <div class="progress-bars">
+          <div
+            v-for="(image, index) in filteredImages"
+            :key="index"
+            class="progress-bar"
+            :style="{ height: image.weight * 5 + 'px' }"
+            @click="showImageModal(image)"
+          >
+            {{ image.weight }} KG
+          </div>
         </div>
       </div>
+      
     </div>
-    
+
     <user-bar></user-bar>
   </div>
 </template>
-
 
 <script>
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -96,7 +106,16 @@ export default {
       },
       weightFilter: null,
       selectedImage: null,
-      images: [] 
+      images: [], 
+      stats: {
+        totalGained: 0,
+        totalLost: 0,
+        netChange: 0,
+        initialWeight: 0,
+        currentWeight: 0,
+        percentageGained: 0,
+        percentageLost: 0
+      }
     };
   },
   computed: {
@@ -118,6 +137,7 @@ export default {
         const imageCollection = collection(getFirestore(), 'users', user.uid, 'images');
         const snapshot = await getDocs(imageCollection);
         this.images = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        this.calculateStats();
       }
     },
     toggleDarkMode() {
@@ -153,6 +173,7 @@ export default {
         this.newImage.id = docRef.id;
         this.images.push({ ...this.newImage, id: docRef.id });
         this.resetForm();
+        this.calculateStats();
       }
     },
     async deleteImage(index) {
@@ -162,6 +183,7 @@ export default {
         const imageToDelete = this.images[index];
         await deleteDoc(doc(getFirestore(), 'users', user.uid, 'images', imageToDelete.id));
         this.images.splice(index, 1);
+        this.calculateStats();
       }
     },
     resetForm() {
@@ -198,6 +220,48 @@ export default {
     },
     goToMusicPlayer() {
       this.$router.push({ path: '/music' });
+    },
+    calculateStats() {
+      if (this.images.length === 0) {
+        this.stats = {
+          totalGained: 0,
+          totalLost: 0,
+          netChange: 0,
+          initialWeight: 0,
+          currentWeight: 0,
+          percentageGained: 0,
+          percentageLost: 0
+        };
+        return;
+      }
+
+      let totalGained = 0;
+      let totalLost = 0;
+      let initialWeight = this.images[0].weight;
+      let currentWeight = this.images[this.images.length - 1].weight;
+
+      for (let i = 1; i < this.images.length; i++) {
+        let weightDiff = this.images[i].weight - this.images[i - 1].weight;
+        if (weightDiff > 0) {
+          totalGained += weightDiff;
+        } else {
+          totalLost += Math.abs(weightDiff);
+        }
+      }
+
+      let netChange = currentWeight - initialWeight;
+      let percentageGained = (totalGained / initialWeight) * 100;
+      let percentageLost = (totalLost / initialWeight) * 100;
+
+      this.stats = {
+        totalGained,
+        totalLost,
+        netChange,
+        initialWeight,
+        currentWeight,
+        percentageGained,
+        percentageLost
+      };
     }
   },
   mounted() {
@@ -212,8 +276,8 @@ export default {
   }
 };
 </script>
-<style scoped>
 
+<style scoped>
 .container {
   position: relative; 
 }
@@ -391,7 +455,7 @@ form button {
   position: absolute;
   top: 15px;
   right: 15px;
-  font-size: 24px;
+  font-size: 92px;
   color: white;
   cursor: pointer;
 }
@@ -399,9 +463,11 @@ form button {
 .navbar .navbar-nav li button.active {
   background-color: #007bff;
 }
+
 .visualization-container {
   margin-top: 80px;
 }
+
 .progress-bars {
   display: flex;
   align-items: flex-end;
@@ -413,7 +479,7 @@ form button {
   background-color: #4CAF50; 
   margin: 0 5px;
   text-align: center;
-  color: #fff;
+  color: #11b936;
   font-size: 12px;
   line-height: 1.5;
   cursor: pointer;
@@ -439,5 +505,22 @@ form button {
   background: linear-gradient(to bottom, #333, #8c8c8c);
   border: 1px solid #999;
   transition: 0.3s;
+}
+
+.weight-progress {
+  margin-top: 40px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.weight-progress h2 {
+  text-align: center;
+}
+
+.weight-progress p {
+  font-size: 16px;
+  margin: 5px 0;
 }
 </style>
