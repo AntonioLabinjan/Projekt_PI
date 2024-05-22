@@ -14,7 +14,7 @@ App link2: https://frolicking-dragon-b7c509.netlify.app/
 #### password: PASSword!!!123456
 
 #### mail: alabinjan@student.unipu.hr
-#### password: Lozinka//1234567//ABccD
+#### password: 7R4pnaZatTeY8Ce
 #### admin: admin@trainingapp.com
 #### password: 123456789
 Aplikacija za praćenje raznih aktivnosti važnih za zdrav život i treniranje.
