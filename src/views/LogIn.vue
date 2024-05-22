@@ -1,4 +1,3 @@
-/* eslint-disable */
 <template>
   <div class="login-container" :class="{ 'dark-mode': darkMode }">
     <h2>Login</h2>
@@ -13,8 +12,9 @@
       </div>
       <div class="button-group">
         <button type="submit" class="btn metallic-button">Login</button>
-        <button @click="goToSignUp" class="btn metallic-button">Sign-up</button>
-        <button @click="goBackHome" class="btn metallic-button">Home</button>
+        <button type="button" @click="goToSignUp" class="btn metallic-button">Sign-up</button>
+        <button type="button" @click="goBackHome" class="btn metallic-button">Home</button>
+        <button type="button" @click="resetPassword" class="btn metallic-button">Forgot Password?</button>
       </div>
     </form>
     <button @click="toggleDarkMode" class="btn metallic-button">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '@/firebase';
 
 export default {
@@ -38,7 +38,7 @@ export default {
       signInWithEmailAndPassword(auth, this.loginEmail, this.loginPassword)
         .then(() => {
           alert('Login successful.');
-          this.$router.replace({ path: '/' });
+          this.$router.push({ path: '/' });
         })
         .catch(error => {
           switch (error.code) {
@@ -67,6 +67,20 @@ export default {
       } else {
         document.body.classList.remove('dark-mode');
       }
+    },
+    resetPassword() {
+      if (!this.loginEmail) {
+        alert('Please enter your email address.');
+        return;
+      }
+      sendPasswordResetEmail(auth, this.loginEmail)
+        .then(() => {
+          alert('Password reset email sent successfully.');
+        })
+        .catch(error => {
+          alert('Failed to send password reset email. Please try again later.');
+          console.error('Password reset error:', error);
+        });
     }
   }
 };
@@ -141,7 +155,6 @@ label {
   background-color: #000;
   color: #fff;
 }
-
 
 .metallic-button {
   background: linear-gradient(to bottom, #8c8c8c, #333);
