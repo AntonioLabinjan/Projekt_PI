@@ -9,6 +9,7 @@
       <button @click="toggleDarkMode">{{ darkMode ? 'Light Mode' : 'Dark Mode' }}</button>
       <button @click="viewUsers">View users</button>
       <button @click="openChat">Open chat</button>
+      <button @click="viewProfile">Profile</button>
     </div>
     <div class="header">
       <h1>Welcome to <span class="highlight">TrainingMate 2.0 </span></h1>
@@ -183,6 +184,9 @@ async fetchExercises() {
     },
     playGame(){
       this.$router.push({path: '/memory'});
+    },
+    viewProfile(){
+      this.$router.push({path: '/profile'});
     }
   },
   /*
