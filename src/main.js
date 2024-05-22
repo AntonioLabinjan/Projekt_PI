@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { createApp } from 'vue';
 import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
@@ -38,6 +39,8 @@ import EventMap from './components/EventMap.vue';
 import ChatComponent from './views/ChatComponent.vue';
 import IntervalTimer from './components/IntervalTimer.vue';
 import MemoryGame from './components/MemoryGame.vue';
+import PersonalProfile from './views/PersonalProfile.vue';
+
 
 
 import firebase from 'firebase/app';
@@ -58,6 +61,7 @@ function isLoggedIn() {
 function requiresAdmin(to, from, next) {
   const currentUser = getAuth().currentUser;
 
+  
   if (currentUser) {
     firebase.firestore().collection('users').doc(currentUser.uid).get()
       .then(doc => {
@@ -107,7 +111,8 @@ const routes = [
   { path: '/admin-events', component: SportEventsAdmin},
   { path: '/chat', component: ChatComponent, meta: { requiresAuth: true }},
   {path: '/interval', component: IntervalTimer},
-  { path: '/memory', component: MemoryGame}
+  { path: '/memory', component: MemoryGame},
+  { path: '/profile', component: PersonalProfile, meta: {requiresAuth: true} }
 
 ];
 
@@ -170,6 +175,7 @@ app.component('SportEventsAdmin', SportEventsAdmin);
 app.component('ChatComponent', ChatComponent);
 app.component('IntervalTimer', IntervalTimer);
 app.component('MemoryGame', MemoryGame);
+app.component('PersonalProfile', PersonalProfile);
 app.use(router);
 app.use(store);
 
