@@ -1,7 +1,10 @@
 <template>
   <div class="user-info" v-if="currentUser">
     <p><b>Current user:</b> {{ currentUser.email }}</p>
-    <li><button @click="logout">Logout</button></li>
+    <div class="button-container">
+      <button @click="viewProfile">More</button>
+      <button @click="logout">Logout</button>
+    </div>
   </div>
 </template>
 
@@ -19,13 +22,16 @@ export default {
     async logout() {
       try {
         await signOut(auth);
-        window.alert("Successfull logout.");
+        window.alert("Successful logout.");
         this.$router.push('/');
       } catch (error) {
         console.error('Logout error:', error);
         window.alert("There has been an error while logging out.");
       }
     },
+    viewProfile() {
+      this.$router.push('/profile');
+    }
   },
   mounted() {
     onAuthStateChanged(auth, (user) => {
@@ -53,6 +59,12 @@ export default {
   margin-bottom: 15px; 
 }
 
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px; 
+}
+
 button {
   padding: 10px 20px;
   background-color: #007bff; 
@@ -66,5 +78,4 @@ button {
 button:hover {
   background-color: #0056b3;
 }
-
 </style>
