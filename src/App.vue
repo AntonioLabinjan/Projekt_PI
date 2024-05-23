@@ -109,7 +109,47 @@ button:hover {
   background-color: #45a049; 
 }
 
+
+@media (min-width: 601px) {
+  .dark-mode-toggle-container {
+    text-align: left; 
+    padding-left: 10px; 
+  }
+
+  .loading-pulse {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .pulse {
+    width: 100px;
+    height: 100px;
+  }
+
+  button {
+    font-size: 16px;
+    padding: 10px 20px;
+  }
+}
+
+/* Styles for mobile */
 @media (max-width: 600px) {
+  #app {
+    margin-top: 20px;
+  }
+
+  .dark-mode-toggle-container {
+    text-align: center; 
+    padding-left: 0; 
+  }
+
+  .pulse {
+    width: 50px;
+    height: 50px;
+  }
+
   button {
     font-size: 14px;
     padding: 6px 12px;
