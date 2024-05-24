@@ -35,25 +35,27 @@ export default {
   },
   methods: {
     login() {
-      signInWithEmailAndPassword(auth, this.loginEmail, this.loginPassword)
-        .then(() => {
-          alert('Login successful.');
-          this.$router.push({ path: '/' });
-        })
-        .catch(error => {
-          switch (error.code) {
-            case 'auth/invalid-email':
-            case 'auth/user-not-found':
-            case 'auth/wrong-password':
-              alert('Invalid email or password');
-              break;
-            default:
-              alert('An error occurred during login. Please try again later.');
-              break;
-          }
-          console.error('Login error:', error);
-        });
-    },
+  signInWithEmailAndPassword(auth, this.loginEmail, this.loginPassword)
+    .then(() => {
+      const loginTime = new Date().toLocaleTimeString();
+      localStorage.setItem('loginTime', loginTime);
+      alert('Login successful.');
+      this.$router.push({ path: '/' });
+    })
+    .catch(error => {
+      switch (error.code) {
+        case 'auth/invalid-email':
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+          alert('Invalid email or password');
+          break;
+        default:
+          alert('An error occurred during login. Please try again later.');
+          break;
+      }
+      console.error('Login error:', error);
+    });
+},
     goToSignUp() {
       this.$router.push({ path: '/sign-up' });
     },
@@ -156,6 +158,7 @@ label {
   color: #fff;
 }
 
+/* Metallic Button Styles */
 .metallic-button {
   background: linear-gradient(to bottom, #8c8c8c, #333);
   border: 1px solid #666;
