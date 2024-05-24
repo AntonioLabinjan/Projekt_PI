@@ -3,6 +3,7 @@
       <h2>User Profile</h2>
       <div v-if="userEmail">
         <p><strong>Email:</strong> {{ userEmail }}</p>
+        <p><strong>Logged in at:</strong> {{ loginTime }}</p>
         <div class="profile-picture">
           <img :src="profilePictureUrl" alt="Profile Picture" v-if="profilePictureUrl" />
           <p v-else>No profile picture</p>
@@ -24,7 +25,8 @@
     data() {
       return {
         userEmail: '',
-        profilePictureUrl: null
+        profilePictureUrl: null,
+        loginTime: ''
       };
     },
     created() {
@@ -33,6 +35,7 @@
         if (user) {
           this.userEmail = user.email;
           this.loadProfilePicture(user.uid);
+          this.loginTime = localStorage.getItem('loginTime') || 'N/A';
         } else {
           this.$router.push('/login');
         }
@@ -115,3 +118,4 @@
     margin-top: 10px;
   }
   </style>
+  
