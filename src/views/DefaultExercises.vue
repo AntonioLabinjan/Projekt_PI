@@ -91,7 +91,7 @@ export default {
     editExercise(index) {
       this.editIndex = index;
       this.newExercise = { ...this.exercises[index] };
-      this.newExercise.image = this.newExercise.url; // Ensure the image URL is loaded correctly
+      this.newExercise.image = this.newExercise.url; 
       this.editMode = true;
     },
     async updateExercise() {
@@ -180,11 +180,11 @@ h1 {
 }
 
 .exercise img {
-  max-width: 100%; /* Maksimalna širina slike je 100% roditeljskog elementa */
-  height: auto; /* Održavanje proporcija slike */
+  max-width: 100%; 
+  height: auto; 
   margin-top: 10px;
-  object-fit: contain; /* Osigurava da se slika neće izrezati, ali će se prilagoditi dimenzijama */
-  max-height: 200px; /* Maksimalna visina slike */
+  object-fit: contain; 
+  max-height: 200px; 
 }
 
 /* Stilizacija gumba */
