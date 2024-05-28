@@ -33,18 +33,18 @@ Za običnog korisnika:
 - postavljanje notifikacija
 - dohvat kalorijskog balansa
 
-#### FAKULTET INFORMATIKE U PULI
+## FAKULTET INFORMATIKE U PULI
 ### Kolegij:
-## Programsko inženjerstvo
+#### Programsko inženjerstvo
 
-### Mentor:
-## doc. dr. sc. Nikola Tanković
+#### Mentor:
+##### doc. dr. sc. Nikola Tanković
 
 
-## LINK NA FIGMA PROTOTIP (not cool) 
+### LINK NA FIGMA PROTOTIP (not cool) 
 https://www.figma.com/file/f8u5rOvTMgHEVSlU6denFg/Untitled?type=design&node-id=0%3A1&mode=design&t=brZMxneQCVA9nUOM-1   
 
-## LINK NA DOKUMENTACIJU
+### LINK NA DOKUMENTACIJU
 https://1drv.ms/w/c/144ded0df3b8fb69/EZVrFH7tPtdLpR_S74k7_1sB0Ug0cqxwwAwWpxj9Xla_tQ?e=X6Gigb
 
 
@@ -55,7 +55,7 @@ https://1drv.ms/w/c/144ded0df3b8fb69/EZVrFH7tPtdLpR_S74k7_1sB0Ug0cqxwwAwWpxj9Xla
 #### Dulja verzija videa s objašnjenjima: https://youtu.be/Nf9knYXIFQ4
 #### Kraća verzija videa bez objašnjenja: https://youtu.be/q2TmRErZ5Qs
 
-#### TEST CREDENTIALS: 
+### TEST CREDENTIALS: 
 #### mail: alabinjan6@gmail.com
 #### password: Ovo_je_Lozinka?!1234
 
