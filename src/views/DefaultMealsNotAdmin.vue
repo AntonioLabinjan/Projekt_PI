@@ -115,7 +115,7 @@ export default {
         app.classList.remove('dark-mode');
       }
     },
-    editAsAdmin(){ // obrisa saan fromPage
+    editAsAdmin(){ 
       this.$router.push({path:'/admin-login', query: { redirect: '/default-meals'}});
     },
     goBack(){
