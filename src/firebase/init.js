@@ -1,26 +1,25 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore"
+import { initializeApp } from 'firebase/app'
+import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { getStorage } from 'firebase/storage';
 
-// Your web app's Firebase configuration
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCl-SC9Geie_6QFRM6SJElP8ZY-qhBdkus",
-  authDomain: "trainingapp-255dc.firebaseapp.com",
-  projectId: "trainingapp-255dc",
-  storageBucket: "trainingapp-255dc.appspot.com",
-  messagingSenderId: "916045185222",
-  appId: "1:916045185222:web:2e02cb1e300f95725757c7"
-};
-
-// Initialize Firebase
-let app;
-let db;
-
-try {
-  app = initializeApp(firebaseConfig);
-  db = getFirestore(app);
-} catch (error) {
-  console.error("Error initializing Firebase app:", error);
+  apiKey: 'AIzaSyCAYR92SG0_uUrNdzg5TUL_2VwaOI1oQeM',
+  authDomain: 'badass-todo-fb4dc.firebaseapp.com',
+  projectId: 'badass-todo-fb4dc',
+  storageBucket: 'badass-todo-fb4dc.appspot.com',
+  messagingSenderId: '925150517547',
+  appId: '1:925150517547:web:546bc343bd3430293e8d6e'
 }
 
-export default db;
+const app = initializeApp(firebaseConfig)
+const db = getFirestore(app);
+const auth = getAuth(app);
+const storage = getStorage(app);
+
+export {
+    db,
+    auth,
+    storage
+}
