@@ -257,22 +257,7 @@ async saveEditedSleepEntry() {
     }
   });
 
-  // Stara verzija koja ne dela dobro
-  /*
-  try {
-    onSnapshot(collection(db, 'sleepEntries'), (querySnapshot) => {
-      const updatedSleepEntries = [];
-      querySnapshot.forEach((doc) => {
-        const sleepEntryData = doc.data();
-        sleepEntryData.id = doc.id;
-        updatedSleepEntries.push(sleepEntryData);
-      });
-      this.sleepEntries = updatedSleepEntries;
-    });
-  } catch (error) {
-    console.error('Error fetching sleep entries:', error);
-  }
-  */
+  
 }, }
 
 </script>
