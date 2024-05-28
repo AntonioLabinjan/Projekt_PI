@@ -1,6 +1,6 @@
 ### Javni linkovi:
-App link: https://trainingmate20-mv9vj6zj5-antonio-labinjans-projects.vercel.app/
-App link2: https://frolicking-dragon-b7c509.netlify.app/
+#### App link: https://trainingmate20-mv9vj6zj5-antonio-labinjans-projects.vercel.app/
+#### App link2: https://frolicking-dragon-b7c509.netlify.app/
 
 #### Dulja verzija videa s objašnjenjima: https://youtu.be/Nf9knYXIFQ4
 #### Kraća verzija videa bez objašnjenja: https://youtu.be/q2TmRErZ5Qs
