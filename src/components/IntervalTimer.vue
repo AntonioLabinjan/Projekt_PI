@@ -87,7 +87,7 @@
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px; /* Dodali smo margin-bottom kako bi bilo prostora između kartice i forme */
+    margin-bottom: 20px; 
   }
   
   .form {
