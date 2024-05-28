@@ -56,7 +56,7 @@
 
 <script>
 import { db } from '@/firebase';
-import { collection, addDoc, getDoc, doc, getDocs, deleteDoc, query, where, orderBy } from 'firebase/firestore';
+import { collection, addDoc, getDoc, /*updateDoc,*/ doc, getDocs, deleteDoc, query, where, orderBy } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase'; 
 import { mapState, mapActions } from 'vuex';
@@ -174,7 +174,6 @@ export default {
     removeDate(index) {
       if (!this.userId) return;
       const dateToRemove = this.selectedDates[index];
-      //const dateToRemoveISO = dateToRemove.toISOString().slice(0, 10);
       const datesRef = collection(db, 'users', this.userId, 'trainingDates');
       const q = query(datesRef, where('trainingDate', '==', dateToRemove));
       getDocs(q).then(snapshot => {
@@ -201,7 +200,7 @@ export default {
   let lastDate = sortedDates[0];
 
   sortedDates.forEach((date, index) => {
-    if (index === 0) return; // Skip first iteration
+    if (index === 0) return; 
 
     const currentDate = new Date(date);
     const previousDate = new Date(lastDate);
@@ -211,14 +210,14 @@ export default {
     if (diffDays === 1) {
       currentStreak++;
     } else {
-      currentStreak = 1; // Reset streak if gap is more than one day
+      currentStreak = 1; 
     }
 
     if (currentStreak > maxStreak) {
       maxStreak = currentStreak;
     }
 
-    lastDate = date; // Update lastDate for the next iteration
+    lastDate = date; 
   });
 
   const newRecordStreak = Math.max(this.recordStreak, maxStreak);
@@ -299,15 +298,20 @@ export default {
   list-style-type: none;
   padding: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: center; 
+  gap: 10px; 
   margin-bottom: 20px;
+}
+
+.navbar li {
+  margin: 0; 
 }
 
 .navbar li button {
   background-color: #4CAF50;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 15px; 
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -316,7 +320,6 @@ export default {
 .navbar li button:hover {
   background-color: #45a049;
 }
-
 hr {
   margin: 20px 0;
   border: none;
