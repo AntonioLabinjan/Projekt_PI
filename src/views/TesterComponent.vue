@@ -1,4 +1,5 @@
 <template>
+    <!-- VAŽNA NAPOMENA: TesterComponent.vue mi ne treba, samo sam nešto bezveze testirao i ovo nije implementirano nigdje u projektu -->
     <div>
       <h1>Todo List</h1>
       <ul>
