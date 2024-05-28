@@ -14,7 +14,6 @@
       <hr>
     </div>
 
-    <!-- Forma za dodavanje/novo uređivanje obroka -->
     <h2 v-if="editMode">Uredi obrok</h2>
     <h2 v-else>Dodaj novi obrok</h2>
     <form @submit.prevent="submitMeal">
@@ -33,7 +32,6 @@
       <button type="button" @click="cancelEdit" v-if="editMode">Odustani</button>
     </form>
     
-    <!-- Button to go back to the about page -->
     <button @click="goBack">Go Back</button>
     <button @click="toggleDarkMode" class="btn btn-dark">{{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}</button>
   </div>
@@ -134,7 +132,6 @@ export default {
 };
 </script>
 <style scoped>
-/* Globalni stilovi */
 body {
   font-family: Arial, sans-serif;
   background-color: #f2f2f2;
