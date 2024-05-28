@@ -75,7 +75,7 @@ export default {
     editExercise(index) {
       this.editIndex = index;
       this.newExercise = { ...this.exercises[index] };
-      this.newExercise.image = this.newExercise.url; // Ensure the image URL is loaded correctly
+      this.newExercise.image = this.newExercise.url; 
       this.editMode = true;
     },
     async updateExercise() {
@@ -131,7 +131,7 @@ export default {
         app.classList.remove('dark-mode');
       }
     },
-    editAsAdmin(){ // obrisa saan fromPage
+    editAsAdmin(){ 
       this.$router.push({path:'/admin-login', query: { redirect: '/default-exercises'}});
     },
     goBack(){
@@ -193,7 +193,7 @@ button.edit {
   background-color: #28a745;
 }
 
-/* Stilizacija forme */
+
 form {
   margin-top: 20px;
   background-color: #f8f8f8;
