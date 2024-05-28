@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { createStore } from 'vuex';
 
 const store = createStore({
@@ -9,9 +10,9 @@ const store = createStore({
       images: [],
       exercises: [],
       selectedDates: [],
-      currentStreak: null,
-      recordStreak: null,
-      medalCounter: 0,
+      currentStreak: 0,
+    recordStreak: 0,
+    medalCounter: 0,
       notifications: [],
       songs: [],
       users: [], 
@@ -92,6 +93,18 @@ const store = createStore({
     removeDate(state, index) {
       state.selectedDates.splice(index, 1);
     },
+    setCurrentStreak(state, streak) {
+      state.currentStreak = streak;
+    },
+    setRecordStreak(state, streak) {
+      state.recordStreak = streak;
+    },
+    setMedalCounter(state, count) {
+      state.medalCounter = count;
+    },
+    setSelectedDates(state, dates) {
+      state.selectedDates = dates;
+    },
     updateStreak(state) {
       let streak = 0;
       const today = new Date();
@@ -147,8 +160,17 @@ const store = createStore({
     setImages(state, images) {
       state.images = images;
     },
+    incrementMedalCounter(state) {
+      state.medalCounter += 1;
+    },
   },
   actions: {
+    setInitialData({ commit }, payload) {
+      commit('setCurrentStreak', payload.currentStreak);
+      commit('setRecordStreak', payload.recordStreak);
+      commit('setMedalCounter', payload.medalCounter);
+      commit('setSelectedDates', payload.selectedDates.map(date => new Date(date)));
+    },
     addSong({ commit }, song) { 
       commit('addSong', song);
     },
@@ -213,8 +235,18 @@ const store = createStore({
       dispatch('updateStreak');
       dispatch('updateMedalCounter');
     },
-    updateStreak({ commit }) {
-      commit('updateStreak');
+    updateStreak({ commit }, { currentStreak, recordStreak }) {
+      commit('setCurrentStreak', currentStreak);
+      commit('setRecordStreak', recordStreak);
+    },
+    updateMedals({ commit }, count) {
+      commit('setMedalCounter', count);
+    },
+    updateSelectedDates({ commit }, dates) {
+      commit('setSelectedDates', dates);
+    },
+    incrementMedalCounter({ commit }) {
+      commit('incrementMedalCounter');
     },
     updateMedalCounter({ commit }) {
       commit('updateMedalCounter');
@@ -227,7 +259,16 @@ const store = createStore({
     },
     logoutUser({ commit }) {
       commit('logoutUser');
-    }
+    },
+    updateCurrentStreak({ commit }, streak) {
+      commit('setCurrentStreak', streak);
+    },
+    updateRecordStreak({ commit }, streak) {
+      commit('setRecordStreak', streak);
+    },
+    /*updateMedalCounter({ commit }, count) {
+      commit('setMedalCounter', count);
+    },*/
   },
   getters: {
     totalIntake(state) {
