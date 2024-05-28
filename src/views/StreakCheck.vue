@@ -56,7 +56,7 @@
 
 <script>
 import { db } from '@/firebase';
-import { collection, addDoc, getDoc, /*updateDoc,*/ doc, getDocs, deleteDoc, query, where, orderBy } from 'firebase/firestore';
+import { collection, addDoc, getDoc, doc, getDocs, deleteDoc, query, where, orderBy } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/firebase'; 
 import { mapState, mapActions } from 'vuex';
@@ -225,7 +225,6 @@ export default {
   this.$store.dispatch('updateCurrentStreak', currentStreak);
   this.$store.dispatch('updateRecordStreak', newRecordStreak);
 
-  // Check and update medal counter if streak criteria are met
   if ((currentStreak % 3 === 0 || currentStreak % 7 === 0) && currentStreak !== this.currentStreak) {
     this.$store.dispatch('updateMedalCounter', this.medalCounter + 1);
   }
