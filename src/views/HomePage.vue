@@ -189,19 +189,7 @@ async fetchExercises() {
       this.$router.push({path: '/profile'});
     }
   },
-  /*
-  mounted() {
-    this.fetchExercises();
-    this.fetchMeals();
-    
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        this.currentUser = user;
-      } else {
-        this.currentUser = null;
-      }
-    });
-  },*/
+  
   mounted() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
