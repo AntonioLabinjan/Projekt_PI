@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import ToggleSwitch from 'C:/Users/Korisnik/Desktop/TrainingAPP-final-almost--master/src/components/DarkModeButton.vue';
+import ToggleSwitch from '@/components/DarkModeButton.vue';
 export default {
   name: 'App',
   components: {
