@@ -40,6 +40,7 @@ import ChatComponent from './views/ChatComponent.vue';
 import IntervalTimer from './components/IntervalTimer.vue';
 import MemoryGame from './components/MemoryGame.vue';
 import PersonalProfile from './views/PersonalProfile.vue';
+import AdminDashboard from './views/AdminDashboard.vue';
 
 
 
@@ -112,7 +113,8 @@ const routes = [
   { path: '/chat', component: ChatComponent, meta: { requiresAuth: true }},
   {path: '/interval', component: IntervalTimer},
   { path: '/memory', component: MemoryGame},
-  { path: '/profile', component: PersonalProfile, meta: {requiresAuth: true} }
+  { path: '/profile', component: PersonalProfile, meta: {requiresAuth: true} },
+  { path: '/admin-dashboard', component: AdminDashboard}
 
 ];
 
@@ -176,6 +178,7 @@ app.component('ChatComponent', ChatComponent);
 app.component('IntervalTimer', IntervalTimer);
 app.component('MemoryGame', MemoryGame);
 app.component('PersonalProfile', PersonalProfile);
+app.component('AdminDashboard', AdminDashboard)
 app.use(router);
 app.use(store);
 
