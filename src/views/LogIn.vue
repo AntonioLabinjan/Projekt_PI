@@ -12,6 +12,7 @@
       </div>
       <div class="button-group">
         <button type="submit" class="btn metallic-button">Login</button>
+        <button type="button" @click="loginAsAdmin" class="btn metallic-button">Log in as admin</button>
         <button type="button" @click="goToSignUp" class="btn metallic-button">Sign-up</button>
         <button type="button" @click="goBackHome" class="btn metallic-button">Home</button>
         <button type="button" @click="resetPassword" class="btn metallic-button">Forgot Password?</button>
@@ -34,6 +35,9 @@ export default {
     };
   },
   methods: {
+    loginAsAdmin(){ // obrisa saan fromPage
+      this.$router.push({path:'/admin-login', query: { redirect: '/admin-dashboard'}});
+    },
     login() {
   signInWithEmailAndPassword(auth, this.loginEmail, this.loginPassword)
     .then(() => {
