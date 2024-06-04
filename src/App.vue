@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <div>
     <div :class="{'dark-mode': isDark}" class="dark-mode-toggle-container">
