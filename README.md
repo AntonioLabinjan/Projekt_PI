@@ -1,4 +1,5 @@
 # TrainingMate 2.0
+![TrainingMate 2.0](https://img.shields.io/badge/TrainingMate-v2.0-brightgreen)
 Aplikacija za praćenje raznih aktivnosti važnih za zdrav život i treniranje.
 
 Te su aktivnosti: 
