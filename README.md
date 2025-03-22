@@ -1,70 +1,82 @@
-# TrainingMate 2.0
-![TrainingMate 2.0](https://img.shields.io/badge/TrainingMate-v2.0-brightgreen)
-Aplikacija za praćenje raznih aktivnosti važnih za zdrav život i treniranje.
+# **TrainingMate 2.0**  
+![TrainingMate 2.0](https://img.shields.io/badge/TrainingMate-v2.0-brightgreen)  
 
-Te su aktivnosti: 
-Za admina:
- - pregled svih registriranih korisnika
- - slanje mailova korisnicima
- - uređivanje prijedloga za odrađivanje vježbi
- - uređivanje prijedloga za obroke
- - uređivanje sportskih evenata
- - dodavanje QR kodova
- - napomena: kako bi se omogućila maksimalna personalizacija korisničkog iskustva, administrator nikako ne može dobiti pristup informacijama koje su korisnici unijeli (npr. njihovih obroka, težine i sl.). Time je omogućena privatnost korisnika pri radu s aplikacijom
-   
-Za običnog korisnika:
-- kreiranje računa (login i signup)
-- praćenje visine i težine
-- praćenje odrađenih treninga
-- praćenje konzumacije obroka
-- praćenje sna
-- praćenje unosa tekućine
-- izračun Body mass indexa
-- praćenje training streaka
-- proučavanje prijedloga za odrađivanje vježbi
-- proučavanje prijedloga za obroke
-- music player
-- praćenje kalorijskog balansa
-- qr kod skener
-- interaktivne mape
-- proučavanje prijedloga sportskih evenata
-- pregled i editiranje korisničkog profila
-- igranje memory igre pogađanja brojeva
-- dobivanje motivacijskih citata
-- postavljanje notifikacija
-- dohvat kalorijskog balansa
+An application for tracking various activities important for a healthy lifestyle and training.  
 
-## FAKULTET INFORMATIKE U PULI
-### Kolegij:
-#### Programsko inženjerstvo
+---
 
-#### Mentor:
-##### doc. dr. sc. Nikola Tanković
+## **Features:**
 
+### **For Admins:**
+- View all registered users  
+- Send emails to users  
+- Manage exercise suggestions  
+- Manage meal suggestions  
+- Manage sports events  
+- Add QR codes  
+- **Note:** To ensure maximum personalization and user privacy, administrators cannot access personal information entered by users (e.g., meals, weight, etc.). This guarantees user privacy while using the application.  
 
-### LINK NA FIGMA PROTOTIP (not cool) 
-https://www.figma.com/file/f8u5rOvTMgHEVSlU6denFg/Untitled?type=design&node-id=0%3A1&mode=design&t=brZMxneQCVA9nUOM-1   
+### **For Regular Users:**
+- Create an account (sign up and log in)  
+- Track height and weight  
+- Track completed workouts  
+- Track meal consumption  
+- Track sleep patterns  
+- Track water intake  
+- Calculate Body Mass Index (BMI)  
+- Track training streaks  
+- Explore exercise suggestions  
+- Explore meal suggestions  
+- Built-in music player  
+- Monitor calorie balance  
+- QR code scanner  
+- Interactive maps  
+- Explore upcoming sports events  
+- View and edit user profile  
+- Play a memory game (guessing numbers)  
+- Receive motivational quotes  
+- Set reminders/notifications  
+- Fetch and monitor calorie balance  
 
-### LINK NA DOKUMENTACIJU
-https://1drv.ms/w/c/144ded0df3b8fb69/EZVrFH7tPtdLpR_S74k7_1sB0Ug0cqxwwAwWpxj9Xla_tQ?e=X6Gigb
+---
 
+## **Faculty of Informatics in Pula**  
+### **Course:**  
+**Software Engineering**  
 
-### Javni linkovi:
-#### App link: https://trainingmate20-mv9vj6zj5-antonio-labinjans-projects.vercel.app/
-#### App link2: https://frolicking-dragon-b7c509.netlify.app/
+### **Mentor:**  
+**doc. dr. sc. Nikola Tanković**  
 
-#### Dulja verzija videa s objašnjenjima: https://youtu.be/Nf9knYXIFQ4
-#### Kraća verzija videa bez objašnjenja: https://youtu.be/q2TmRErZ5Qs
+---
 
-### TEST CREDENTIALS: 
-#### mail: alabinjan6@gmail.com
-#### password: Ovo_je_Lozinka?!1234
+### **Links:**
 
-#### mail: antoniolabinjan5@gmail.com
-#### password: PASSword!!!123456
+- **Figma Prototype (not cool)**: [View Prototype](https://www.figma.com/file/f8u5rOvTMgHEVSlU6denFg/Untitled?type=design&node-id=0%3A1&mode=design&t=brZMxneQCVA9nUOM-1)  
+- **Documentation**: [View Documentation](https://1drv.ms/w/c/144ded0df3b8fb69/EZVrFH7tPtdLpR_S74k7_1sB0Ug0cqxwwAwWpxj9Xla_tQ?e=X6Gigb)  
 
-#### mail: alabinjan@student.unipu.hr
-#### password: 7R4pnaZatTeY8Ce
+---
 
-#### admin: admin@trainingapp.com
-#### password: 123456789
+### **Public Links:**
+- **App Link 1**: [TrainingMate 2.0 (Vercel)](https://trainingmate20-mv9vj6zj5-antonio-labinjans-projects.vercel.app/)  
+- **App Link 2**: [TrainingMate 2.0 (Netlify)](https://frolicking-dragon-b7c509.netlify.app/)  
+
+- **Longer Explanation Video**: [Watch on YouTube](https://youtu.be/Nf9knYXIFQ4)  
+- **Shorter Video (No Explanation)**: [Watch on YouTube](https://youtu.be/q2TmRErZ5Qs)  
+
+---
+
+## **Test Credentials:**
+
+### **Regular Users:**
+- **Email:** alabinjan6@gmail.com  
+  **Password:** Ovo_je_Lozinka?!1234  
+
+- **Email:** antoniolabinjan5@gmail.com  
+  **Password:** PASSword!!!123456  
+
+- **Email:** alabinjan@student.unipu.hr  
+  **Password:** 7R4pnaZatTeY8Ce  
+
+### **Admin:**
+- **Email:** admin@trainingapp.com  
+  **Password:** 123456789
